@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linguobyte/core/router/app_router.dart';
+import 'package:linguobyte/core/theme/app_theme.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -40,6 +41,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: appRouter,
+      theme: AppTheme.dark,
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
     );
   }
