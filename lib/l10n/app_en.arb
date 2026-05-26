@@ -1,0 +1,105 @@
+{
+  "@@locale": "en",
+
+  "loading": "Loading...",
+  "@loading": { "description": "Generic loading indicator label" },
+
+  "errorGeneric": "Something went wrong",
+  "@errorGeneric": { "description": "Generic error message" },
+
+  "errorNetwork": "No internet connection",
+  "@errorNetwork": { "description": "Shown when a network request fails" },
+
+  "errorAuth": "Authentication error. Please sign in again.",
+  "@errorAuth": { "description": "Shown on auth errors" },
+
+  "errorNotFound": "Content not found",
+  "@errorNotFound": { "description": "Shown when a Firestore document is missing" },
+
+  "retry": "Retry",
+  "@retry": { "description": "Button label to retry a failed action" },
+
+  "continueLabel": "Continue",
+  "@continueLabel": { "description": "Primary forward-action button" },
+
+  "back": "Back",
+  "@back": { "description": "Navigation back button" },
+
+  "cancel": "Cancel",
+  "@cancel": { "description": "Dismiss / cancel action" },
+
+  "save": "Save",
+  "@save": { "description": "Save action" },
+
+  "authWelcomeTitle": "Welcome to LinguoByte",
+  "@authWelcomeTitle": { "description": "Auth screen main heading" },
+
+  "authWelcomeSubtitle": "Learn a language, step by step",
+  "@authWelcomeSubtitle": { "description": "Auth screen subheading" },
+
+  "email": "Email",
+  "@email": { "description": "Email input label" },
+
+  "password": "Password",
+  "@password": { "description": "Password input label" },
+
+  "signIn": "Sign in",
+  "@signIn": { "description": "Sign-in button / tab label" },
+
+  "signUp": "Sign up",
+  "@signUp": { "description": "Sign-up button / tab label" },
+
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": { "description": "Link to password recovery" },
+
+  "resetPassword": "Reset password",
+  "@resetPassword": { "description": "Password reset screen title and button" },
+
+  "resetPasswordSent": "A reset link has been sent to your email.",
+  "@resetPasswordSent": { "description": "Confirmation after password reset email is sent" },
+
+  "noAccount": "Don't have an account?",
+  "@noAccount": { "description": "Prompt to switch to sign-up" },
+
+  "hasAccount": "Already have an account?",
+  "@hasAccount": { "description": "Prompt to switch to sign-in" },
+
+  "homeTitle": "Home",
+  "@homeTitle": { "description": "Home screen title" },
+
+  "chooseLanguage": "Choose a language",
+  "@chooseLanguage": { "description": "Language selection prompt on home screen" },
+
+  "continueLearning": "Continue learning",
+  "@continueLearning": { "description": "Section header for in-progress language" },
+
+  "lessonTitle": "Lesson",
+  "@lessonTitle": { "description": "Lesson screen title" },
+
+  "theory": "Theory",
+  "@theory": { "description": "Theory sub-screen label" },
+
+  "practice": "Practice",
+  "@practice": { "description": "Practice sub-screen label" },
+
+  "additional": "Additional",
+  "@additional": { "description": "Additional materials sub-screen label" },
+
+  "profileTitle": "Profile",
+  "@profileTitle": { "description": "Profile screen title" },
+
+  "points": "Points",
+  "@points": { "description": "User XP / points label" },
+
+  "settings": "Settings",
+  "@settings": { "description": "Settings section label" },
+
+  "signOut": "Sign out",
+  "@signOut": { "description": "Sign out button" },
+
+  "languageLabel": "Interface language",
+  "@languageLabel": { "description": "Setting label for UI locale selection" },
+
+  "learningLanguageLabel": "Learning language",
+  "@learningLanguageLabel": { "description": "Setting label for the language being studied" }
+}
