@@ -46,9 +46,23 @@ basic/                                  # коллекция
             createdAt: timestamp
             updatedAt: timestamp
 
+        lexical_set/                      # подколлекция "лексический запас, тематические слова"
+          {vocabularySetID}/             # документ
+            title: string
+            translation: string
+            transcription: string
+
+        verbs/                          # подколлекция "матрица глаголов", спряжение
+          {verbID}/                     # документ
+            title: string
+            type: string
+            conjugation: map
+            translation: string
+            transcription: string
+
     exercises/                          # подколлекция
       {exerciseId}/                     # документ (одно упражнение)
-        type: string                    # "multiple_choice" | "fill_blank" | "translate"
+        type: string                    # "multiple_choice" | "fill_blank" | "translate" | "flashcard" | "wordcard" | "voice_translate" | "mosaic" | "listen_pick"
         target_language: string
         course_id: string
         lesson_id: string               # id урока, к которому относится упражнение
