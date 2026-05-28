@@ -22,7 +22,7 @@
 | Авторизация | Firebase Auth |
 | Хранилище медиа | Firebase Storage |
 | Мониторинг | Firebase Crashlytics, Firebase Analytics |
-| State management | Riverpod 2.x с code generation (`@riverpod`) |
+| State management | Riverpod 3.x с code generation (`@riverpod`) |
 | Навигация | GoRouter |
 | Сериализация | `freezed` + `json_serializable` |
 | Изображения | `cached_network_image` |
@@ -97,7 +97,7 @@ lib/
 
 ## 5. State Management (Riverpod)
 
-- Использовать Riverpod 2.x с `@riverpod` code generation
+- Использовать Riverpod 3.x с `@riverpod` code generation
 - `AsyncNotifier` — основной ViewModel для экранов с асинхронными данными
 - `ref.watch` — в провайдерах и методе `build`
 - `ref.read` — только в обработчиках событий (`onPressed` и т.п.)
@@ -211,10 +211,10 @@ class UnknownError extends AppError {
 | Репозитории | `PascalCase` + `Repository` | `LessonRepository` |
 | UseCase | `PascalCase` + `UseCase` | `GetLessonUseCase` |
 | Классы нотификаторов | `PascalCase` | `LessonNotifier` |
-| Провайдеры | `camelCase` + `Provider` | `lessonNotifierProvider` |
+| Провайдеры | `camelCase` + `Provider` | `lessonProvider` |
 | Коллекции Firestore | `camelCase` | `privateUserInfo` |
 
-> Провайдеры в `camelCase` — не исключение из правил, а поведение генератора `@riverpod`. Класс нотификатора (`LessonNotifier`) — `PascalCase`. Провайдер (`lessonNotifierProvider`) генерируется автоматически в `camelCase`.
+> Провайдеры в `camelCase` — не исключение из правил, а поведение генератора `@riverpod`. Класс нотификатора (`LessonNotifier`) — `PascalCase`. Провайдер (`lessonProvider`) генерируется автоматически в `camelCase`. Riverpod 3.x убирает суффикс `Notifier` из имени провайдера.
 
 ---
 
@@ -272,3 +272,9 @@ abstract class FirestorePaths {
 - Тестирование и CI/CD — после реализации MVP
 - Детальная обработка ошибок с разными сообщениями — после MVP
 - Офлайн-предзагрузка медиа — после MVP
+
+### Технический долг (зафиксировать до постMVP-итерации)
+
+- **`mapFirebaseException`**: добавить Auth-специфичные коды (`wrong-password`, `user-not-found`, `email-already-in-use`, `weak-password`) → маппить в `AuthError`, сейчас падают в `UnknownError`
+- **Валидация форм** (`AuthorizationScreen`): добавить проверку формата email и минимальной длины пароля
+- **`UserModel.fromDocument`**: перенести из `domain` в `data`-слой (репозиторий) для соблюдения чистоты слоёв — domain не должен зависеть от `cloud_firestore`
