@@ -305,6 +305,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learning language'**
   String get learningLanguageLabel;
+
+  /// Name of the English learning language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get langEnglish;
+
+  /// Name of the Spanish learning language option
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get langSpanish;
+
+  /// Name of the French learning language option
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get langFrench;
+
+  /// Name of the Russian learning language option
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get langRussian;
+
+  /// Profile first name field label
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get nameLabel;
+
+  /// Profile last name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get surnameLabel;
+
+  /// Snackbar message after successful profile save
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved'**
+  String get profileSaved;
+
+  /// Edit profile button label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -109,4 +109,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get learningLanguageLabel => 'Learning language';
+
+  @override
+  String get langEnglish => 'English';
+
+  @override
+  String get langSpanish => 'Spanish';
+
+  @override
+  String get langFrench => 'French';
+
+  @override
+  String get langRussian => 'Russian';
+
+  @override
+  String get nameLabel => 'First name';
+
+  @override
+  String get surnameLabel => 'Last name';
+
+  @override
+  String get profileSaved => 'Profile saved';
+
+  @override
+  String get editLabel => 'Edit';
 }

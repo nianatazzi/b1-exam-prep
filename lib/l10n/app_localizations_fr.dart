@@ -111,4 +111,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get learningLanguageLabel => 'Langue étudiée';
+
+  @override
+  String get langEnglish => 'Anglais';
+
+  @override
+  String get langSpanish => 'Espagnol';
+
+  @override
+  String get langFrench => 'Français';
+
+  @override
+  String get langRussian => 'Russe';
+
+  @override
+  String get nameLabel => 'Prénom';
+
+  @override
+  String get surnameLabel => 'Nom de famille';
+
+  @override
+  String get profileSaved => 'Profil enregistré';
+
+  @override
+  String get editLabel => 'Modifier';
 }

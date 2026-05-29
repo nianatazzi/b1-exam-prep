@@ -39,7 +39,7 @@ final class AuthNotifierProvider
   AuthNotifier create() => AuthNotifier();
 }
 
-String _$authNotifierHash() => r'51b5bfc264bf757e745cc9e9a7b92c7833b32730';
+String _$authNotifierHash() => r'baa48a73ef14e8b3121d5a5378a74c7999ab59b6';
 
 /// Глобальное состояние авторизации.
 /// keepAlive — живёт всё время работы приложения, GoRouter зависит от него.

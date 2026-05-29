@@ -109,4 +109,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get learningLanguageLabel => 'Изучаемый язык';
+
+  @override
+  String get langEnglish => 'Английский';
+
+  @override
+  String get langSpanish => 'Испанский';
+
+  @override
+  String get langFrench => 'Французский';
+
+  @override
+  String get langRussian => 'Русский';
+
+  @override
+  String get nameLabel => 'Имя';
+
+  @override
+  String get surnameLabel => 'Фамилия';
+
+  @override
+  String get profileSaved => 'Профиль сохранён';
+
+  @override
+  String get editLabel => 'Редактировать';
 }
