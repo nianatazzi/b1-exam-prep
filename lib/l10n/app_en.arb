@@ -101,5 +101,29 @@
   "@languageLabel": { "description": "Setting label for UI locale selection" },
 
   "learningLanguageLabel": "Learning language",
-  "@learningLanguageLabel": { "description": "Setting label for the language being studied" }
+  "@learningLanguageLabel": { "description": "Setting label for the language being studied" },
+
+  "langEnglish": "English",
+  "@langEnglish": { "description": "Name of the English learning language option" },
+
+  "langSpanish": "Spanish",
+  "@langSpanish": { "description": "Name of the Spanish learning language option" },
+
+  "langFrench": "French",
+  "@langFrench": { "description": "Name of the French learning language option" },
+
+  "langRussian": "Russian",
+  "@langRussian": { "description": "Name of the Russian learning language option" },
+
+  "nameLabel": "First name",
+  "@nameLabel": { "description": "Profile first name field label" },
+
+  "surnameLabel": "Last name",
+  "@surnameLabel": { "description": "Profile last name field label" },
+
+  "profileSaved": "Profile saved",
+  "@profileSaved": { "description": "Snackbar message after successful profile save" },
+
+  "editLabel": "Edit",
+  "@editLabel": { "description": "Edit profile button label" }
 }

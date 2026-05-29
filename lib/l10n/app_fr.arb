@@ -34,5 +34,14 @@
   "settings": "Paramètres",
   "signOut": "Se déconnecter",
   "languageLabel": "Langue de l'interface",
-  "learningLanguageLabel": "Langue étudiée"
+  "learningLanguageLabel": "Langue étudiée",
+
+  "langEnglish": "Anglais",
+  "langSpanish": "Espagnol",
+  "langFrench": "Français",
+  "langRussian": "Russe",
+  "nameLabel": "Prénom",
+  "surnameLabel": "Nom de famille",
+  "profileSaved": "Profil enregistré",
+  "editLabel": "Modifier"
 }

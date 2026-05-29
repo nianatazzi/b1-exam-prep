@@ -34,5 +34,14 @@
   "settings": "Настройки",
   "signOut": "Выйти",
   "languageLabel": "Язык интерфейса",
-  "learningLanguageLabel": "Изучаемый язык"
+  "learningLanguageLabel": "Изучаемый язык",
+
+  "langEnglish": "Английский",
+  "langSpanish": "Испанский",
+  "langFrench": "Французский",
+  "langRussian": "Русский",
+  "nameLabel": "Имя",
+  "surnameLabel": "Фамилия",
+  "profileSaved": "Профиль сохранён",
+  "editLabel": "Редактировать"
 }

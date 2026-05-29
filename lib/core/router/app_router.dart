@@ -32,17 +32,25 @@ GoRouter router(Ref ref) {
       final authState = ref.read(authProvider);
       final location = state.matchedLocation;
 
-      // Пока идёт инициализация — ничего не трогаем
+      // Пока идёт инициализация — остаёмся на сплеше
       if (authState.isLoading) return null;
 
       final isLoggedIn = authState.asData?.value != null;
+      final isNewUser = ref.read(authProvider.notifier).isNewUser;
 
-      // Splash не трогаем — SplashScreen сам вызовет context.go после загрузки
-      if (location == AppRoutes.splash) return null;
+      // Уходим со сплеша как только auth определён
+      if (location == AppRoutes.splash) {
+        if (!isLoggedIn) return AppRoutes.auth;
+        return isNewUser ? AppRoutes.profile : AppRoutes.home;
+      }
 
-      // Гард для всех остальных маршрутов
+      // Гард: не авторизован — только на /auth
       if (!isLoggedIn && location != AppRoutes.auth) return AppRoutes.auth;
-      if (isLoggedIn && location == AppRoutes.auth) return AppRoutes.home;
+
+      // После входа/регистрации уходим с /auth
+      if (isLoggedIn && location == AppRoutes.auth) {
+        return isNewUser ? AppRoutes.profile : AppRoutes.home;
+      }
 
       return null;
     },
