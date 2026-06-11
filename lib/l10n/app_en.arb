@@ -125,5 +125,14 @@
   "@profileSaved": { "description": "Snackbar message after successful profile save" },
 
   "editLabel": "Edit",
-  "@editLabel": { "description": "Edit profile button label" }
+  "@editLabel": { "description": "Edit profile button label" },
+
+  "statusDone": "Done",
+  "@statusDone": { "description": "Lesson card badge — lesson completed" },
+
+  "statusInProgress": "In progress",
+  "@statusInProgress": { "description": "Lesson card badge — lesson currently active" },
+
+  "statusLocked": "Locked",
+  "@statusLocked": { "description": "Lesson card badge — lesson not yet available" }
 }

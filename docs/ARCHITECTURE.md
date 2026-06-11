@@ -42,6 +42,17 @@
 
 Направление зависимостей: `presentation` → `domain` ← `data`. Зависимости направлены только внутрь. `domain` не зависит ни от чего.
 
+### Развязка слоёв через интерфейсы
+
+Если UseCase или domain-класс нуждается в данных из репозитория — он зависит только от **абстрактного интерфейса** (`ILessonRepository`), объявленного в `domain/repositories/`. Конкретная реализация (`LessonRepository`) живёт в `data/` и реализует этот интерфейс. Riverpod-провайдер служит DI-мостом: создаёт конкретную реализацию и передаёт её туда, где ожидается интерфейс.
+
+```
+domain/repositories/i_lesson_repository.dart   ← абстракция (domain)
+data/repositories/lesson_repository.dart        ← реализация (data, implements ILessonRepository)
+domain/usecases/get_home_data_use_case.dart     ← использует ILessonRepository
+                @riverpod-функция               ← DI: передаёт LessonRepository как ILessonRepository
+```
+
 ### Когда использовать UseCase
 
 UseCase нужен когда есть **бизнес-логика** — не просто чтение данных, а их обработка:
@@ -114,8 +125,8 @@ lib/
 
 - Использовать Riverpod 3.x с `@riverpod` code generation
 - `AsyncNotifier` — основной ViewModel для экранов с асинхронными данными
-- `ref.watch` — в провайдерах и методе `build`
-- `ref.read` — только в обработчиках событий (`onPressed` и т.п.)
+- `ref.watch` — в синхронных провайдерах и в `build()` для **реактивных** провайдеров (чьё изменение должно перезапустить build)
+- `ref.read` — в обработчиках событий (`onPressed` и т.п.), а также в `async build()` для **сервисных** провайдеров (репозитории, UseCase): `ref.watch` после `await` вызывает бесконечный rebuild-цикл, потому что Riverpod отменяет текущий `build()` при каждой переоценке зависимостей
 - `StreamBuilder` без кэширования не использовать — лишние reads Firestore
 - UI-состояние — локально в виджете, не в провайдере
 - После мутации данных для перезагрузки использовать `ref.invalidateSelf()` — **не вызывать `build()` напрямую**: прямой вызов обходит систему отслеживания зависимостей Riverpod
@@ -295,7 +306,13 @@ abstract class FirestorePaths {
 - Детальная обработка ошибок с разными сообщениями — после MVP
 - Офлайн-предзагрузка медиа — после MVP
 
-### Технический долг (зафиксировать до постMVP-итерации)
+---
+
+## 20. Технический долг
+
+Фиксируется здесь. Решается до постMVP-итерации или при выходе на соответствующую фазу.
+
+### Фазы 1–2 (Auth + Profile)
 
 - **`mapFirebaseException`**: добавить Auth-специфичные коды (`wrong-password`, `user-not-found`, `email-already-in-use`, `weak-password`) → маппить в `AuthError`, сейчас падают в `UnknownError`
 - **Валидация форм** (`AuthorizationScreen`): добавить проверку формата email и минимальной длины пароля
@@ -303,3 +320,17 @@ abstract class FirestorePaths {
 - **`AuthRepository.signUp`**: создаёт документы в Firestore (`public_user_info`, `private_user_info`) — нарушает единственную ответственность. Перенести в отдельный UseCase (`CreateUserProfileUseCase`) или заменить Cloud Function триггером `onCreate`.
 - **`AuthNotifier._isNewUser`**: флаг новой регистрации хранится in-memory — не переживает перезапуск приложения. Если пользователь закрыл приложение до заполнения профиля, при следующем входе попадёт на HomeScreen. Пост-MVP: заменить на поле `onboardingComplete: bool` в `private_user_info` Firestore.
 - **Запоминание входа** (`AuthorizationScreen`): чтобы не приходилось постоянно заново вводить пароль и логин
+
+### Фаза 3 (HomeScreen)
+
+- **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
+- **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант А, MVP). При реализации Фазы 4 добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
+- **Порядок уроков**: `LessonModel` не имеет поля `position`, Firestore не гарантирует порядок документов. Добавить `position: number` в коллекцию `lessons`, сортировать по нему в `LessonRepository`.
+- **Новый пользователь**: при `lastLesson = null` первый урок разблокируется в коде (MVP-решение). Фаза 4: реализовать полноценный онбординг-флоу или подтвердить, что текущего решения достаточно.
+- **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
+- **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
+
+### К Фазе 4 (LessonScreen)
+
+- **Запись `lastLesson`**: при первом тапе на урок (или при его завершении) нужно записывать `lastLesson` и `lastParagraph` в `private_user_info/{userId}/languages/{langId}`. Без этого прогресс не сохраняется между сессиями.
+- **`HomeScreen` → `LessonScreen`**: навигация по `AppRoutes.lessonPath(lessonId)` настроена, но `LessonScreen` ещё не реализован — реализовать в Фазе 4.
