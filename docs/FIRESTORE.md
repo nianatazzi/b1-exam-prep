@@ -153,6 +153,29 @@ public_user_info/                       # коллекция
 
 ---
 
+## Security Rules
+
+**Версия:** `rules_version = '2'` — единственная актуальная версия. Версии 3 не существует.
+
+### Матрица доступа
+
+| Коллекция | Администратор | Авторизованный пользователь |
+|---|---|---|
+| `basic/**` | read + write | read |
+| `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
+| `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
+
+### Правило доработки
+
+> При добавлении новой коллекции или подколлекции в этот файл — **сразу** добавить для неё правило в Firestore Console. Не оставлять на потом.
+
+Новое правило добавляется по шаблону:
+- Контент (читают все пользователи): `allow read: if request.auth != null;`
+- Данные пользователя (только свои): `allow read, write: if request.auth != null && request.auth.uid == userId;`
+- Плюс всегда: `allow read, write: if isAllowed();` для администраторов
+
+---
+
 ## Ключевые решения
 
 | Решение | Причина |

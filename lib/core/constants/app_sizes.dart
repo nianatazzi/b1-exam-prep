@@ -17,4 +17,13 @@ abstract class AppSizes {
   static const double avatarXl = 80;
 
   static const double dividerThickness = 1;
+
+  // Карточка урока на HomeScreen
+  static const double lessonCardWidth   = 200;
+  static const double lessonCardHeight  = 280;
+  static const double timelineDot       = 7;
+  static const double timelineLineWidth = 0.5;
+
+  // Иконка профиля на HomeScreen
+  static const double profileIconSize = 48;
 }

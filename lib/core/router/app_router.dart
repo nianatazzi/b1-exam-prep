@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:linguobyte/core/constants/app_routes.dart';
 import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
 import 'package:linguobyte/features/auth/presentation/authorization_screen.dart';
-import 'package:linguobyte/features/home/presentation/home_screen.dart';
+import 'package:linguobyte/features/home/presentation/screens/home_screen.dart';
 import 'package:linguobyte/features/home/presentation/splash_screen.dart';
 import 'package:linguobyte/features/lesson/presentation/additional_screen.dart';
 import 'package:linguobyte/features/lesson/presentation/lesson_screen.dart';

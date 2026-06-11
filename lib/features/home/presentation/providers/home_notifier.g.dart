@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_notifier.dart';
+part of 'home_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,44 +9,44 @@ part of 'profile_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ProfileNotifier)
-const profileProvider = ProfileNotifierProvider._();
+@ProviderFor(HomeNotifier)
+const homeProvider = HomeNotifierProvider._();
 
-final class ProfileNotifierProvider
-    extends $AsyncNotifierProvider<ProfileNotifier, ProfileData> {
-  const ProfileNotifierProvider._()
+final class HomeNotifierProvider
+    extends $AsyncNotifierProvider<HomeNotifier, HomeState> {
+  const HomeNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'profileProvider',
+        name: r'homeProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$profileNotifierHash();
+  String debugGetCreateSourceHash() => _$homeNotifierHash();
 
   @$internal
   @override
-  ProfileNotifier create() => ProfileNotifier();
+  HomeNotifier create() => HomeNotifier();
 }
 
-String _$profileNotifierHash() => r'6b71fe7ed8c0d56bd754446f7ef3b00ae0f2a1da';
+String _$homeNotifierHash() => r'730bc1aeb78a91e08db3500ae08008a83ed6acd8';
 
-abstract class _$ProfileNotifier extends $AsyncNotifier<ProfileData> {
-  FutureOr<ProfileData> build();
+abstract class _$HomeNotifier extends $AsyncNotifier<HomeState> {
+  FutureOr<HomeState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<ProfileData>, ProfileData>;
+    final ref = this.ref as $Ref<AsyncValue<HomeState>, HomeState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<ProfileData>, ProfileData>,
-              AsyncValue<ProfileData>,
+              AnyNotifier<AsyncValue<HomeState>, HomeState>,
+              AsyncValue<HomeState>,
               Object?,
               Object?
             >;

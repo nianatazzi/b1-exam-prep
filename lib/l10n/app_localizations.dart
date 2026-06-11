@@ -353,6 +353,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get editLabel;
+
+  /// Lesson card badge — lesson completed
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get statusDone;
+
+  /// Lesson card badge — lesson currently active
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get statusInProgress;
+
+  /// Lesson card badge — lesson not yet available
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get statusLocked;
 }
 
 class _AppLocalizationsDelegate

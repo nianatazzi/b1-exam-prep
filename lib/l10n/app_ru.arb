@@ -43,5 +43,8 @@
   "nameLabel": "Имя",
   "surnameLabel": "Фамилия",
   "profileSaved": "Профиль сохранён",
-  "editLabel": "Редактировать"
+  "editLabel": "Редактировать",
+  "statusDone": "Готово",
+  "statusInProgress": "В процессе",
+  "statusLocked": "Закрыто"
 }

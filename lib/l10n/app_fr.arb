@@ -43,5 +43,8 @@
   "nameLabel": "Prénom",
   "surnameLabel": "Nom de famille",
   "profileSaved": "Profil enregistré",
-  "editLabel": "Modifier"
+  "editLabel": "Modifier",
+  "statusDone": "Terminé",
+  "statusInProgress": "En cours",
+  "statusLocked": "Verrouillé"
 }

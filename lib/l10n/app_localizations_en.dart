@@ -133,4 +133,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editLabel => 'Edit';
+
+  @override
+  String get statusDone => 'Done';
+
+  @override
+  String get statusInProgress => 'In progress';
+
+  @override
+  String get statusLocked => 'Locked';
 }

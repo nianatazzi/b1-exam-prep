@@ -133,4 +133,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get editLabel => 'Редактировать';
+
+  @override
+  String get statusDone => 'Готово';
+
+  @override
+  String get statusInProgress => 'В процессе';
+
+  @override
+  String get statusLocked => 'Закрыто';
 }
