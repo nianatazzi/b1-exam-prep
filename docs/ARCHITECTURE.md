@@ -219,7 +219,9 @@ class UnknownError extends AppError {
 - Языки интерфейса MVP: EN, RU, FR, ES
 - **Язык интерфейса** и **язык обучения** — разные сущности, не смешивать:
   - **Язык интерфейса** — выбирается пользователем в `ProfileScreen`. Хранится в `public_user_info/{userId}.preference.uiLanguage`. Управляется через `AppLocaleNotifier` (`core/locale/`). `MaterialApp.locale` берёт значение из этого провайдера.
-  - **Язык обучения** — выбирается на `HomeScreen`. Хранится в `private_user_info/{userId}/languages/{langId}`.
+  - **Язык обучения** — выбирается на `HomeScreen`. Управляется через `HomeNotifier` (`features/home/presentation/providers/`).
+    - Прогресс по каждому языку хранится в `private_user_info/{userId}/languages/{langId}`.
+    - Последний выбранный язык (UI-предпочтение) хранится в `public_user_info/{userId}/preference.selectedLanguage` — восстанавливается при следующем открытии экрана.
 - Все строки интерфейса — только через ARB. Хардкод строк запрещён.
 
 ---

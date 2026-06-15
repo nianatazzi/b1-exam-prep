@@ -3,6 +3,7 @@ import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/home/data/repositories/language_repository.dart';
 import 'package:linguobyte/features/home/domain/models/language_model.dart';
 import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.dart';
+import 'package:linguobyte/features/profile/data/user_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_notifier.g.dart';
@@ -37,7 +38,14 @@ class HomeNotifier extends _$HomeNotifier {
       throw const NotFoundError();
     }
 
-    final selectedLangId = languages.first.id;
+    final saved = await ref
+        .read(userRepositoryProvider)
+        .getSelectedLanguage(_userId);
+
+    final selectedLangId =
+        (saved != null && languages.any((l) => l.id == saved))
+            ? saved
+            : languages.first.id;
 
     final screenData = await ref
         .read(getHomeDataUseCaseProvider)
@@ -68,6 +76,10 @@ class HomeNotifier extends _$HomeNotifier {
           screenData: screenData,
         ),
       );
+
+      await ref
+          .read(userRepositoryProvider)
+          .saveSelectedLanguage(_userId, langId);
     } on AppError catch (e, st) {
       state = AsyncError(e, st);
     } catch (e, st) {
