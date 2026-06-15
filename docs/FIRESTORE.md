@@ -60,22 +60,6 @@ basic/                                  # коллекция
             translation: string
             transcription: string
 
-    exercises/                          # подколлекция
-      {exerciseId}/                     # документ (одно упражнение)
-        type: string                    # "multiple_choice" | "fill_blank" | "translate" | "flashcard" | "wordcard" | "voice_translate" | "mosaic" | "listen_pick"
-        target_language: string
-        course_id: string
-        lesson_id: string               # id урока, к которому относится упражнение
-        subpart_id: string
-        set_id: string
-        position: number                # порядок в уроке
-        difficulty: number
-        grammar_types: array            # список грамматических тем
-        image_url: string | null
-        audio_url: string | null
-        createdAt: timestamp
-        updatedAt: timestamp
-        type_data: map                  # данные, специфичные для типа упражнения
 
     theory_chunks/                      # подколлекция
       {theoryChunkId}/                  # документ (повторное использование теории)
@@ -94,6 +78,24 @@ basic/                                  # коллекция
       botSettings/                      # документ (будущая фича, заглушка)
         enabled: boolean
         greeting: string
+
+
+exercises/                          # подколлекция
+  {exerciseId}/                     # документ (одно упражнение)
+    type: string                    # "multiple_choice" | "fill_blank" | "translate" | "flashcard" | "wordcard" | "voice_translate" | "mosaic" | "listen_pick"
+      target_language: string
+      course_id: string
+      lesson_id: string               # id урока, к которому относится упражнение
+      subpart_id: string
+      set_id: string
+      position: number                # порядок в уроке
+      difficulty: number
+      grammar_types: array            # список грамматических тем
+      image_url: string | null
+      audio_url: string | null
+      createdAt: timestamp
+      updatedAt: timestamp
+      type_data: map                  # данные, специфичные для типа упражнения
 ```
 
 ---
