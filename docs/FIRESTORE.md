@@ -151,6 +151,8 @@ public_user_info/                       # коллекция
     avatar: string                      # url
     points: number
     preference: map                     # {theme, notifications, ...}
+      uiLanguage: string              # язык интерфейса (en | ru | fr | es)
+      selectedLanguage: string        # id языка обучения (en | es | fr | ru)
 ```
 
 ---

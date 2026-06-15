@@ -62,6 +62,36 @@ class UserRepository {
     }
   }
 
+  Future<void> saveSelectedLanguage(String userId, String langId) async {
+    try {
+      await _firestore
+          .doc(FirestorePaths.publicUser(userId))
+          .update({'preference.selectedLanguage': langId});
+    } on AppError {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
+  }
+
+  Future<String?> getSelectedLanguage(String userId) async {
+    try {
+      final doc = await _firestore.doc(FirestorePaths.publicUser(userId)).get();
+      if (!doc.exists || doc.data() == null) return null;
+      final preference = doc.data()!['preference'];
+      if (preference is! Map) return null;
+      return preference['selectedLanguage'] as String?;
+    } on AppError {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
+  }
+
   /// Создаёт документ языка с начальными значениями прогресса.
   /// SetOptions(merge: true) гарантирует, что существующий прогресс не сбрасывается.
   Future<void> updateLearningLanguage(String userId, String langId) async {
