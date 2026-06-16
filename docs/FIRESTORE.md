@@ -27,7 +27,7 @@ basic/                                  # коллекция
 
         theory/                         # подколлекция
           {theoryId}/                   # документ
-            id: number
+            th_id: number
             lesson_id: number
             topic: string
             title: string
@@ -54,7 +54,7 @@ basic/                                  # коллекция
             createdAt: timestamp
             updatedAt: timestamp
             duration: number
-            id: number
+            voc_id: number
             lesson_id: number
             reward: number
             set_title: string           # название всей темы
@@ -62,7 +62,7 @@ basic/                                  # коллекция
 
         verbs/                          # подколлекция "матрица глаголов", спряжение
           {verbID}/                     # документ
-            id: number
+            v_id: number
             lesson_id: number
             title: string
             type: string
@@ -106,7 +106,7 @@ exercises/                          # коллекция
       createdAt: timestamp
       updatedAt: timestamp
       type_data: map                  # данные, специфичные для типа упражнения
-      id: number
+      ex_id: number
 ```
 
 ---
