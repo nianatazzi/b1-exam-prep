@@ -23,16 +23,16 @@ class LessonCard extends StatelessWidget {
     this.onTap,
   });
 
-  /// Вычисляет состояние конкретной субчасти исходя из состояния карточки.
-  LessonCardState _subpartState(int number) {
+  /// Вычисляет состояние субчасти по её позиции (0-based index) в списке.
+  LessonCardState _subpartState(int index) {
     switch (cardData.state) {
       case LessonCardState.done:
         return LessonCardState.done;
       case LessonCardState.locked:
         return LessonCardState.locked;
       case LessonCardState.active:
-        if (number <= cardData.lastParagraph) return LessonCardState.done;
-        if (number == cardData.lastParagraph + 1) return LessonCardState.active;
+        if (index < cardData.lastParagraph) return LessonCardState.done;
+        if (index == cardData.lastParagraph) return LessonCardState.active;
         return LessonCardState.locked;
     }
   }
@@ -135,7 +135,7 @@ class LessonCard extends StatelessWidget {
                       final sp = subparts[i];
                       return _SubpartRow(
                         subpart: sp,
-                        state: _subpartState(sp.number),
+                        state: _subpartState(i),
                         isLast: i == subparts.length - 1,
                       );
                     }),

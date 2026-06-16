@@ -15,9 +15,6 @@ LessonRepository lessonRepository(Ref ref) =>
 class LessonRepository implements ILessonRepository {
   final FirebaseFirestore _firestore;
 
-  // Имя поля сортировки — вынесено чтобы не хардкодить строку в запросе
-  static const _fieldNumber = 'number';
-
   const LessonRepository(this._firestore);
 
   @override
@@ -43,7 +40,7 @@ class LessonRepository implements ILessonRepository {
     try {
       final snapshot = await _firestore
           .collection(FirestorePaths.theory(langId, lessonId))
-          .orderBy(_fieldNumber)
+          .orderBy(FieldPath.documentId)
           .get();
       return snapshot.docs
           .map((doc) =>

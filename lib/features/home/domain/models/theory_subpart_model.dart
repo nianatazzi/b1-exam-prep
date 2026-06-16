@@ -11,7 +11,6 @@ abstract class TheorySubpartModel with _$TheorySubpartModel {
   const factory TheorySubpartModel({
     // id берётся из DocumentSnapshot.id — не хранится в теле документа
     @JsonKey(includeToJson: false) required String id,
-    required int number,
     required String topic,
   }) = _TheorySubpartModel;
 
