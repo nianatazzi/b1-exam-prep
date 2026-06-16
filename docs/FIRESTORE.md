@@ -27,8 +27,8 @@ basic/                                  # коллекция
 
         theory/                         # подколлекция
           {theoryId}/                   # документ
-            id: string
-            number: number              # порядок блока
+            id: number
+            lesson_id: number
             topic: string
             title: string
             text: string
@@ -51,9 +51,19 @@ basic/                                  # коллекция
             title: string
             translation: string
             transcription: string
+            createdAt: timestamp
+            updatedAt: timestamp
+            duration: number
+            id: number
+            lesson_id: number
+            reward: number
+            set_title: string           # название всей темы
+
 
         verbs/                          # подколлекция "матрица глаголов", спряжение
           {verbID}/                     # документ
+            id: number
+            lesson_id: number
             title: string
             type: string
             conjugation: map
@@ -82,13 +92,13 @@ basic/                                  # коллекция
 
 exercises/                          # подколлекция
   {exerciseId}/                     # документ (одно упражнение)
-    type: string                    # "multiple_choice" | "fill_blank" | "translate" | "flashcard" | "wordcard" | "voice_translate" | "mosaic" | "listen_pick"
+    type: string                    # "wordcard" | "flashcard" | "multiple_choice" | "fill_blank" | "mosaic" | "translate" | "listen_pick" | "voice_translate"
       target_language: string
       course_id: string
-      lesson_id: string               # id урока, к которому относится упражнение
-      subpart_id: string
-      set_id: string
-      position: number                # порядок в уроке
+      lesson_id: number               # id урока, к которому относится упражнение
+      linked_item_id: number          # id подраздела урока
+      segment_type: string            # тип подраздела
+      permission: string              # платный или бесплатный контент
       difficulty: number
       grammar_types: array            # список грамматических тем
       image_url: string | null
@@ -96,6 +106,7 @@ exercises/                          # подколлекция
       createdAt: timestamp
       updatedAt: timestamp
       type_data: map                  # данные, специфичные для типа упражнения
+      id: number
 ```
 
 ---
