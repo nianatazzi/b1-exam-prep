@@ -78,19 +78,19 @@ basic/                                  # коллекция
         usedInLesson: string            # id урока, где используется
 
     service/                            # подколлекция
-      basic_vocabulary/                 # документ
+      {basic_vocabulary}/                 # документ
         words: array
 
-      AIPreference/                     # документ (будущая фича, заглушка)
+      {AIPreference}/                     # документ (будущая фича, заглушка)
         model: string
         prompt: string
 
-      botSettings/                      # документ (будущая фича, заглушка)
+      {botSettings}/                      # документ (будущая фича, заглушка)
         enabled: boolean
         greeting: string
 
 
-exercises/                          # подколлекция
+exercises/                          # коллекция
   {exerciseId}/                     # документ (одно упражнение)
     type: string                    # "wordcard" | "flashcard" | "multiple_choice" | "fill_blank" | "mosaic" | "translate" | "listen_pick" | "voice_translate"
       target_language: string
