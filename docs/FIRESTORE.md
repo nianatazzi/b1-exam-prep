@@ -22,7 +22,7 @@ basic/                                  # коллекция
 
     lessons/                            # подколлекция
       {lessonId}/                       # документ
-        id: string
+        id: number
         theme: string
 
         theory/                         # подколлекция
