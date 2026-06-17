@@ -345,17 +345,15 @@ abstract class FirestorePaths {
 ### Фаза 3 (HomeScreen)
 
 - **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
-- **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант А, MVP). При реализации Фазы 4 добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
-- **Порядок уроков**: `LessonModel` не имеет поля `position`, Firestore не гарантирует порядок документов. Добавить `position: number` в коллекцию `lessons`, сортировать по нему в `LessonRepository`.
-- **Новый пользователь**: подтверждено — при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Полноценный онбординг для MVP не требуется.
+- **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант MVP). После MVP добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
+- **Новый пользователь**: сделать после реализации Фазы 4 — при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Полноценный онбординг для MVP не требуется.
 - **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
 - **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
 
 ### К Фазе 4 (LessonScreen)
 
 - **Запись `lastLesson`/`lastParagraph`**: при завершении упражнений очередного шага урока — обновлять `lastLesson` и `lastParagraph` в `private_user_info/{userId}/languages/{langId}`. `lastParagraph` хранит индекс последней завершённой пары "контент+упражнения" (см. раздел 6.1).
+- **Связь блоков и упражнений**: через `course_id` (`"{courseType}_{langId}"`), `lesson_id`, `segment_type` (`"theory" | "vocab" | "verb"`), `linked_item_id` (= номер блока theory/verbs). Подробности — FIRESTORE.md.
+- **Меню быстрого перехода между блоками урока**: нужно продумать быстрый переход между всеми блоками урока(theory, lexical_set, verbs). Может быть есть смысл связать с `LessonCard` из HomeScreen и прогрессом пользователя, т.к. это похожая сущность. Реализуется отдельным промтом после базовой версии LessonScreen.
 - **`AppRoutes.lessonPath`**: обновить сигнатуру — `lessonPath(langId, lessonId)`.
-- **Связь блоков и упражнений**: через `course_id` (`"{courseType}_{langId}"`), `lesson_id`, `segment_type` (`"theory" | "vocab" | "verb"`), `linked_item_id` (= `id` блока теории/лексики/глаголов). Подробности — FIRESTORE.md.
-- **Меню быстрого перехода между блоками урока**: спроектировано (список всех блоков, состояния done/active/locked как у `LessonCard`, переход разрешён только на done/active, переход — на начало блока). Реализуется отдельным промтом после базовой версии LessonScreen.
-- **`completedExercises`**: всё ещё отложено (см. Фаза 3) — добавить в схему Firestore и вернуть exercise dots в `LessonCard` при появлении такой необходимости.
 - **Additional / подписка**: в базовой реализации `AdditionalScreen` — заглушка без проверки `subscription.plan`. Гейтинг по подписке — после MVP.
