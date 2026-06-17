@@ -2,7 +2,7 @@
 
 ## Firestore Structure
 
-Три корневых коллекции: `basic`, `private_user_info`, `public_user_info`.
+Три корневых коллекции: `basic`, `exercises`, `private_user_info`, `public_user_info`.
 
 **Обозначения:**
 - `name/` — коллекция или документ-контейнер
@@ -22,13 +22,13 @@ basic/                                  # коллекция
 
     lessons/                            # подколлекция
       {lessonId}/                       # документ
-        l_id: number
+        l_id: number                    # порядковый номер
         theme: string
 
         theory/                         # подколлекция
           {theoryId}/                   # документ
-            th_id: number
-            lesson_id: number
+            th_id: number               # порядковый номер 
+            lesson_id: number           # указатель на урок 
             topic: string
             title: string
             text: string
@@ -54,16 +54,16 @@ basic/                                  # коллекция
             createdAt: timestamp
             updatedAt: timestamp
             duration: number
-            voc_id: number
-            lesson_id: number
+            voc_id: number              # порядковый номер
+            lesson_id: number           # указатель на урок 
             reward: number
             set_title: string           # название всей темы
 
 
         verbs/                          # подколлекция "матрица глаголов", спряжение
           {verbID}/                     # документ
-            v_id: number
-            lesson_id: number
+            v_id: number                # порядковый номер
+            lesson_id: number           # указатель на урок 
             title: string
             type: string
             conjugation: map
@@ -94,10 +94,10 @@ exercises/                          # коллекция
   {exerciseId}/                     # документ (одно упражнение)
     type: string                    # "wordcard" | "flashcard" | "multiple_choice" | "fill_blank" | "mosaic" | "translate" | "listen_pick" | "voice_translate"
       target_language: string
-      course_id: string
+      course_id: string             # указатель на какой курс (например: basic_fr) 
       lesson_id: number               # id урока, к которому относится упражнение
-      linked_item_id: number          # id подраздела урока
-      segment_type: string            # тип подраздела
+      linked_item_id: number          # id подраздела урока (theory или verbs | lexical_set не имеет)
+      segment_type: string            # тип подраздела (theory | lexical_set | verbs)
       permission: string              # платный или бесплатный контент
       difficulty: number
       grammar_types: array            # список грамматических тем
@@ -106,7 +106,7 @@ exercises/                          # коллекция
       createdAt: timestamp
       updatedAt: timestamp
       type_data: map                  # данные, специфичные для типа упражнения
-      ex_id: number
+      ex_id: number                   # порядковый номер 
 ```
 
 ---
@@ -195,14 +195,13 @@ public_user_info/                       # коллекция
 
 | Решение | Причина |
 |---|---|
-| Контент (`basic`) отделён от данных пользователя | Контент обновляется независимо от прогресса пользователей |
+| Контент (`basic` и `exercises`) отделён от данных пользователя | Контент обновляется независимо от прогресса пользователей |
 | Приватные и публичные данные в разных коллекциях | Безопасность: публичный профиль читают все, приватный — только владелец |
 | `theory_chunks` вынесены на уровень языка | Блоки теории могут переиспользоваться в нескольких уроках и используются при слабых результатах в упражнениях |
 | Прогресс хранится внутри `private_user_info/{userId}/languages/{langId}` | Один запрос — весь прогресс по языку |
 | `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`), к уроку через `lesson_id`, к блоку через `segment_type` + `linked_item_id` |
-| Порядок уроков, блоков теории/лексики и упражнений — по полю `id`, без отдельного поля `position` | Перестановки контента не планируются; не плодим лишние поля |
+| Порядок lesson - по полю `l_id`, theory - по полю `th_id`, lexical_set - по полю `voc_id`, verbs - по полю `v_id`, exercise — по полю `ex_id`|
 | `subscription` — map с `plan` и `expiresAt` | Позволяет хранить тип подписки и дату истечения; легко расширяется (например, `autoRenew`) |
-| `exercises` расширены полями из Eraiser-модели | Поддержка медиа, сложности, грамматических тегов и гибкого `type_data` для разных типов упражнений |
 | `oral_progress`, `grammar_progress`, `lexicon_progress` — отдельные числа | Простота чтения и обновления на MVP; `progress: map` оставлен как заглушка для детального трекинга |
 | `personalized_courses` — заглушка | Зарезервировано для персональных курсов (например, подготовка к просмотру фильмов) |
 | `AIPreference`, `botSettings` — заглушки в `service` | Будущие фичи после MVP |
