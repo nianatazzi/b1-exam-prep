@@ -9,6 +9,7 @@ abstract class LessonModel with _$LessonModel {
   const factory LessonModel({
     // id берётся из DocumentSnapshot.id — не хранится в теле документа
     @JsonKey(includeToJson: false) required String id,
+    @JsonKey(name: 'l_id') required int lId,
     required String theme,
   }) = _LessonModel;
 

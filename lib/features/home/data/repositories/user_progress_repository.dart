@@ -33,4 +33,23 @@ class UserProgressRepository implements IUserProgressRepository {
       throw UnknownError(e.toString());
     }
   }
+
+  @override
+  Future<void> updateProgress(
+    String userId,
+    String langId,
+    String lastLesson,
+    int lastParagraph,
+  ) async {
+    try {
+      await _firestore.doc(FirestorePaths.userLanguage(userId, langId)).update({
+        'lastLesson': lastLesson,
+        'lastParagraph': lastParagraph,
+      });
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
+  }
 }

@@ -142,4 +142,34 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get statusLocked => 'Закрыто';
+
+  @override
+  String get lexicalSection => 'Лексика';
+
+  @override
+  String get verbsSection => 'Спряжение глаголов';
+
+  @override
+  String get additionalSection => 'Доп. материалы';
+
+  @override
+  String get lessonContents => 'Содержание';
+
+  @override
+  String get toExercisesButton => 'К упражнениям';
+
+  @override
+  String get nextButton => 'Далее';
+
+  @override
+  String get completeStepButton => 'Завершить';
+
+  @override
+  String get lessonCompleteTitle => 'Урок завершён!';
+
+  @override
+  String get courseCompleteTitle => 'Курс завершён!';
+
+  @override
+  String get backToHomeButton => 'На главную';
 }

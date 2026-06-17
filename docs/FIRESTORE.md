@@ -67,8 +67,8 @@ basic/                                  # коллекция
             title: string
             type: string
             conjugation: map
-            translation: string
-            transcription: string
+            translation: map            # {en: string, ru: string, es: string, ...} — перевод на язык интерфейса
+            transcription: map          # {en: string, ru: string, es: string, ...} — транскрипция для носителей разных языков
 
 
     theory_chunks/                      # подколлекция
@@ -199,7 +199,7 @@ public_user_info/                       # коллекция
 | Приватные и публичные данные в разных коллекциях | Безопасность: публичный профиль читают все, приватный — только владелец |
 | `theory_chunks` вынесены на уровень языка | Блоки теории могут переиспользоваться в нескольких уроках и используются при слабых результатах в упражнениях |
 | Прогресс хранится внутри `private_user_info/{userId}/languages/{langId}` | Один запрос — весь прогресс по языку |
-| `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`), к уроку через `lesson_id`, к блоку через `segment_type` + `linked_item_id` |
+| `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`, например `basic_fr`), к уроку через `lesson_id` (= числовой `l_id` документа урока, не строка id), к блоку через `segment_type` + `linked_item_id`. Все упражнения урока загружаются одним запросом и группируются в памяти. |
 | Порядок lesson - по полю `l_id`, theory - по полю `th_id`, lexical_set - по полю `voc_id`, verbs - по полю `v_id`, exercise — по полю `ex_id`|
 | `subscription` — map с `plan` и `expiresAt` | Позволяет хранить тип подписки и дату истечения; легко расширяется (например, `autoRenew`) |
 | `oral_progress`, `grammar_progress`, `lexicon_progress` — отдельные числа | Простота чтения и обновления на MVP; `progress: map` оставлен как заглушка для детального трекинга |

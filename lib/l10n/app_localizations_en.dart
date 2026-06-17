@@ -142,4 +142,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusLocked => 'Locked';
+
+  @override
+  String get lexicalSection => 'Vocabulary';
+
+  @override
+  String get verbsSection => 'Verb conjugation';
+
+  @override
+  String get additionalSection => 'Additional materials';
+
+  @override
+  String get lessonContents => 'Contents';
+
+  @override
+  String get toExercisesButton => 'To exercises';
+
+  @override
+  String get nextButton => 'Next';
+
+  @override
+  String get completeStepButton => 'Complete';
+
+  @override
+  String get lessonCompleteTitle => 'Lesson complete!';
+
+  @override
+  String get courseCompleteTitle => 'Course complete!';
+
+  @override
+  String get backToHomeButton => 'Back to home';
 }

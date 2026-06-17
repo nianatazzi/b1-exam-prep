@@ -122,6 +122,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 data: (state) => _LessonList(
                   cards: state.screenData.lessonCards,
+                  selectedLangId: state.selectedLangId,
                   controller: _scrollController,
                   cardGap: _cardGap,
                 ),
@@ -247,11 +248,13 @@ class _LanguagePickerSheet extends StatelessWidget {
 
 class _LessonList extends StatelessWidget {
   final List<LessonCardData> cards;
+  final String selectedLangId;
   final ScrollController controller;
   final double cardGap;
 
   const _LessonList({
     required this.cards,
+    required this.selectedLangId,
     required this.controller,
     required this.cardGap,
   });
@@ -296,7 +299,10 @@ class _LessonList extends StatelessWidget {
                 onTap: cards[i].state == LessonCardState.locked
                     ? null
                     : () => context.push(
-                        AppRoutes.lessonPath(cards[i].lesson.id),
+                        AppRoutes.lessonPath(
+                          selectedLangId,
+                          cards[i].lesson.id,
+                        ),
                       ),
               ),
             ],

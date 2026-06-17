@@ -20,7 +20,7 @@ abstract class AppSizes {
 
   // Карточка урока на HomeScreen
   static const double lessonCardWidth   = 200;
-  static const double lessonCardHeight  = 280;
+  static const double lessonCardHeight  = 320;
   static const double timelineDot       = 7;
   static const double timelineLineWidth = 0.5;
 

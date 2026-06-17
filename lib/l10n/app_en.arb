@@ -134,5 +134,35 @@
   "@statusInProgress": { "description": "Lesson card badge — lesson currently active" },
 
   "statusLocked": "Locked",
-  "@statusLocked": { "description": "Lesson card badge — lesson not yet available" }
+  "@statusLocked": { "description": "Lesson card badge — lesson not yet available" },
+
+  "lexicalSection": "Vocabulary",
+  "@lexicalSection": { "description": "General label for the lexical step in lesson card and nav panel" },
+
+  "verbsSection": "Verb conjugation",
+  "@verbsSection": { "description": "Label for the verbs step in lesson card and nav panel" },
+
+  "additionalSection": "Additional materials",
+  "@additionalSection": { "description": "Label for additional materials in lesson nav panel" },
+
+  "lessonContents": "Contents",
+  "@lessonContents": { "description": "Button/tooltip to open lesson navigation panel" },
+
+  "toExercisesButton": "To exercises",
+  "@toExercisesButton": { "description": "Button to proceed from content to exercises in a lesson step" },
+
+  "nextButton": "Next",
+  "@nextButton": { "description": "Advance to next exercise" },
+
+  "completeStepButton": "Complete",
+  "@completeStepButton": { "description": "Mark current lesson step as completed" },
+
+  "lessonCompleteTitle": "Lesson complete!",
+  "@lessonCompleteTitle": { "description": "Shown when the user finishes all steps in a lesson" },
+
+  "courseCompleteTitle": "Course complete!",
+  "@courseCompleteTitle": { "description": "Shown when the user finishes the last lesson" },
+
+  "backToHomeButton": "Back to home",
+  "@backToHomeButton": { "description": "Button to return to HomeScreen after completing a lesson or course" }
 }

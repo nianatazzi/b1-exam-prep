@@ -5,4 +5,11 @@ abstract class IUserProgressRepository {
     String userId,
     String langId,
   );
+
+  Future<void> updateProgress(
+    String userId,
+    String langId,
+    String lastLesson,
+    int lastParagraph,
+  );
 }

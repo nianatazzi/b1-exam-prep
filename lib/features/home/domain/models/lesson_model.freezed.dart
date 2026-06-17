@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$LessonModel {
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
-@JsonKey(includeToJson: false) String get id; String get theme;
+@JsonKey(includeToJson: false) String get id;@JsonKey(name: 'l_id') int get lId; String get theme;
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $LessonModelCopyWith<LessonModel> get copyWith => _$LessonModelCopyWithImpl<Less
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.theme, theme) || other.theme == theme));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.lId, lId) || other.lId == lId)&&(identical(other.theme, theme) || other.theme == theme));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,theme);
+int get hashCode => Object.hash(runtimeType,id,lId,theme);
 
 @override
 String toString() {
-  return 'LessonModel(id: $id, theme: $theme)';
+  return 'LessonModel(id: $id, lId: $lId, theme: $theme)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $LessonModelCopyWith<$Res>  {
   factory $LessonModelCopyWith(LessonModel value, $Res Function(LessonModel) _then) = _$LessonModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String theme
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 'l_id') int lId, String theme
 });
 
 
@@ -66,10 +66,11 @@ class _$LessonModelCopyWithImpl<$Res>
 
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? theme = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? lId = null,Object? theme = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as String,lId: null == lId ? _self.lId : lId // ignore: cast_nullable_to_non_nullable
+as int,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String theme)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'l_id')  int lId,  String theme)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LessonModel() when $default != null:
-return $default(_that.id,_that.theme);case _:
+return $default(_that.id,_that.lId,_that.theme);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.id,_that.theme);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String theme)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'l_id')  int lId,  String theme)  $default,) {final _that = this;
 switch (_that) {
 case _LessonModel():
-return $default(_that.id,_that.theme);case _:
+return $default(_that.id,_that.lId,_that.theme);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.id,_that.theme);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String theme)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'l_id')  int lId,  String theme)?  $default,) {final _that = this;
 switch (_that) {
 case _LessonModel() when $default != null:
-return $default(_that.id,_that.theme);case _:
+return $default(_that.id,_that.lId,_that.theme);case _:
   return null;
 
 }
@@ -211,11 +212,12 @@ return $default(_that.id,_that.theme);case _:
 @JsonSerializable()
 
 class _LessonModel implements LessonModel {
-  const _LessonModel({@JsonKey(includeToJson: false) required this.id, required this.theme});
+  const _LessonModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'l_id') required this.lId, required this.theme});
   factory _LessonModel.fromJson(Map<String, dynamic> json) => _$LessonModelFromJson(json);
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
 @override@JsonKey(includeToJson: false) final  String id;
+@override@JsonKey(name: 'l_id') final  int lId;
 @override final  String theme;
 
 /// Create a copy of LessonModel
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.theme, theme) || other.theme == theme));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.lId, lId) || other.lId == lId)&&(identical(other.theme, theme) || other.theme == theme));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,theme);
+int get hashCode => Object.hash(runtimeType,id,lId,theme);
 
 @override
 String toString() {
-  return 'LessonModel(id: $id, theme: $theme)';
+  return 'LessonModel(id: $id, lId: $lId, theme: $theme)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$LessonModelCopyWith<$Res> implements $LessonModelCopyWith
   factory _$LessonModelCopyWith(_LessonModel value, $Res Function(_LessonModel) _then) = __$LessonModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String theme
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 'l_id') int lId, String theme
 });
 
 
@@ -268,10 +270,11 @@ class __$LessonModelCopyWithImpl<$Res>
 
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? theme = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? lId = null,Object? theme = null,}) {
   return _then(_LessonModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
+as String,lId: null == lId ? _self.lId : lId // ignore: cast_nullable_to_non_nullable
+as int,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
