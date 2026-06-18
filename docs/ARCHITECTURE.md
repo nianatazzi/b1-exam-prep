@@ -152,7 +152,7 @@ lib/
 
 1. **theory** — блоки сортируются по полю `th_id`. Каждый блок образует отдельный `TheoryLessonStep` со своими упражнениями (`segment_type = "theory"`, `linked_item_id = th_id`).
 2. **lexical_set** — один `LexicalLessonStep`: все блоки подряд (сортировка по `voc_id`), затем все упражнения (`segment_type = "vocab"`).
-3. **verbs** — один `VerbsLessonStep`: таблица всех документов (сортировка по `v_id`), затем все упражнения (`segment_type = "verb"`).
+3. **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (по одному на документ, сортировка по `v_id`). Каждый суб-шаг: таблица спряжения глагола → упражнения именно на него (`segment_type = "verb"`, `linked_item_id = v_id`). Суб-навигация — локальный стейт `VerbsStepWidget`; для `HomeScreen` и `progressIndex` вся пара остаётся одним шагом.
 4. **additional** — не входит в `List<LessonStep>`, хранится отдельно в `LessonState.additional`. Доступен всегда через навигационную панель, не блокирует завершение урока.
 
 Порядок фиксирован: theory[] → lexical? → verbs?. Блоки lexical/verbs добавляются только если их коллекции непусты.

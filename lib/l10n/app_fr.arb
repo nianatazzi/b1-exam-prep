@@ -57,5 +57,10 @@
   "lessonCompleteTitle": "Leçon terminée !",
   "courseCompleteTitle": "Cours terminé !",
   "backToHomeButton": "Retour à l'accueil",
-  "verbTranslationColumn": "Traduction"
+  "verbTranslationColumn": "Traduction",
+  "nextVerbButton": "Verbe suivant",
+  "tenseFuture": "Futur",
+  "tensePresent": "Présent",
+  "tensePast": "Passé",
+  "finalSection": "Exercices finaux"
 }

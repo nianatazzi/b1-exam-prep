@@ -177,4 +177,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get verbTranslationColumn => 'Traduction';
+
+  @override
+  String get nextVerbButton => 'Verbe suivant';
+
+  @override
+  String get tenseFuture => 'Futur';
+
+  @override
+  String get tensePresent => 'Présent';
+
+  @override
+  String get tensePast => 'Passé';
+
+  @override
+  String get finalSection => 'Exercices finaux';
 }

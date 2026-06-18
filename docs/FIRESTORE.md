@@ -92,7 +92,7 @@ basic/                                  # коллекция
 
 exercises/                          # коллекция
   {exerciseId}/                     # документ (одно упражнение)
-    type: string                    # "wordcard" | "flashcard" | "multiple_choice" | "fill_blank" | "mosaic" | "translate" | "listen_pick" | "voice_translate"
+    type: string                    # "wordcard" | "flashcard" | "multiple_choice" | "fill_blank" | "mosaic" | "translate_sentence" | "listen_pick" | "voice_translate"
       target_language: string
       course_id: string             # указатель на какой курс (например: basic_fr) 
       lesson_id: number               # id урока, к которому относится упражнение

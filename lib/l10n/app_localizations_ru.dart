@@ -175,4 +175,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get verbTranslationColumn => 'Перевод';
+
+  @override
+  String get nextVerbButton => 'Следующий глагол';
+
+  @override
+  String get tenseFuture => 'Будущее';
+
+  @override
+  String get tensePresent => 'Настоящее';
+
+  @override
+  String get tensePast => 'Прошедшее';
+
+  @override
+  String get finalSection => 'Финальные упражнения';
 }

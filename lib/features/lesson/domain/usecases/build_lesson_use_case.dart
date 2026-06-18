@@ -96,11 +96,12 @@ class BuildLessonUseCase {
 
     // Группировка упражнений по типу
     final theoryExByBlockId = _groupTheoryExercises(allExercises);
+    final verbExByVId = _groupVerbExercises(allExercises);
     final vocabExercises = allExercises
         .where((e) => e.segmentType == 'vocab')
         .toList();
-    final verbExercises = allExercises
-        .where((e) => e.segmentType == 'verb')
+    final finalExercises = allExercises
+        .where((e) => e.segmentType == 'final')
         .toList();
 
     // Сборка детерминированной последовательности шагов
@@ -113,7 +114,16 @@ class BuildLessonUseCase {
       if (lexicalSets.isNotEmpty)
         LexicalLessonStep(sets: lexicalSets, exercises: vocabExercises),
       if (verbs.isNotEmpty)
-        VerbsLessonStep(verbs: verbs, exercises: verbExercises),
+        VerbsLessonStep(
+          verbSubSteps: verbs
+              .map((v) => VerbSubStep(
+                    verb: v,
+                    exercises: verbExByVId[v.vId] ?? [],
+                  ))
+              .toList(),
+        ),
+      if (finalExercises.isNotEmpty)
+        FinalLessonStep(exercises: finalExercises),
     ];
 
     // lastParagraph осмыслен только для текущего урока (progress.lastLesson).
@@ -137,6 +147,19 @@ class BuildLessonUseCase {
     final result = <int, List<ExerciseModel>>{};
     for (final ex in exercises) {
       if (ex.segmentType != 'theory') continue;
+      final key = ex.linkedItemId ?? 0;
+      result.putIfAbsent(key, () => []).add(ex);
+    }
+    return result;
+  }
+
+  /// Группирует verb-упражнения по linked_item_id (= v_id глагола).
+  Map<int, List<ExerciseModel>> _groupVerbExercises(
+    List<ExerciseModel> exercises,
+  ) {
+    final result = <int, List<ExerciseModel>>{};
+    for (final ex in exercises) {
+      if (ex.segmentType != 'verb') continue;
       final key = ex.linkedItemId ?? 0;
       result.putIfAbsent(key, () => []).add(ex);
     }
