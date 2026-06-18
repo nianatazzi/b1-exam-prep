@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/features/home/domain/models/theory_subpart_model.dart';
 import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 
 /// Карточка одного урока на HomeScreen.
 /// Состояние (done / active / locked) приходит уже вычисленным в [LessonCardData].
@@ -23,8 +23,8 @@ class LessonCard extends StatelessWidget {
     this.onTap,
   });
 
-  /// Вычисляет состояние субчасти по её позиции (0-based index) в списке.
-  LessonCardState _subpartState(int index) {
+  /// Вычисляет состояние шага по его позиции (0-based index) в списке.
+  LessonCardState _stepState(int index) {
     switch (cardData.state) {
       case LessonCardState.done:
         return LessonCardState.done;
@@ -45,17 +45,14 @@ class LessonCard extends StatelessWidget {
     final state = cardData.state;
     final isLocked = state == LessonCardState.locked;
 
-    // Цвет номера урока
     final numberColor = isLocked
         ? cs.onSurface.withValues(alpha: 0.4)
         : cs.primary;
 
-    // Цвет заголовка — яркий для всех состояний
     final themeTextColor = isLocked
         ? cs.onSurface.withValues(alpha: 0.5)
         : cs.onSurface;
 
-    // Рамка по состоянию (без Opacity-виджета на всю карточку)
     final BoxBorder border;
     final List<BoxShadow> shadow;
     switch (state) {
@@ -79,9 +76,8 @@ class LessonCard extends StatelessWidget {
         '${l10n.lessonTitle} ${(lessonIndex + 1).toString().padLeft(2, '0')}'
             .toUpperCase();
 
-    final subparts = cardData.subparts;
+    final steps = cardData.steps;
 
-    // Фиксированный размер — ClipRect обрезает если контент не помещается
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -91,7 +87,6 @@ class LessonCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusLg),
           child: Container(
             decoration: BoxDecoration(
-              // colorScheme.surface вместо surfaceRaised — насыщеннее на тёмной теме
               color: cs.surface,
               borderRadius: BorderRadius.circular(AppSizes.radiusLg),
               border: border,
@@ -128,15 +123,16 @@ class LessonCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
-                // ── СПИСОК СУБЧАСТЕЙ ──
+                // ── СПИСОК ШАГОВ ──
                 Expanded(
                   child: Column(
-                    children: List.generate(subparts.length, (i) {
-                      final sp = subparts[i];
-                      return _SubpartRow(
-                        subpart: sp,
-                        state: _subpartState(i),
-                        isLast: i == subparts.length - 1,
+                    children: List.generate(steps.length, (i) {
+                      final step = steps[i];
+                      return _StepRow(
+                        step: step,
+                        state: _stepState(i),
+                        isLast: i == steps.length - 1,
+                        l10n: l10n,
                       );
                     }),
                   ),
@@ -164,18 +160,28 @@ class LessonCard extends StatelessWidget {
   }
 }
 
-// ── Строка субчасти с timeline-колонкой слева ───────────────────────────────
+// ── Строка шага с timeline-колонкой слева ────────────────────────────────────
 
-class _SubpartRow extends StatelessWidget {
-  final TheorySubpartModel subpart;
+class _StepRow extends StatelessWidget {
+  final LessonStepSummary step;
   final LessonCardState state;
   final bool isLast;
+  final AppLocalizations l10n;
 
-  const _SubpartRow({
-    required this.subpart,
+  const _StepRow({
+    required this.step,
     required this.state,
     required this.isLast,
+    required this.l10n,
   });
+
+  String _displayTitle() {
+    return switch (step.type) {
+      LessonStepType.theory => step.title,
+      LessonStepType.lexical => l10n.lexicalSection,
+      LessonStepType.verbs => l10n.verbsSection,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +206,6 @@ class _SubpartRow extends StatelessWidget {
         textColor = cs.onSurface.withValues(alpha: 0.6);
     }
 
-    // IntrinsicHeight нужен, чтобы вертикальная линия растянулась на высоту строки
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,7 +240,7 @@ class _SubpartRow extends StatelessWidget {
                 bottom: AppSpacing.sm,
               ),
               child: Text(
-                subpart.topic,
+                _displayTitle(),
                 style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

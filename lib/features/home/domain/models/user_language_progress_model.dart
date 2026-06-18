@@ -12,9 +12,12 @@ abstract class UserLanguageProgressModel with _$UserLanguageProgressModel {
     // null = новый пользователь, все уроки locked
     String? lastLesson,
     required int lastParagraph,
-    @JsonKey(name: 'oral_progress') required int oralProgress,
-    @JsonKey(name: 'grammar_progress') required int grammarProgress,
-    @JsonKey(name: 'lexicon_progress') required int lexiconProgress,
+    // @Default(0) — документ прогресса может быть создан частично (updateProgress
+    // пишет только lastLesson/lastParagraph). Эти поля — заглушки детального
+    // прогресса; реальные значения, когда появятся, читаются как обычно.
+    @JsonKey(name: 'oral_progress') @Default(0) int oralProgress,
+    @JsonKey(name: 'grammar_progress') @Default(0) int grammarProgress,
+    @JsonKey(name: 'lexicon_progress') @Default(0) int lexiconProgress,
   }) = _UserLanguageProgressModel;
 
   factory UserLanguageProgressModel.fromJson(Map<String, dynamic> json) =>

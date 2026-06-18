@@ -11,10 +11,16 @@ abstract class FirestorePaths {
       '$basic/$langId/lessons/$lessonId';
   static String theory(String langId, String lessonId) =>
       '$basic/$langId/lessons/$lessonId/theory';
+  static String lexicalSet(String langId, String lessonId) =>
+      '$basic/$langId/lessons/$lessonId/lexical_set';
+  static String verbs(String langId, String lessonId) =>
+      '$basic/$langId/lessons/$lessonId/verbs';
   static String additional(String langId, String lessonId) =>
       '$basic/$langId/lessons/$lessonId/additional';
-  static String exercises(String langId) => '$basic/$langId/exercises';
   static String theoryChunks(String langId) => '$basic/$langId/theory_chunks';
+
+  // Упражнения — корневая коллекция (не вложена в basic/)
+  static const String exercises = 'exercises';
 
   // Служебные документы (заглушки для будущих фич)
   static String serviceBasicVocabulary(String langId) =>

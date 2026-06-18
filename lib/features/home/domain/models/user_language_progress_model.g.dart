@@ -12,9 +12,9 @@ _UserLanguageProgressModel _$UserLanguageProgressModelFromJson(
   id: json['id'] as String,
   lastLesson: json['lastLesson'] as String?,
   lastParagraph: (json['lastParagraph'] as num).toInt(),
-  oralProgress: (json['oral_progress'] as num).toInt(),
-  grammarProgress: (json['grammar_progress'] as num).toInt(),
-  lexiconProgress: (json['lexicon_progress'] as num).toInt(),
+  oralProgress: (json['oral_progress'] as num?)?.toInt() ?? 0,
+  grammarProgress: (json['grammar_progress'] as num?)?.toInt() ?? 0,
+  lexiconProgress: (json['lexicon_progress'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$UserLanguageProgressModelToJson(

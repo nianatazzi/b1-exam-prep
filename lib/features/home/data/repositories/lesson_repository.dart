@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:linguobyte/core/constants/firestore_paths.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/home/domain/models/lesson_model.dart';
-import 'package:linguobyte/features/home/domain/models/theory_subpart_model.dart';
 import 'package:linguobyte/features/home/domain/repositories/i_lesson_repository.dart';
+import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'lesson_repository.g.dart';
@@ -33,19 +33,51 @@ class LessonRepository implements ILessonRepository {
   }
 
   @override
-  Future<List<TheorySubpartModel>> getTheorySubparts(
+  Future<List<LessonStepSummary>> getLessonStepSummaries(
     String langId,
     String lessonId,
   ) async {
     try {
-      final snapshot = await _firestore
-          .collection(FirestorePaths.theory(langId, lessonId))
-          .orderBy(FieldPath.documentId)
-          .get();
-      return snapshot.docs
-          .map((doc) =>
-              TheorySubpartModel.fromJson({...doc.data(), 'id': doc.id}))
-          .toList();
+      // Параллельная загрузка: theory (полный список) + lexical limit(1) + verbs limit(1)
+      final (theorySnap, lexicalSnap, verbsSnap) = await (
+        _firestore
+            .collection(FirestorePaths.theory(langId, lessonId))
+            .orderBy('th_id')
+            .get(),
+        _firestore
+            .collection(FirestorePaths.lexicalSet(langId, lessonId))
+            .limit(1)
+            .get(),
+        _firestore
+            .collection(FirestorePaths.verbs(langId, lessonId))
+            .limit(1)
+            .get(),
+      ).wait;
+
+      final summaries = <LessonStepSummary>[];
+
+      for (final doc in theorySnap.docs) {
+        summaries.add(LessonStepSummary(
+          type: LessonStepType.theory,
+          title: doc.data()['topic'] as String? ?? '',
+        ));
+      }
+
+      if (lexicalSnap.docs.isNotEmpty) {
+        final setTitle =
+            lexicalSnap.docs.first.data()['set_title'] as String? ?? '';
+        summaries.add(
+          LessonStepSummary(type: LessonStepType.lexical, title: setTitle),
+        );
+      }
+
+      if (verbsSnap.docs.isNotEmpty) {
+        summaries.add(
+          const LessonStepSummary(type: LessonStepType.verbs, title: ''),
+        );
+      }
+
+      return summaries;
     } on FirebaseException catch (e) {
       throw mapFirebaseException(e);
     } catch (e) {

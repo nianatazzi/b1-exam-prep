@@ -2,7 +2,7 @@
 
 ## Firestore Structure
 
-Три корневых коллекции: `basic`, `exercises`, `private_user_info`, `public_user_info`.
+Четыре корневых коллекции: `basic`, `exercises`, `private_user_info`, `public_user_info`.
 
 **Обозначения:**
 - `name/` — коллекция или документ-контейнер
@@ -67,8 +67,8 @@ basic/                                  # коллекция
             title: string
             type: string
             conjugation: map
-            translation: string
-            transcription: string
+            translation: map            # {en: string, ru: string, es: string, ...} — перевод на язык интерфейса
+            transcription: map          # {en: string, ru: string, es: string, ...} — транскрипция для носителей разных языков
 
 
     theory_chunks/                      # подколлекция
@@ -97,7 +97,7 @@ exercises/                          # коллекция
       course_id: string             # указатель на какой курс (например: basic_fr) 
       lesson_id: number               # id урока, к которому относится упражнение
       linked_item_id: number          # id подраздела урока (theory или verbs | lexical_set не имеет)
-      segment_type: string            # тип подраздела (theory | lexical_set | verbs)
+      segment_type: string            # значение упражнения: "theory" | "vocab" | "verb" — указывает на блок theory / lexical_set / verbs соответственно
       permission: string              # платный или бесплатный контент
       difficulty: number
       grammar_types: array            # список грамматических тем
@@ -177,6 +177,7 @@ public_user_info/                       # коллекция
 | Коллекция | Администратор | Авторизованный пользователь |
 |---|---|---|
 | `basic/**` | read + write | read |
+| `exercises/**` | read + write | read |
 | `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
 | `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
 
@@ -199,7 +200,7 @@ public_user_info/                       # коллекция
 | Приватные и публичные данные в разных коллекциях | Безопасность: публичный профиль читают все, приватный — только владелец |
 | `theory_chunks` вынесены на уровень языка | Блоки теории могут переиспользоваться в нескольких уроках и используются при слабых результатах в упражнениях |
 | Прогресс хранится внутри `private_user_info/{userId}/languages/{langId}` | Один запрос — весь прогресс по языку |
-| `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`), к уроку через `lesson_id`, к блоку через `segment_type` + `linked_item_id` |
+| `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`, например `basic_fr`), к уроку через `lesson_id` (= числовой `l_id` документа урока, не строка id), к блоку через `segment_type` + `linked_item_id`. Все упражнения урока загружаются одним запросом и группируются в памяти. |
 | Порядок lesson - по полю `l_id`, theory - по полю `th_id`, lexical_set - по полю `voc_id`, verbs - по полю `v_id`, exercise — по полю `ex_id`|
 | `subscription` — map с `plan` и `expiresAt` | Позволяет хранить тип подписки и дату истечения; легко расширяется (например, `autoRenew`) |
 | `oral_progress`, `grammar_progress`, `lexicon_progress` — отдельные числа | Простота чтения и обновления на MVP; `progress: map` оставлен как заглушка для детального трекинга |

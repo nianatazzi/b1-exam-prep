@@ -4,12 +4,10 @@ abstract class AppRoutes {
   static const String home = '/home';
   static const String profile = '/profile';
 
-  // Урок и вложенный флоу: Theory → Practice → Additional
-  static const String lesson = '/lesson/:lessonId';
-  static const String theory = 'theory';
-  static const String practice = 'practice';
-  static const String additional = 'additional';
+  // Урок: langId и lessonId передаются явно, чтобы LessonScreen
+  // не зависел от HomeNotifier для определения языка обучения
+  static const String lesson = '/lesson/:langId/:lessonId';
 
-  // Хелпер для навигации на конкретный урок
-  static String lessonPath(String lessonId) => '/lesson/$lessonId';
+  static String lessonPath(String langId, String lessonId) =>
+      '/lesson/$langId/$lessonId';
 }

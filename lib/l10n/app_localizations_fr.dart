@@ -144,4 +144,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get statusLocked => 'Verrouillé';
+
+  @override
+  String get lexicalSection => 'Vocabulaire';
+
+  @override
+  String get verbsSection => 'Conjugaison des verbes';
+
+  @override
+  String get additionalSection => 'Ressources complémentaires';
+
+  @override
+  String get lessonContents => 'Sommaire';
+
+  @override
+  String get toExercisesButton => 'Aux exercices';
+
+  @override
+  String get nextButton => 'Suivant';
+
+  @override
+  String get completeStepButton => 'Terminer';
+
+  @override
+  String get lessonCompleteTitle => 'Leçon terminée !';
+
+  @override
+  String get courseCompleteTitle => 'Cours terminé !';
+
+  @override
+  String get backToHomeButton => 'Retour à l\'accueil';
+
+  @override
+  String get verbTranslationColumn => 'Traduction';
 }

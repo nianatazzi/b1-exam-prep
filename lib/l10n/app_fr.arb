@@ -46,5 +46,16 @@
   "editLabel": "Modifier",
   "statusDone": "Terminé",
   "statusInProgress": "En cours",
-  "statusLocked": "Verrouillé"
+  "statusLocked": "Verrouillé",
+  "lexicalSection": "Vocabulaire",
+  "verbsSection": "Conjugaison des verbes",
+  "additionalSection": "Ressources complémentaires",
+  "lessonContents": "Sommaire",
+  "toExercisesButton": "Aux exercices",
+  "nextButton": "Suivant",
+  "completeStepButton": "Terminer",
+  "lessonCompleteTitle": "Leçon terminée !",
+  "courseCompleteTitle": "Cours terminé !",
+  "backToHomeButton": "Retour à l'accueil",
+  "verbTranslationColumn": "Traduction"
 }

@@ -144,4 +144,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statusLocked => 'Bloqueado';
+
+  @override
+  String get lexicalSection => 'Vocabulario';
+
+  @override
+  String get verbsSection => 'Conjugación verbal';
+
+  @override
+  String get additionalSection => 'Material adicional';
+
+  @override
+  String get lessonContents => 'Contenido';
+
+  @override
+  String get toExercisesButton => 'A los ejercicios';
+
+  @override
+  String get nextButton => 'Siguiente';
+
+  @override
+  String get completeStepButton => 'Completar';
+
+  @override
+  String get lessonCompleteTitle => '¡Lección completada!';
+
+  @override
+  String get courseCompleteTitle => '¡Curso completado!';
+
+  @override
+  String get backToHomeButton => 'Volver al inicio';
+
+  @override
+  String get verbTranslationColumn => 'Traducción';
 }

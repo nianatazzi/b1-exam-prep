@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linguobyte/core/locale/locale_provider.dart';
+import 'package:linguobyte/core/logger/provider_observer.dart';
 import 'package:linguobyte/core/router/app_router.dart';
 import 'package:linguobyte/core/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -42,7 +43,12 @@ void main() async {
   await FirebaseAnalytics.instance
       .setAnalyticsCollectionEnabled(!kDebugMode);
 
-  runApp(const ProviderScope(child: App()));
+  runApp(
+    ProviderScope(
+      observers: kDebugMode ? const [LoggingProviderObserver()] : const [],
+      child: const App(),
+    ),
+  );
 }
 
 class App extends ConsumerWidget {

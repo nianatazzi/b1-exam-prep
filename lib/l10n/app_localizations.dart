@@ -371,6 +371,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Locked'**
   String get statusLocked;
+
+  /// General label for the lexical step in lesson card and nav panel
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get lexicalSection;
+
+  /// Label for the verbs step in lesson card and nav panel
+  ///
+  /// In en, this message translates to:
+  /// **'Verb conjugation'**
+  String get verbsSection;
+
+  /// Label for additional materials in lesson nav panel
+  ///
+  /// In en, this message translates to:
+  /// **'Additional materials'**
+  String get additionalSection;
+
+  /// Button/tooltip to open lesson navigation panel
+  ///
+  /// In en, this message translates to:
+  /// **'Contents'**
+  String get lessonContents;
+
+  /// Button to proceed from content to exercises in a lesson step
+  ///
+  /// In en, this message translates to:
+  /// **'To exercises'**
+  String get toExercisesButton;
+
+  /// Advance to next exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextButton;
+
+  /// Mark current lesson step as completed
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get completeStepButton;
+
+  /// Shown when the user finishes all steps in a lesson
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson complete!'**
+  String get lessonCompleteTitle;
+
+  /// Shown when the user finishes the last lesson
+  ///
+  /// In en, this message translates to:
+  /// **'Course complete!'**
+  String get courseCompleteTitle;
+
+  /// Button to return to HomeScreen after completing a lesson or course
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backToHomeButton;
+
+  /// Header of the translation column in the verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get verbTranslationColumn;
 }
 
 class _AppLocalizationsDelegate

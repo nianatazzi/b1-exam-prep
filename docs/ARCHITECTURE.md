@@ -148,22 +148,28 @@ lib/
 
 ## 6.1 Логика прохождения урока (LessonScreen)
 
-Урок строится как детерминированная последовательность шагов, собираемая из данных Firestore при открытии экрана:
+Урок строится как детерминированная последовательность шагов (`List<LessonStep>`), собираемая из данных Firestore при открытии экрана через `BuildLessonUseCase`:
 
-1. **theory** — блоки сортируются по полю `th_id`. Каждый блок сразу сопровождается своими упражнениями (`segment_type = "theory"`, `linked_item_id = th_id` блока).
-2. **lexical_set** — сначала подряд показываются ВСЕ блоки коллекции (сортировка по `voc_id`), без упражнений между ними. После последнего блока — все упражнения (`segment_type = "vocab"`) для всех блоков лексики этого урока.
-3. **verbs** — показывается одним общим блоком (таблица всех документов коллекции). После него — все упражнения (`segment_type = "verb"`).
-4. **additional** — заглушка, без проверки подписки (см. раздел 20).
+1. **theory** — блоки сортируются по полю `th_id`. Каждый блок образует отдельный `TheoryLessonStep` со своими упражнениями (`segment_type = "theory"`, `linked_item_id = th_id`).
+2. **lexical_set** — один `LexicalLessonStep`: все блоки подряд (сортировка по `voc_id`), затем все упражнения (`segment_type = "vocab"`).
+3. **verbs** — один `VerbsLessonStep`: таблица всех документов (сортировка по `v_id`), затем все упражнения (`segment_type = "verb"`).
+4. **additional** — не входит в `List<LessonStep>`, хранится отдельно в `LessonState.additional`. Доступен всегда через навигационную панель, не блокирует завершение урока.
 
-Порядок типов блоков фиксирован (theory → lexical_set → verbs → additional), сортировка между типами не требуется.
+Порядок фиксирован: theory[] → lexical? → verbs?. Блоки lexical/verbs добавляются только если их коллекции непусты.
 
-Упражнения внутри одной группы сортируются по полю `ex_id` документа упражнения.
+Все упражнения урока загружаются одним запросом (`course_id = "basic_{langId}"`, `lesson_id = lId`) и группируются в памяти.
 
-**Прогресс (`lastParagraph`):** хранит индекс последней полностью завершённой пары "контент+упражнения" в этой последовательности, не номер блока. Блок считается завершённым только после прохождения его упражнений. При повторном открытии урока шаги пересобираются из тех же данных и пользователь продолжает со следующей пары.
+**`lastParagraph`** = количество завершённых шагов = индекс СЛЕДУЮЩЕГО шага к прохождению. Соответствует позиции в `List<LessonStep>`. Тот же индекс используется в `LessonCard` на HomeScreen.
 
-**Навигация назад:** пользователь может вернуться к любому уже пройденному шагу (кнопка "Назад"). Переход назад — только локальная навигация в рамках текущей сессии, не изменяет `lastParagraph` в Firestore.
+**Два индекса в `LessonNotifier`:**
+- `progressIndex` = `lastParagraph` — персистентный, пишется в Firestore при каждом завершении шага
+- `viewIndex` — локальный, меняется при навигации назад/через панель без записи в Firestore
 
-**Меню быстрого перехода между блоками** — спроектировано, но не входит в базовую реализацию LessonScreen. Добавляется отдельным промтом после неё (см. раздел 20).
+**Поток внутри шага:** content-фаза → упражнения по одному → кнопка "Завершить" (последнее упражнение или контент если упражнений нет). Фаза и индекс упражнения — локальный стейт `ConsumerStatefulWidget`.
+
+**Завершение урока:** `progressIndex >= steps.length` → обновить Firestore (`lastLesson = nextLesson.id`, `lastParagraph = 0`), показать заглушку, вернуться на HomeScreen.
+
+**Навигационная панель:** постоянно видимый прогресс-бар в AppBar (показывает `progressIndex / steps.length`). Тап → BottomSheet со всеми шагами. Завершённые и текущий шаг — тапабельны (меняют `viewIndex`). Залоченные — нет.
 
 ---
 
@@ -218,6 +224,7 @@ class UnknownError extends AppError {
 - `AsyncValue` (Riverpod) — основной механизм состояний `loading` / `data` / `error` в UI
 - Для MVP: одно сообщение об ошибке + кнопка Retry
 - Детальные сообщения для разных типов ошибок — после MVP
+- `LoggingProviderObserver` (`core/logger/`) — печатает ошибки любых провайдеров в консоль через `debugPrint`. Подключается в `main.dart` только в debug (`kDebugMode`), в release не используется. Полноценное логирование — после MVP.
 
 ---
 
@@ -290,7 +297,7 @@ abstract class FirestorePaths {
   static const String privateUserInfo = 'private_user_info';
   static const String publicUserInfo = 'public_user_info';
   static String lessons(String langId) => '$basic/$langId/lessons';
-  static String exercises(String langId) => '$basic/$langId/exercises';
+  static const String exercises = 'exercises'; // корневая коллекция, не вложена в basic/
 }
 ```
 
@@ -346,14 +353,17 @@ abstract class FirestorePaths {
 
 - **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
 - **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант MVP). После MVP добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
-- **Новый пользователь**: сделать после реализации Фазы 4 — при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Полноценный онбординг для MVP не требуется.
+- **Новый пользователь**: при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Сохранение прогресса нового пользователя реализовано: `updateProgress` создаёт документ `languages/{langId}` через `set(merge:true)`, а `oral/grammar/lexicon_progress` имеют `@Default(0)` — частичный документ читается корректно. Полная инициализация документа (`updateLearningLanguage` со всеми полями и `progress`-map) пока не вызывается — это часть будущего онбординга, для MVP не требуется.
 - **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
 - **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
+- **`getLessonStepSummaries` — 3·N чтений Firestore на каждое открытие HomeScreen**: для N уроков выполняется `1` (уроки) + `1` (прогресс) + `3·N` (theory + lexical limit(1) + verbs limit(1)). На MVP допустимо: офлайн-кэш Firestore отдаёт повторные открытия, уроков немного. Долгосрочное решение: денормализовать `steps_summary` (массив `{type, title}` по каждому шагу) в документ урока — админ-панель пишет это поле при редактировании контента + бэкафилл существующих уроков; клиент читает сводку вместе со списком уроков, убирая все `3·N`. Админ-панель готова → задача разблокирована, выполнять **отдельной веткой** (схема FIRESTORE.md + клиент + миграция данных), не в рамках lesson-screen.
 
-### К Фазе 4 (LessonScreen)
+### Фаза 4 (LessonScreen) — скелет реализован
 
-- **Запись `lastLesson`/`lastParagraph`**: при завершении упражнений очередного шага урока — обновлять `lastLesson` и `lastParagraph` в `private_user_info/{userId}/languages/{langId}`. `lastParagraph` хранит индекс последней завершённой пары "контент+упражнения" (см. раздел 6.1).
-- **Связь блоков и упражнений**: через `course_id` (`"{courseType}_{langId}"`), `lesson_id`, `segment_type` (`"theory" | "vocab" | "verb"`), `linked_item_id` (= номер блока theory/verbs). Подробности — FIRESTORE.md.
-- **Меню быстрого перехода между блоками урока**: нужно продумать быстрый переход между всеми блоками урока(theory, lexical_set, verbs). Может быть есть смысл связать с `LessonCard` из HomeScreen и прогрессом пользователя, т.к. это похожая сущность. Реализуется отдельным промтом после базовой версии LessonScreen.
-- **`AppRoutes.lessonPath`**: обновить сигнатуру — `lessonPath(langId, lessonId)`.
-- **Additional / подписка**: в базовой реализации `AdditionalScreen` — заглушка без проверки `subscription.plan`. Гейтинг по подписке — после MVP.
+- **Виджеты упражнений**: `ExerciseWidget` — скелет (показывает `ex_id` + `type`). Детальный UI для каждого из 8 типов (`wordcard`, `flashcard`, `multiple_choice`, `fill_blank`, `mosaic`, `translate`, `listen_pick`, `voice_translate`) реализуется в отдельной сессии.
+- **Экран завершения урока**: `_LessonCompleteStub` — заглушка (иконка + текст + кнопка). Статистика, баллы, проблемные моменты — после MVP.
+- **Additional / подписка**: additional доступен через панель навигации (заглушка-диалог). Гейтинг по `subscription.plan` — после MVP.
+- **`IUserProgressRepository` cross-feature**: `LessonNotifier` зависит от репозитория из `features/home/`. Допустимо для MVP (аналогично `UserRepository`). Пост-MVP: вынести в `shared/` или `core/`.
+- **`BuildLessonUseCase` cross-feature**: UseCase в `features/lesson/domain/` использует `ILessonRepository` и `IUserProgressRepository` из `features/home/`. Долгосрочное решение: вынести общие интерфейсы в `shared/` или `core/`.
+- **`LessonStepSummary` в `LessonCard`**: `progressPercent` теперь учитывает все шаги (theory + lexical + verbs). Если последний урок завершён (нет nextLesson), `lastLesson` остаётся на нём — карточка показывается как active с 100%. Пост-MVP: добавить явное поле `isFullyCompleted` в прогресс.
+- **Генератор провайдера**: Riverpod 3.x для `@riverpod class LessonNotifier` генерирует `lessonProvider` (не `lessonNotifierProvider`) — суффикс `Notifier` убирается автоматически. Аналогично для других нотификаторов.

@@ -46,5 +46,16 @@
   "editLabel": "Редактировать",
   "statusDone": "Готово",
   "statusInProgress": "В процессе",
-  "statusLocked": "Закрыто"
+  "statusLocked": "Закрыто",
+  "lexicalSection": "Лексика",
+  "verbsSection": "Спряжение глаголов",
+  "additionalSection": "Доп. материалы",
+  "lessonContents": "Содержание",
+  "toExercisesButton": "К упражнениям",
+  "nextButton": "Далее",
+  "completeStepButton": "Завершить",
+  "lessonCompleteTitle": "Урок завершён!",
+  "courseCompleteTitle": "Курс завершён!",
+  "backToHomeButton": "На главную",
+  "verbTranslationColumn": "Перевод"
 }

@@ -46,5 +46,16 @@
   "editLabel": "Editar",
   "statusDone": "Hecho",
   "statusInProgress": "En curso",
-  "statusLocked": "Bloqueado"
+  "statusLocked": "Bloqueado",
+  "lexicalSection": "Vocabulario",
+  "verbsSection": "Conjugación verbal",
+  "additionalSection": "Material adicional",
+  "lessonContents": "Contenido",
+  "toExercisesButton": "A los ejercicios",
+  "nextButton": "Siguiente",
+  "completeStepButton": "Completar",
+  "lessonCompleteTitle": "¡Lección completada!",
+  "courseCompleteTitle": "¡Curso completado!",
+  "backToHomeButton": "Volver al inicio",
+  "verbTranslationColumn": "Traducción"
 }
