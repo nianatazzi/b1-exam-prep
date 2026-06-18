@@ -167,5 +167,18 @@
   "@backToHomeButton": { "description": "Button to return to HomeScreen after completing a lesson or course" },
 
   "verbTranslationColumn": "Translation",
-  "@verbTranslationColumn": { "description": "Header of the translation column in the verb conjugation table" }
+  "@verbTranslationColumn": { "description": "Header of the translation column in the verb conjugation table" },
+
+  "nextVerbButton": "Next verb",
+  "@nextVerbButton": { "description": "Button to proceed to the next verb in the verbs lesson step" },
+
+  "tenseFuture": "Future",
+  "@tenseFuture": { "description": "Tense name in verb conjugation table" },
+  "tensePresent": "Present",
+  "@tensePresent": { "description": "Tense name in verb conjugation table" },
+  "tensePast": "Past",
+  "@tensePast": { "description": "Tense name in verb conjugation table" },
+
+  "finalSection": "Final exercises",
+  "@finalSection": { "description": "Label for the final exercises step in lesson card and nav panel" }
 }

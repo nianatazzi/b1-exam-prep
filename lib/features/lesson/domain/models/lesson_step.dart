@@ -23,9 +23,23 @@ class LexicalLessonStep extends LessonStep {
   const LexicalLessonStep({required this.sets, required this.exercises});
 }
 
-class VerbsLessonStep extends LessonStep {
-  final List<VerbModel> verbs;
+/// Один глагол внутри шага verbs: таблица + упражнения именно на этот глагол.
+class VerbSubStep {
+  final VerbModel verb;
   final List<ExerciseModel> exercises;
 
-  const VerbsLessonStep({required this.verbs, required this.exercises});
+  const VerbSubStep({required this.verb, required this.exercises});
+}
+
+class VerbsLessonStep extends LessonStep {
+  final List<VerbSubStep> verbSubSteps;
+
+  const VerbsLessonStep({required this.verbSubSteps});
+}
+
+/// Финальные упражнения после всех блоков урока (segment_type = "final").
+class FinalLessonStep extends LessonStep {
+  final List<ExerciseModel> exercises;
+
+  const FinalLessonStep({required this.exercises});
 }

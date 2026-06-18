@@ -61,10 +61,12 @@ class LessonNotifier extends _$LessonNotifier {
         .execute(_userId, langId, lessonId);
 
     // progressIndex не должен превышать число шагов (устаревший прогресс,
-    // сокращённый контент). viewIndex — позиция видимого шага в пределах списка.
+    // сокращённый контент). viewIndex == stepCount означает экран завершения урока.
     final stepCount = data.steps.length;
     final progressIndex = data.initialProgressIndex.clamp(0, stepCount);
-    final viewIndex = progressIndex.clamp(0, stepCount == 0 ? 0 : stepCount - 1);
+    final viewIndex = progressIndex >= stepCount
+        ? stepCount
+        : progressIndex.clamp(0, stepCount == 0 ? 0 : stepCount - 1);
 
     return LessonState(
       data: data,
@@ -98,12 +100,13 @@ class LessonNotifier extends _$LessonNotifier {
         );
       }
 
+      final stepCount = current.data.steps.length;
       state = AsyncData(current.copyWith(
         progressIndex: newProgress,
-        viewIndex: newProgress.clamp(
-          0,
-          current.data.steps.isEmpty ? 0 : current.data.steps.length - 1,
-        ),
+        // viewIndex == stepCount → экран завершения урока
+        viewIndex: newProgress >= stepCount
+            ? stepCount
+            : newProgress.clamp(0, stepCount == 0 ? 0 : stepCount - 1),
       ));
     } on AppError catch (e, st) {
       state = AsyncError(e, st);

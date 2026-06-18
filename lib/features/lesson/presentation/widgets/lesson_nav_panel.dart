@@ -53,9 +53,9 @@ class _NavPanelSheet extends StatelessWidget {
   String _stepTitle(LessonStep step, AppLocalizations l10n) {
     return switch (step) {
       TheoryLessonStep s => s.theory.topic,
-      LexicalLessonStep s =>
-        s.sets.isNotEmpty ? s.sets.first.setTitle : l10n.lessonContents,
+      LexicalLessonStep _ => l10n.lexicalSection,
       VerbsLessonStep _ => l10n.verbsSection,
+      FinalLessonStep _ => l10n.finalSection,
     };
   }
 

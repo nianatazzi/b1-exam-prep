@@ -57,5 +57,10 @@
   "lessonCompleteTitle": "Урок завершён!",
   "courseCompleteTitle": "Курс завершён!",
   "backToHomeButton": "На главную",
-  "verbTranslationColumn": "Перевод"
+  "verbTranslationColumn": "Перевод",
+  "nextVerbButton": "Следующий глагол",
+  "tenseFuture": "Будущее",
+  "tensePresent": "Настоящее",
+  "tensePast": "Прошедшее",
+  "finalSection": "Финальные упражнения"
 }

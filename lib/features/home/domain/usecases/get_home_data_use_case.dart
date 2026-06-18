@@ -134,8 +134,11 @@ class GetHomeDataUseCase {
         progressPercent = 1.0;
         lastParagraph = 0;
       } else if (i == activeIndex) {
-        state = LessonCardState.active;
         final total = steps.length;
+        // Последний урок курса: lastLesson остаётся на нём, lastParagraph = steps.length.
+        // Определяем "завершён" по факту, без отдельного поля Firestore.
+        final isFullyCompleted = total > 0 && progress.lastParagraph >= total;
+        state = isFullyCompleted ? LessonCardState.done : LessonCardState.active;
         progressPercent = total > 0
             ? (progress.lastParagraph / total).clamp(0.0, 1.0)
             : 0.0;

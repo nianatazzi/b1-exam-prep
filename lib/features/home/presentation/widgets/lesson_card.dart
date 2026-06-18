@@ -191,19 +191,24 @@ class _StepRow extends StatelessWidget {
     final Color dotColor;
     final Color lineColor;
     final Color textColor;
+    final bool isDotFilled;
     switch (state) {
       case LessonCardState.done:
         dotColor = cs.primary;
         lineColor = cs.primary.withValues(alpha: 0.3);
         textColor = cs.onSurface;
+        isDotFilled = true;
       case LessonCardState.active:
+        // Кольцо вместо закрашенной точки: шаг текущий, но не завершён
         dotColor = cs.primary;
         lineColor = cs.primary.withValues(alpha: 0.3);
         textColor = cs.onSurface;
+        isDotFilled = false;
       case LessonCardState.locked:
         dotColor = cs.primary.withValues(alpha: 0.35);
         lineColor = cs.primary.withValues(alpha: 0.2);
         textColor = cs.onSurface.withValues(alpha: 0.6);
+        isDotFilled = true;
     }
 
     return IntrinsicHeight(
@@ -218,10 +223,15 @@ class _StepRow extends StatelessWidget {
                   margin: const EdgeInsets.only(top: AppSpacing.xs),
                   width: AppSizes.timelineDot,
                   height: AppSizes.timelineDot,
-                  decoration: BoxDecoration(
-                    color: dotColor,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: isDotFilled
+                      ? BoxDecoration(
+                          color: dotColor,
+                          shape: BoxShape.circle,
+                        )
+                      : BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: dotColor, width: 1.5),
+                        ),
                 ),
                 if (!isLast)
                   Expanded(

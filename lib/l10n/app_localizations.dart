@@ -437,6 +437,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Translation'**
   String get verbTranslationColumn;
+
+  /// Button to proceed to the next verb in the verbs lesson step
+  ///
+  /// In en, this message translates to:
+  /// **'Next verb'**
+  String get nextVerbButton;
+
+  /// Tense name in verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Future'**
+  String get tenseFuture;
+
+  /// Tense name in verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get tensePresent;
+
+  /// Tense name in verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get tensePast;
+
+  /// Label for the final exercises step in lesson card and nav panel
+  ///
+  /// In en, this message translates to:
+  /// **'Final exercises'**
+  String get finalSection;
 }
 
 class _AppLocalizationsDelegate

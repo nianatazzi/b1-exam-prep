@@ -6,6 +6,7 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/home/presentation/providers/home_notifier.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/presentation/providers/lesson_notifier.dart';
+import 'package:linguobyte/features/lesson/presentation/widgets/final_step_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/lesson_nav_panel.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/lexical_step_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/theory_step_widget.dart';
@@ -34,6 +35,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   // Предыдущий viewIndex — для сброса фазы при навигации
   int? _lastViewIndex;
 
+  // Сохраняем контейнер в initState — ref недоступен в dispose()
+  late final ProviderContainer _container;
+
+  @override
+  void initState() {
+    super.initState();
+    _container = ProviderScope.containerOf(context, listen: false);
+  }
+
   void _resetStepPhase() {
     setState(() {
       _isExercisePhase = false;
@@ -57,6 +67,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         .read(lessonProvider(widget.langId, widget.lessonId).notifier)
         .navigateToStep(index);
     _resetStepPhase();
+  }
+
+  @override
+  void dispose() {
+    // ProviderContainer не привязан к lifecycle виджета — безопасно вызывать в dispose().
+    // ref здесь уже деактивирован и недоступен.
+    _container.invalidate(homeProvider);
+    super.dispose();
   }
 
   @override
@@ -110,15 +128,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               onStepTap: _onNavigateToStep,
             ),
           ),
-          body: state.isCompleted
+          body: state.viewIndex >= state.data.steps.length
               ? _LessonCompleteStub(
                   hasNextLesson: state.data.nextLesson != null,
-                  onContinue: () {
-                    ref.invalidate(homeProvider);
-                    context.go(AppRoutes.home);
-                  },
+                  onContinue: () => context.go(AppRoutes.home),
                 )
               : _StepBody(
+                  // Ключ сбрасывает внутренний стейт VerbsStepWidget при смене шага
+                  key: ValueKey(state.viewIndex),
                   step: state.currentStep!,
                   isExercisePhase: _isExercisePhase,
                   exerciseIndex: _exerciseIndex,
@@ -215,6 +232,7 @@ class _StepBody extends StatelessWidget {
   final VoidCallback onComplete;
 
   const _StepBody({
+    super.key,
     required this.step,
     required this.isExercisePhase,
     required this.exerciseIndex,
@@ -244,12 +262,14 @@ class _StepBody extends StatelessWidget {
             onNextExercise: onNextExercise,
             onComplete: onComplete,
           ),
+        // VerbsStepWidget управляет суб-навигацией самостоятельно
         VerbsLessonStep s => VerbsStepWidget(
             step: s,
-            isExercisePhase: isExercisePhase,
-            exerciseIndex: exerciseIndex,
-            onToExercises: onToExercises,
-            onNextExercise: onNextExercise,
+            onComplete: onComplete,
+          ),
+        // FinalStepWidget управляет счётчиком упражнений самостоятельно
+        FinalLessonStep s => FinalStepWidget(
+            step: s,
             onComplete: onComplete,
           ),
       },

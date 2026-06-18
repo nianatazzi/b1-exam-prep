@@ -2,50 +2,87 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercise_widget.dart';
+import 'package:linguobyte/features/lesson/presentation/widgets/verb_conjugation_table.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
-class VerbsStepWidget extends StatelessWidget {
+/// Шаг урока "Глаголы". Самостоятельно управляет суб-навигацией:
+/// для каждого глагола — таблица → упражнения → следующий глагол.
+/// Вызывает [onComplete] только после последнего упражнения последнего глагола.
+class VerbsStepWidget extends StatefulWidget {
   final VerbsLessonStep step;
-  final bool isExercisePhase;
-  final int exerciseIndex;
-  final VoidCallback onToExercises;
-  final VoidCallback onNextExercise;
   final VoidCallback onComplete;
 
   const VerbsStepWidget({
     super.key,
     required this.step,
-    required this.isExercisePhase,
-    required this.exerciseIndex,
-    required this.onToExercises,
-    required this.onNextExercise,
     required this.onComplete,
   });
 
   @override
+  State<VerbsStepWidget> createState() => _VerbsStepWidgetState();
+}
+
+class _VerbsStepWidgetState extends State<VerbsStepWidget> {
+  int _verbIndex = 0;
+  bool _isExercisePhase = false;
+  int _exerciseIndex = 0;
+
+  VerbSubStep get _current => widget.step.verbSubSteps[_verbIndex];
+  bool get _isLastVerb => _verbIndex >= widget.step.verbSubSteps.length - 1;
+
+  void _onToExercises() => setState(() => _isExercisePhase = true);
+
+  void _onNextExercise() => setState(() => _exerciseIndex++);
+
+  void _onSubStepComplete() {
+    if (_isLastVerb) {
+      widget.onComplete();
+    } else {
+      setState(() {
+        _verbIndex++;
+        _isExercisePhase = false;
+        _exerciseIndex = 0;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return isExercisePhase
+    final subStep = _current;
+    return _isExercisePhase
         ? _ExercisePhase(
-            step: step,
-            exerciseIndex: exerciseIndex,
-            onNext: onNextExercise,
-            onComplete: onComplete,
+            subStep: subStep,
+            exerciseIndex: _exerciseIndex,
+            isLastVerb: _isLastVerb,
+            onNext: _onNextExercise,
+            onComplete: _onSubStepComplete,
           )
         : _ContentPhase(
-            step: step,
-            onToExercises: onToExercises,
-            onComplete: onComplete,
+            subStep: subStep,
+            verbIndex: _verbIndex,
+            totalVerbs: widget.step.verbSubSteps.length,
+            isLastVerb: _isLastVerb,
+            onToExercises: _onToExercises,
+            onComplete: _onSubStepComplete,
           );
   }
 }
 
+// ── Фаза таблицы ─────────────────────────────────────────────────────────────
+
 class _ContentPhase extends StatelessWidget {
-  final VerbsLessonStep step;
+  final VerbSubStep subStep;
+  final int verbIndex;
+  final int totalVerbs;
+  final bool isLastVerb;
   final VoidCallback onToExercises;
   final VoidCallback onComplete;
 
   const _ContentPhase({
-    required this.step,
+    required this.subStep,
+    required this.verbIndex,
+    required this.totalVerbs,
+    required this.isLastVerb,
     required this.onToExercises,
     required this.onComplete,
   });
@@ -55,48 +92,70 @@ class _ContentPhase extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final langCode = Localizations.localeOf(context).languageCode;
+    final verb = subStep.verb;
+    final transcription =
+        (verb.transcription[langCode] ?? verb.transcription['en'] ?? '')
+            .toString();
+    final translation =
+        (verb.translation[langCode] ?? verb.translation['en'] ?? '')
+            .toString();
 
-    // Заголовки колонок из ключей conjugation первого глагола
-    final columns = step.verbs.isNotEmpty
-        ? step.verbs.first.conjugation.keys.toList()
-        : <String>[];
+    final String buttonLabel;
+    if (subStep.exercises.isNotEmpty) {
+      buttonLabel = l10n.toExercisesButton;
+    } else if (isLastVerb) {
+      buttonLabel = l10n.completeStepButton;
+    } else {
+      buttonLabel = l10n.nextVerbButton;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.verbsSection, style: theme.textTheme.titleLarge),
+        if (totalVerbs > 1)
+          Text(
+            '${verbIndex + 1} / $totalVerbs',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: cs.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+        if (totalVerbs > 1) const SizedBox(height: AppSpacing.sm),
+
+        // Название, транскрипция, перевод
+        Text(
+          verb.title,
+          style: theme.textTheme.headlineSmall?.copyWith(color: cs.primary),
+        ),
+        if (transcription.isNotEmpty || translation.isNotEmpty)
+          Text(
+            [
+              if (transcription.isNotEmpty) transcription,
+              if (translation.isNotEmpty) translation,
+            ].join(' · '),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: cs.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
         const SizedBox(height: AppSpacing.lg),
+
+        // Таблица спряжения
         Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: SingleChildScrollView(
-              child: _VerbTable(
-                verbs: step.verbs
-                    .map((v) => (
-                          title: v.title,
-                          translation: v.translation,
-                          conjugation: v.conjugation,
-                        ))
-                    .toList(),
-                columns: columns,
-                cs: cs,
-                theme: theme,
-                langCode: Localizations.localeOf(context).languageCode,
-              ),
+              child: VerbConjugationTable(conjugation: verb.conjugation),
             ),
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
+
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             onPressed:
-                step.exercises.isEmpty ? onComplete : onToExercises,
-            child: Text(
-              step.exercises.isEmpty
-                  ? l10n.completeStepButton
-                  : l10n.toExercisesButton,
-            ),
+                subStep.exercises.isNotEmpty ? onToExercises : onComplete,
+            child: Text(buttonLabel),
           ),
         ),
       ],
@@ -104,85 +163,19 @@ class _ContentPhase extends StatelessWidget {
   }
 }
 
-class _VerbTable extends StatelessWidget {
-  final List<({String title, Map<String, dynamic> translation, Map<String, dynamic> conjugation})>
-      verbs;
-  final List<String> columns;
-  final ColorScheme cs;
-  final ThemeData theme;
-  final String langCode;
-
-  const _VerbTable({
-    required this.verbs,
-    required this.columns,
-    required this.cs,
-    required this.theme,
-    required this.langCode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final headerStyle = theme.textTheme.bodySmall?.copyWith(
-      fontWeight: FontWeight.w600,
-      color: cs.primary,
-    );
-    final cellStyle = theme.textTheme.bodyMedium;
-
-    return Table(
-      border: TableBorder.all(
-        color: cs.onSurface.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      defaultColumnWidth: const IntrinsicColumnWidth(),
-      children: [
-        // Заголовочная строка
-        TableRow(
-          decoration: BoxDecoration(
-            color: cs.primary.withValues(alpha: 0.08),
-          ),
-          children: [
-            _cell('', headerStyle),
-            _cell(l10n.verbTranslationColumn, headerStyle),
-            for (final col in columns) _cell(col, headerStyle),
-          ],
-        ),
-        // Строки глаголов
-        for (final verb in verbs)
-          TableRow(
-            children: [
-              _cell(verb.title, cellStyle),
-              _cell(
-                  (verb.translation[langCode] ?? verb.translation['en'] ?? '—')
-                      .toString(),
-                  cellStyle?.copyWith(
-                      color: cs.onSurface.withValues(alpha: 0.6))),
-              for (final col in columns)
-                _cell(verb.conjugation[col]?.toString() ?? '—', cellStyle),
-            ],
-          ),
-      ],
-    );
-  }
-
-  Widget _cell(String text, TextStyle? style) => Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
-        ),
-        child: Text(text, style: style),
-      );
-}
+// ── Фаза упражнений ───────────────────────────────────────────────────────────
 
 class _ExercisePhase extends StatelessWidget {
-  final VerbsLessonStep step;
+  final VerbSubStep subStep;
   final int exerciseIndex;
+  final bool isLastVerb;
   final VoidCallback onNext;
   final VoidCallback onComplete;
 
   const _ExercisePhase({
-    required this.step,
+    required this.subStep,
     required this.exerciseIndex,
+    required this.isLastVerb,
     required this.onNext,
     required this.onComplete,
   });
@@ -190,13 +183,23 @@ class _ExercisePhase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isLast = exerciseIndex >= step.exercises.length - 1;
+    final exercises = subStep.exercises;
+    final isLastExercise = exerciseIndex >= exercises.length - 1;
+
+    final String buttonLabel;
+    if (!isLastExercise) {
+      buttonLabel = l10n.nextButton;
+    } else if (isLastVerb) {
+      buttonLabel = l10n.completeStepButton;
+    } else {
+      buttonLabel = l10n.nextVerbButton;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${exerciseIndex + 1} / ${step.exercises.length}',
+          '${exerciseIndex + 1} / ${exercises.length}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -205,14 +208,13 @@ class _ExercisePhase extends StatelessWidget {
               ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        ExerciseWidget(exercise: step.exercises[exerciseIndex]),
+        ExerciseWidget(exercise: exercises[exerciseIndex]),
         const Spacer(),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: isLast ? onComplete : onNext,
-            child: Text(
-                isLast ? l10n.completeStepButton : l10n.nextButton),
+            onPressed: isLastExercise ? onComplete : onNext,
+            child: Text(buttonLabel),
           ),
         ),
       ],
