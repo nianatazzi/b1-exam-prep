@@ -122,6 +122,7 @@ class _VerbTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final headerStyle = theme.textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w600,
       color: cs.primary,
@@ -142,7 +143,7 @@ class _VerbTable extends StatelessWidget {
           ),
           children: [
             _cell('', headerStyle),
-            _cell('Translation', headerStyle),
+            _cell(l10n.verbTranslationColumn, headerStyle),
             for (final col in columns) _cell(col, headerStyle),
           ],
         ),

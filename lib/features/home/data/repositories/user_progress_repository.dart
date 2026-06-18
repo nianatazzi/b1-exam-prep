@@ -42,10 +42,15 @@ class UserProgressRepository implements IUserProgressRepository {
     int lastParagraph,
   ) async {
     try {
-      await _firestore.doc(FirestorePaths.userLanguage(userId, langId)).update({
-        'lastLesson': lastLesson,
-        'lastParagraph': lastParagraph,
-      });
+      // merge: true — документ языка создаётся при первом сохранении прогресса,
+      // если его ещё нет (новый пользователь). Остальные поля прогресса не затираются.
+      await _firestore.doc(FirestorePaths.userLanguage(userId, langId)).set(
+        {
+          'lastLesson': lastLesson,
+          'lastParagraph': lastParagraph,
+        },
+        SetOptions(merge: true),
+      );
     } on FirebaseException catch (e) {
       throw mapFirebaseException(e);
     } catch (e) {

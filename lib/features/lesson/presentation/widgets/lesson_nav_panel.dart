@@ -3,7 +3,6 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/lesson/domain/models/additional_model.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
-import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 
 /// Bottom sheet навигации по блокам урока.
 /// [progressIndex] — количество завершённых шагов (= lastParagraph).

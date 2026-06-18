@@ -224,6 +224,7 @@ class UnknownError extends AppError {
 - `AsyncValue` (Riverpod) — основной механизм состояний `loading` / `data` / `error` в UI
 - Для MVP: одно сообщение об ошибке + кнопка Retry
 - Детальные сообщения для разных типов ошибок — после MVP
+- `LoggingProviderObserver` (`core/logger/`) — печатает ошибки любых провайдеров в консоль через `debugPrint`. Подключается в `main.dart` только в debug (`kDebugMode`), в release не используется. Полноценное логирование — после MVP.
 
 ---
 
@@ -352,9 +353,10 @@ abstract class FirestorePaths {
 
 - **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
 - **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант MVP). После MVP добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
-- **Новый пользователь**: сделать после реализации Фазы 4 — при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Полноценный онбординг для MVP не требуется.
+- **Новый пользователь**: при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Сохранение прогресса нового пользователя реализовано: `updateProgress` создаёт документ `languages/{langId}` через `set(merge:true)`, а `oral/grammar/lexicon_progress` имеют `@Default(0)` — частичный документ читается корректно. Полная инициализация документа (`updateLearningLanguage` со всеми полями и `progress`-map) пока не вызывается — это часть будущего онбординга, для MVP не требуется.
 - **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
 - **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
+- **`getLessonStepSummaries` — 3·N чтений Firestore на каждое открытие HomeScreen**: для N уроков выполняется `1` (уроки) + `1` (прогресс) + `3·N` (theory + lexical limit(1) + verbs limit(1)). На MVP допустимо: офлайн-кэш Firestore отдаёт повторные открытия, уроков немного. Долгосрочное решение: денормализовать `steps_summary` (массив `{type, title}` по каждому шагу) в документ урока — админ-панель пишет это поле при редактировании контента + бэкафилл существующих уроков; клиент читает сводку вместе со списком уроков, убирая все `3·N`. Админ-панель готова → задача разблокирована, выполнять **отдельной веткой** (схема FIRESTORE.md + клиент + миграция данных), не в рамках lesson-screen.
 
 ### Фаза 4 (LessonScreen) — скелет реализован
 

@@ -17,7 +17,10 @@ mixin _$UserLanguageProgressModel {
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
 @JsonKey(includeToJson: false) String get id;// null = новый пользователь, все уроки locked
- String? get lastLesson; int get lastParagraph;@JsonKey(name: 'oral_progress') int get oralProgress;@JsonKey(name: 'grammar_progress') int get grammarProgress;@JsonKey(name: 'lexicon_progress') int get lexiconProgress;
+ String? get lastLesson; int get lastParagraph;// @Default(0) — документ прогресса может быть создан частично (updateProgress
+// пишет только lastLesson/lastParagraph). Эти поля — заглушки детального
+// прогресса; реальные значения, когда появятся, читаются как обычно.
+@JsonKey(name: 'oral_progress') int get oralProgress;@JsonKey(name: 'grammar_progress') int get grammarProgress;@JsonKey(name: 'lexicon_progress') int get lexiconProgress;
 /// Create a copy of UserLanguageProgressModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -216,7 +219,7 @@ return $default(_that.id,_that.lastLesson,_that.lastParagraph,_that.oralProgress
 @JsonSerializable()
 
 class _UserLanguageProgressModel implements UserLanguageProgressModel {
-  const _UserLanguageProgressModel({@JsonKey(includeToJson: false) required this.id, this.lastLesson, required this.lastParagraph, @JsonKey(name: 'oral_progress') required this.oralProgress, @JsonKey(name: 'grammar_progress') required this.grammarProgress, @JsonKey(name: 'lexicon_progress') required this.lexiconProgress});
+  const _UserLanguageProgressModel({@JsonKey(includeToJson: false) required this.id, this.lastLesson, required this.lastParagraph, @JsonKey(name: 'oral_progress') this.oralProgress = 0, @JsonKey(name: 'grammar_progress') this.grammarProgress = 0, @JsonKey(name: 'lexicon_progress') this.lexiconProgress = 0});
   factory _UserLanguageProgressModel.fromJson(Map<String, dynamic> json) => _$UserLanguageProgressModelFromJson(json);
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
@@ -224,6 +227,9 @@ class _UserLanguageProgressModel implements UserLanguageProgressModel {
 // null = новый пользователь, все уроки locked
 @override final  String? lastLesson;
 @override final  int lastParagraph;
+// @Default(0) — документ прогресса может быть создан частично (updateProgress
+// пишет только lastLesson/lastParagraph). Эти поля — заглушки детального
+// прогресса; реальные значения, когда появятся, читаются как обычно.
 @override@JsonKey(name: 'oral_progress') final  int oralProgress;
 @override@JsonKey(name: 'grammar_progress') final  int grammarProgress;
 @override@JsonKey(name: 'lexicon_progress') final  int lexiconProgress;

@@ -69,23 +69,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       ),
-      error: (e, st) => Scaffold(
+      error: (_, _) => Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(l10n.errorGeneric),
-              if (kDebugMode) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                  child: Text(
-                    e.toString(),
-                    style: const TextStyle(fontSize: 11, color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
               const SizedBox(height: AppSpacing.lg),
               ElevatedButton(
                 onPressed: () => ref.invalidate(

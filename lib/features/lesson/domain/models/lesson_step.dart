@@ -4,7 +4,7 @@ import 'package:linguobyte/features/lesson/domain/models/theory_model.dart';
 import 'package:linguobyte/features/lesson/domain/models/verb_model.dart';
 
 /// Один шаг урока = пара "контент + упражнения".
-/// Индекс шага в List<LessonStep> соответствует значению lastParagraph в Firestore.
+/// Индекс шага в `List<LessonStep>` соответствует значению lastParagraph в Firestore.
 sealed class LessonStep {
   const LessonStep();
 }

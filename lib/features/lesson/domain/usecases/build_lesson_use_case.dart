@@ -1,3 +1,4 @@
+import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/home/data/repositories/lesson_repository.dart';
 import 'package:linguobyte/features/home/data/repositories/user_progress_repository.dart';
 import 'package:linguobyte/features/home/domain/models/lesson_model.dart';
@@ -75,7 +76,10 @@ class BuildLessonUseCase {
       userProgressRepository.getUserLanguageProgress(userId, langId),
     ).wait;
 
-    final lesson = lessons.firstWhere((l) => l.id == lessonId);
+    final lesson = lessons.firstWhere(
+      (l) => l.id == lessonId,
+      orElse: () => throw const NotFoundError(),
+    );
     final currentIndex = lessons.indexOf(lesson);
     final nextLesson =
         currentIndex + 1 < lessons.length ? lessons[currentIndex + 1] : null;
@@ -112,12 +116,17 @@ class BuildLessonUseCase {
         VerbsLessonStep(verbs: verbs, exercises: verbExercises),
     ];
 
+    // lastParagraph осмыслен только для текущего урока (progress.lastLesson).
+    // При открытии любого другого урока прохождение шагов начинается с нуля.
+    final initialProgressIndex =
+        progress?.lastLesson == lessonId ? progress!.lastParagraph : 0;
+
     return LessonData(
       lesson: lesson,
       steps: steps,
       additional: additional,
       nextLesson: nextLesson,
-      initialProgressIndex: progress?.lastParagraph ?? 0,
+      initialProgressIndex: initialProgressIndex,
     );
   }
 

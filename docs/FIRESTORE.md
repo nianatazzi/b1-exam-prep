@@ -2,7 +2,7 @@
 
 ## Firestore Structure
 
-Три корневых коллекции: `basic`, `exercises`, `private_user_info`, `public_user_info`.
+Четыре корневых коллекции: `basic`, `exercises`, `private_user_info`, `public_user_info`.
 
 **Обозначения:**
 - `name/` — коллекция или документ-контейнер
@@ -97,7 +97,7 @@ exercises/                          # коллекция
       course_id: string             # указатель на какой курс (например: basic_fr) 
       lesson_id: number               # id урока, к которому относится упражнение
       linked_item_id: number          # id подраздела урока (theory или verbs | lexical_set не имеет)
-      segment_type: string            # тип подраздела (theory | lexical_set | verbs)
+      segment_type: string            # значение упражнения: "theory" | "vocab" | "verb" — указывает на блок theory / lexical_set / verbs соответственно
       permission: string              # платный или бесплатный контент
       difficulty: number
       grammar_types: array            # список грамматических тем
@@ -177,6 +177,7 @@ public_user_info/                       # коллекция
 | Коллекция | Администратор | Авторизованный пользователь |
 |---|---|---|
 | `basic/**` | read + write | read |
+| `exercises/**` | read + write | read |
 | `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
 | `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
 

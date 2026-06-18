@@ -174,4 +174,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backToHomeButton => 'Retour à l\'accueil';
+
+  @override
+  String get verbTranslationColumn => 'Traduction';
 }

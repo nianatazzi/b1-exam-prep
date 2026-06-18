@@ -56,5 +56,6 @@
   "completeStepButton": "Terminer",
   "lessonCompleteTitle": "Leçon terminée !",
   "courseCompleteTitle": "Cours terminé !",
-  "backToHomeButton": "Retour à l'accueil"
+  "backToHomeButton": "Retour à l'accueil",
+  "verbTranslationColumn": "Traduction"
 }

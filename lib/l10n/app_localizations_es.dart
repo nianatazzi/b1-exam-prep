@@ -174,4 +174,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get backToHomeButton => 'Volver al inicio';
+
+  @override
+  String get verbTranslationColumn => 'Traducción';
 }

@@ -172,4 +172,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToHomeButton => 'Back to home';
+
+  @override
+  String get verbTranslationColumn => 'Translation';
 }

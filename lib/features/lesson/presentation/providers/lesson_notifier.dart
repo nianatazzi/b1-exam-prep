@@ -56,25 +56,20 @@ class LessonNotifier extends _$LessonNotifier {
 
   @override
   Future<LessonState> build(String langId, String lessonId) async {
-    late final LessonData data;
-    try {
-      data = await ref
-          .read(buildLessonUseCaseProvider)
-          .execute(_userId, langId, lessonId);
-    } catch (e, st) {
-      AppLogger.e('LessonNotifier.build error', error: e, stackTrace: st);
-      rethrow;
-    }
+    final data = await ref
+        .read(buildLessonUseCaseProvider)
+        .execute(_userId, langId, lessonId);
 
-    final initial = data.initialProgressIndex.clamp(
-      0,
-      data.steps.isEmpty ? 0 : data.steps.length - 1,
-    );
+    // progressIndex не должен превышать число шагов (устаревший прогресс,
+    // сокращённый контент). viewIndex — позиция видимого шага в пределах списка.
+    final stepCount = data.steps.length;
+    final progressIndex = data.initialProgressIndex.clamp(0, stepCount);
+    final viewIndex = progressIndex.clamp(0, stepCount == 0 ? 0 : stepCount - 1);
 
     return LessonState(
       data: data,
-      progressIndex: data.initialProgressIndex,
-      viewIndex: initial,
+      progressIndex: progressIndex,
+      viewIndex: viewIndex,
     );
   }
 
@@ -84,8 +79,6 @@ class LessonNotifier extends _$LessonNotifier {
     final newProgress = current.progressIndex + 1;
 
     try {
-      final lessonId = current.data.lesson.id;
-
       if (newProgress >= current.data.steps.length) {
         // Урок завершён — переключаем на следующий урок (если есть)
         final next = current.data.nextLesson;

@@ -164,5 +164,8 @@
   "@courseCompleteTitle": { "description": "Shown when the user finishes the last lesson" },
 
   "backToHomeButton": "Back to home",
-  "@backToHomeButton": { "description": "Button to return to HomeScreen after completing a lesson or course" }
+  "@backToHomeButton": { "description": "Button to return to HomeScreen after completing a lesson or course" },
+
+  "verbTranslationColumn": "Translation",
+  "@verbTranslationColumn": { "description": "Header of the translation column in the verb conjugation table" }
 }

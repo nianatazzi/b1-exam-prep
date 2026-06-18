@@ -172,4 +172,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get backToHomeButton => 'На главную';
+
+  @override
+  String get verbTranslationColumn => 'Перевод';
 }

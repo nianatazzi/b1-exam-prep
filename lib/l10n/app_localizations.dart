@@ -431,6 +431,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to home'**
   String get backToHomeButton;
+
+  /// Header of the translation column in the verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get verbTranslationColumn;
 }
 
 class _AppLocalizationsDelegate

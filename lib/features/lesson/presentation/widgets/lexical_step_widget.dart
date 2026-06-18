@@ -68,7 +68,7 @@ class _ContentPhase extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             itemCount: step.sets.length,
-            separatorBuilder: (_, __) =>
+            separatorBuilder: (_, _) =>
                 const Divider(height: AppSpacing.lg),
             itemBuilder: (_, i) {
               final vocab = step.sets[i];
