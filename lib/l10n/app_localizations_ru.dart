@@ -190,4 +190,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get finalSection => 'Финальные упражнения';
+
+  @override
+  String get checkButton => 'Проверить';
+
+  @override
+  String get correctLabel => 'Правильно!';
+
+  @override
+  String get incorrectLabel => 'Неправильно';
+
+  @override
+  String get correctAnswerLabel => 'Правильный ответ:';
+
+  @override
+  String get answerHint => 'Ваш перевод...';
 }

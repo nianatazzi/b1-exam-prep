@@ -180,5 +180,20 @@
   "@tensePast": { "description": "Tense name in verb conjugation table" },
 
   "finalSection": "Final exercises",
-  "@finalSection": { "description": "Label for the final exercises step in lesson card and nav panel" }
+  "@finalSection": { "description": "Label for the final exercises step in lesson card and nav panel" },
+
+  "checkButton": "Check",
+  "@checkButton": { "description": "Button to submit an exercise answer for checking" },
+
+  "correctLabel": "Correct!",
+  "@correctLabel": { "description": "Feedback shown when the user's answer is correct" },
+
+  "incorrectLabel": "Incorrect",
+  "@incorrectLabel": { "description": "Feedback shown when the user's answer is wrong" },
+
+  "correctAnswerLabel": "Correct answer:",
+  "@correctAnswerLabel": { "description": "Label before the correct answer shown after a wrong submission" },
+
+  "answerHint": "Your translation...",
+  "@answerHint": { "description": "Placeholder in the translation exercise text field" }
 }

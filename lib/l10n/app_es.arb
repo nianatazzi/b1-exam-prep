@@ -62,5 +62,10 @@
   "tenseFuture": "Futuro",
   "tensePresent": "Presente",
   "tensePast": "Pasado",
-  "finalSection": "Ejercicios finales"
+  "finalSection": "Ejercicios finales",
+  "checkButton": "Verificar",
+  "correctLabel": "¡Correcto!",
+  "incorrectLabel": "Incorrecto",
+  "correctAnswerLabel": "Respuesta correcta:",
+  "answerHint": "Tu traducción..."
 }

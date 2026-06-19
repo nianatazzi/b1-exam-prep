@@ -165,7 +165,7 @@ class _ContentPhase extends StatelessWidget {
 
 // ── Фаза упражнений ───────────────────────────────────────────────────────────
 
-class _ExercisePhase extends StatelessWidget {
+class _ExercisePhase extends StatefulWidget {
   final VerbSubStep subStep;
   final int exerciseIndex;
   final bool isLastVerb;
@@ -181,15 +181,30 @@ class _ExercisePhase extends StatelessWidget {
   });
 
   @override
+  State<_ExercisePhase> createState() => _ExercisePhaseState();
+}
+
+class _ExercisePhaseState extends State<_ExercisePhase> {
+  bool _isReady = false;
+
+  @override
+  void didUpdateWidget(_ExercisePhase oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.exerciseIndex != widget.exerciseIndex) {
+      setState(() => _isReady = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final exercises = subStep.exercises;
-    final isLastExercise = exerciseIndex >= exercises.length - 1;
+    final exercises = widget.subStep.exercises;
+    final isLastExercise = widget.exerciseIndex >= exercises.length - 1;
 
     final String buttonLabel;
     if (!isLastExercise) {
       buttonLabel = l10n.nextButton;
-    } else if (isLastVerb) {
+    } else if (widget.isLastVerb) {
       buttonLabel = l10n.completeStepButton;
     } else {
       buttonLabel = l10n.nextVerbButton;
@@ -199,7 +214,7 @@ class _ExercisePhase extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${exerciseIndex + 1} / ${exercises.length}',
+          '${widget.exerciseIndex + 1} / ${exercises.length}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -208,12 +223,15 @@ class _ExercisePhase extends StatelessWidget {
               ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        ExerciseWidget(exercise: exercises[exerciseIndex]),
+        ExerciseWidget(
+          exercise: exercises[widget.exerciseIndex],
+          onReady: () => setState(() => _isReady = true),
+        ),
         const Spacer(),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: isLastExercise ? onComplete : onNext,
+            onPressed: _isReady ? (isLastExercise ? widget.onComplete : widget.onNext) : null,
             child: Text(buttonLabel),
           ),
         ),

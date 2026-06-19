@@ -190,4 +190,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finalSection => 'Final exercises';
+
+  @override
+  String get checkButton => 'Check';
+
+  @override
+  String get correctLabel => 'Correct!';
+
+  @override
+  String get incorrectLabel => 'Incorrect';
+
+  @override
+  String get correctAnswerLabel => 'Correct answer:';
+
+  @override
+  String get answerHint => 'Your translation...';
 }

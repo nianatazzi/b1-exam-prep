@@ -62,5 +62,10 @@
   "tenseFuture": "Будущее",
   "tensePresent": "Настоящее",
   "tensePast": "Прошедшее",
-  "finalSection": "Финальные упражнения"
+  "finalSection": "Финальные упражнения",
+  "checkButton": "Проверить",
+  "correctLabel": "Правильно!",
+  "incorrectLabel": "Неправильно",
+  "correctAnswerLabel": "Правильный ответ:",
+  "answerHint": "Ваш перевод..."
 }

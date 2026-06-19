@@ -467,6 +467,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Final exercises'**
   String get finalSection;
+
+  /// Button to submit an exercise answer for checking
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get checkButton;
+
+  /// Feedback shown when the user's answer is correct
+  ///
+  /// In en, this message translates to:
+  /// **'Correct!'**
+  String get correctLabel;
+
+  /// Feedback shown when the user's answer is wrong
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get incorrectLabel;
+
+  /// Label before the correct answer shown after a wrong submission
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer:'**
+  String get correctAnswerLabel;
+
+  /// Placeholder in the translation exercise text field
+  ///
+  /// In en, this message translates to:
+  /// **'Your translation...'**
+  String get answerHint;
 }
 
 class _AppLocalizationsDelegate

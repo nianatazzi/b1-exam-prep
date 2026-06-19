@@ -192,4 +192,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get finalSection => 'Exercices finaux';
+
+  @override
+  String get checkButton => 'Vérifier';
+
+  @override
+  String get correctLabel => 'Correct !';
+
+  @override
+  String get incorrectLabel => 'Incorrect';
+
+  @override
+  String get correctAnswerLabel => 'Bonne réponse :';
+
+  @override
+  String get answerHint => 'Votre traduction...';
 }
