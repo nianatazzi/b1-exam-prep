@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
+import 'package:linguobyte/core/logger/app_logger.dart';
 import 'package:linguobyte/features/home/data/repositories/user_progress_repository.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/domain/usecases/build_lesson_use_case.dart';
@@ -109,9 +110,13 @@ class LessonNotifier extends _$LessonNotifier {
             : newProgress.clamp(0, stepCount == 0 ? 0 : stepCount - 1),
       ));
     } on AppError catch (e, st) {
-      state = AsyncError(e, st);
+      // Не переводим в AsyncError — экран урока остаётся, пользователь может повторить
+      // [TD-5] TODO: показать SnackBar с ошибкой через UI-callback или ref.invalidate
+      AppLogger.e('completeCurrentStep failed', error: e, stackTrace: st);
+      state = AsyncData(current);
     } catch (e, st) {
-      state = AsyncError(UnknownError(e.toString()), st);
+      AppLogger.e('completeCurrentStep unexpected error', error: e, stackTrace: st);
+      state = AsyncData(current);
     }
   }
 

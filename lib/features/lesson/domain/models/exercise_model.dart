@@ -13,6 +13,8 @@ abstract class ExerciseModel with _$ExerciseModel {
     @JsonKey(name: 'segment_type') required String segmentType,
     // null для vocab-упражнений (lexical_set не имеет linked_item_id)
     @JsonKey(name: 'linked_item_id') int? linkedItemId,
+    @JsonKey(name: 'audio_url') String? audioUrl,
+    @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'type_data') Map<String, dynamic>? typeData,
   }) = _ExerciseModel;
 

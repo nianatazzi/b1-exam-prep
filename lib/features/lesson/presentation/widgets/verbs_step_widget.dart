@@ -223,16 +223,24 @@ class _ExercisePhaseState extends State<_ExercisePhase> {
               ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        ExerciseWidget(
-          exercise: exercises[widget.exerciseIndex],
-          onReady: () => setState(() => _isReady = true),
+        Expanded(
+          child: ExerciseWidget(
+            exercise: exercises[widget.exerciseIndex],
+            onReady: () => setState(() => _isReady = true),
+          ),
         ),
-        const Spacer(),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isReady ? (isLastExercise ? widget.onComplete : widget.onNext) : null,
-            child: Text(buttonLabel),
+        const SizedBox(height: AppSpacing.lg),
+        Visibility(
+          visible: _isReady,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isReady ? (isLastExercise ? widget.onComplete : widget.onNext) : null,
+              child: Text(buttonLabel),
+            ),
           ),
         ),
       ],

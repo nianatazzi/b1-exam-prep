@@ -195,5 +195,26 @@
   "@correctAnswerLabel": { "description": "Label before the correct answer shown after a wrong submission" },
 
   "answerHint": "Your translation...",
-  "@answerHint": { "description": "Placeholder in the translation exercise text field" }
+  "@answerHint": { "description": "Placeholder in the translation exercise text field" },
+
+  "mosaicAnswerPlaceholder": "Tap words to build a sentence",
+  "@mosaicAnswerPlaceholder": { "description": "Placeholder shown in the mosaic answer area when no chunks are selected" },
+
+  "transcriptLabel": "Transcript",
+  "@transcriptLabel": { "description": "Label shown above the audio transcript after a listen_pick exercise is submitted" },
+
+  "seeTranslation": "Tap to see translation",
+  "@seeTranslation": { "description": "Button on flashcard front face that flips the card to reveal the answer" },
+
+  "cantSpeakNow": "I can't speak right now",
+  "@cantSpeakNow": { "description": "Button in voice_translate exercise that switches to text input mode" },
+
+  "tapToRecord": "Tap to record",
+  "@tapToRecord": { "description": "Hint below the mic button in voice_translate exercise" },
+
+  "listeningLabel": "Listening...",
+  "@listeningLabel": { "description": "Label shown while STT is active in voice_translate exercise" },
+
+  "recognizedText": "Recognized:",
+  "@recognizedText": { "description": "Label before the STT result in voice_translate exercise" }
 }

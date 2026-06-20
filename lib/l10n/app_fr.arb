@@ -67,5 +67,16 @@
   "correctLabel": "Correct !",
   "incorrectLabel": "Incorrect",
   "correctAnswerLabel": "Bonne réponse :",
-  "answerHint": "Votre traduction..."
+  "answerHint": "Votre traduction...",
+
+  "mosaicAnswerPlaceholder": "Appuyez sur les mots pour construire une phrase",
+
+  "transcriptLabel": "Transcription",
+
+  "seeTranslation": "Appuyez pour voir la traduction",
+
+  "cantSpeakNow": "Je ne peux pas parler maintenant",
+  "tapToRecord": "Appuyez pour enregistrer",
+  "listeningLabel": "J'écoute...",
+  "recognizedText": "Reconnu :"
 }

@@ -13,6 +13,8 @@ _ExerciseModel _$ExerciseModelFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       segmentType: json['segment_type'] as String,
       linkedItemId: (json['linked_item_id'] as num?)?.toInt(),
+      audioUrl: json['audio_url'] as String?,
+      imageUrl: json['image_url'] as String?,
       typeData: json['type_data'] as Map<String, dynamic>?,
     );
 
@@ -22,5 +24,7 @@ Map<String, dynamic> _$ExerciseModelToJson(_ExerciseModel instance) =>
       'type': instance.type,
       'segment_type': instance.segmentType,
       'linked_item_id': instance.linkedItemId,
+      'audio_url': instance.audioUrl,
+      'image_url': instance.imageUrl,
       'type_data': instance.typeData,
     };

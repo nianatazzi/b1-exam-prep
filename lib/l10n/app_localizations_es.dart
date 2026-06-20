@@ -207,4 +207,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get answerHint => 'Tu traducción...';
+
+  @override
+  String get mosaicAnswerPlaceholder =>
+      'Toca las palabras para construir una oración';
+
+  @override
+  String get transcriptLabel => 'Transcripción';
+
+  @override
+  String get seeTranslation => 'Toca para ver la traducción';
+
+  @override
+  String get cantSpeakNow => 'No puedo hablar ahora';
+
+  @override
+  String get tapToRecord => 'Toca para grabar';
+
+  @override
+  String get listeningLabel => 'Escuchando...';
+
+  @override
+  String get recognizedText => 'Reconocido:';
 }

@@ -49,11 +49,16 @@ class _TranslateSentenceExerciseWidgetState
     final userInput = _controller.text.trim();
     final bool isCorrect;
     if (pattern.isNotEmpty) {
-      isCorrect = RegExp(pattern).hasMatch(userInput);
+      bool regexMatch;
+      try {
+        regexMatch = RegExp(pattern).hasMatch(userInput);
+      } on FormatException {
+        // Невалидный regex в Firestore — откатываемся к строковому сравнению
+        regexMatch = userInput.toLowerCase() == _correctAnswer.toLowerCase();
+      }
+      isCorrect = regexMatch;
     } else {
-      // Если regex для этой локали нет — сравниваем строки без учёта регистра
-      isCorrect =
-          userInput.toLowerCase() == _correctAnswer.toLowerCase();
+      isCorrect = userInput.toLowerCase() == _correctAnswer.toLowerCase();
     }
 
     setState(() {
@@ -72,10 +77,8 @@ class _TranslateSentenceExerciseWidgetState
     final td = widget.exercise.typeData ?? {};
     final langCode = Localizations.localeOf(context).languageCode;
 
-    final titleMap =
-        (td['title'] as Map?)?.cast<String, dynamic>() ?? {};
-    final title =
-        (titleMap[langCode] ?? titleMap['en'] ?? '').toString();
+    final titleMap = (td['title'] as Map?)?.cast<String, dynamic>() ?? {};
+    final title = (titleMap[langCode] ?? titleMap['en'] ?? '').toString();
     final question = (td['question'] as String?) ?? '';
 
     final Color feedbackColor;
@@ -88,97 +91,99 @@ class _TranslateSentenceExerciseWidgetState
       feedbackBg = Colors.transparent;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Инструкция
-        if (title.isNotEmpty) ...[
-          Text(
-            title,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: ac.textMuted),
-          ),
-          const SizedBox(height: AppSpacing.md),
-        ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (title.isNotEmpty)
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: ac.textPrimary),
+                  ),
 
-        // Исходное предложение
-        if (question.isNotEmpty) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.lg,
-            ),
-            decoration: BoxDecoration(
-              color: ac.primarySub,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: cs.primary.withValues(alpha: 0.25),
-              ),
-            ),
-            child: Text(
-              question,
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(color: ac.textPrimary),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-        ],
+                // Исходное предложение для перевода
+                if (question.isNotEmpty)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xl,
+                      vertical: AppSpacing.lg,
+                    ),
+                    decoration: BoxDecoration(
+                      color: ac.primarySub,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                          color: cs.primary.withValues(alpha: 0.25)),
+                    ),
+                    child: Text(
+                      question,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(color: ac.textPrimary),
+                    ),
+                  ),
 
-        // Поле ввода перевода
-        TextField(
-          controller: _controller,
-          enabled: !_isSubmitted,
-          onChanged: (_) => setState(() {}),
-          maxLines: 3,
-          minLines: 2,
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(color: ac.textPrimary),
-          decoration: InputDecoration(
-            hintText: l10n.answerHint,
-            hintStyle: theme.textTheme.bodyLarge
-                ?.copyWith(color: ac.textMuted),
-            filled: true,
-            fillColor: ac.surfaceOverlay,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  BorderSide(color: ac.n600, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  BorderSide(color: cs.primary, width: 1.5),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: ac.n600, width: 1),
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
+                // Поле ввода перевода
+                TextField(
+                  controller: _controller,
+                  enabled: !_isSubmitted,
+                  onChanged: (_) => setState(() {}),
+                  maxLines: 3,
+                  minLines: 2,
+                  style:
+                      theme.textTheme.bodyLarge?.copyWith(color: ac.textPrimary),
+                  decoration: InputDecoration(
+                    hintText: l10n.answerHint,
+                    hintStyle:
+                        theme.textTheme.bodyLarge?.copyWith(color: ac.textMuted),
+                    filled: true,
+                    fillColor: ac.surfaceOverlay,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: ac.n500, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cs.primary, width: 1.5),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: ac.n600, width: 1),
+                    ),
+                  ),
+                ),
 
-        if (_isSubmitted)
-          ExerciseFeedbackBanner(
-            isCorrect: _isCorrect,
-            correctAnswer: _correctAnswer,
-            color: feedbackColor,
-            backgroundColor: feedbackBg,
-          )
-        else
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed:
-                  _controller.text.trim().isEmpty ? null : _check,
-              child: Text(l10n.checkButton),
+                if (_isSubmitted)
+                  ExerciseFeedbackBanner(
+                    isCorrect: _isCorrect,
+                    correctAnswer: _correctAnswer,
+                    color: feedbackColor,
+                    backgroundColor: feedbackBg,
+                  )
+                else
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed:
+                          _controller.text.trim().isEmpty ? null : _check,
+                      child: Text(l10n.checkButton),
+                    ),
+                  ),
+              ],
             ),
           ),
-      ],
+        );
+      },
     );
   }
 }

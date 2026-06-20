@@ -26,4 +26,7 @@ abstract class AppSizes {
 
   // Иконка профиля на HomeScreen
   static const double profileIconSize = 48;
+
+  // Кнопка воспроизведения аудио в упражнениях
+  static const double audioButtonSize = 64;
 }

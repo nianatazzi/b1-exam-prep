@@ -34,20 +34,17 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
 
   void _check() {
     final td = widget.exercise.typeData ?? {};
-    final blanks =
-        (td['blanks'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final blanks = (td['blanks'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    // whereType безопасно пропускает не-строки (на случай неверной схемы в Firestore)
     final accepted = blanks.isEmpty
         ? <String>[]
-        : ((blanks[0]['accepted'] as List?) ?? []).cast<String>();
+        : ((blanks[0]['accepted'] as List?) ?? []).whereType<String>().toList();
     _correctAnswer = accepted.isNotEmpty ? accepted.first : '';
 
     final userInput = _controller.text.trim().toLowerCase();
-    final isCorrect =
-        accepted.any((a) => a.toLowerCase() == userInput);
-
     setState(() {
       _isSubmitted = true;
-      _isCorrect = isCorrect;
+      _isCorrect = accepted.any((a) => a.toLowerCase() == userInput);
     });
     widget.onReady();
   }
@@ -61,14 +58,12 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
     final td = widget.exercise.typeData ?? {};
     final langCode = Localizations.localeOf(context).languageCode;
 
-    final titleMap =
-        (td['title'] as Map?)?.cast<String, dynamic>() ?? {};
-    final title =
-        (titleMap[langCode] ?? titleMap['en'] ?? '').toString();
-    final promptsMap =
-        (td['prompts'] as Map?)?.cast<String, dynamic>() ?? {};
-    final prompt =
-        (promptsMap[langCode] ?? promptsMap['en'] ?? '').toString();
+    final titleMap = (td['title'] as Map?)?.cast<String, dynamic>() ?? {};
+    final title = (titleMap[langCode] ?? titleMap['en'] ?? '').toString();
+
+    final promptsMap = (td['prompts'] as Map?)?.cast<String, dynamic>() ?? {};
+    final prompt = (promptsMap[langCode] ?? promptsMap['en'] ?? '').toString();
+
     final form = (td['form'] as String?) ?? '';
     final parts = form.split('[]');
 
@@ -85,40 +80,42 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title.isNotEmpty) ...[
+        if (title.isNotEmpty)
           Text(
             title,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: ac.textMuted),
+            style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
           ),
-          const SizedBox(height: AppSpacing.md),
-        ],
+
+        const Spacer(),
 
         // Перевод-подсказка
-        if (prompt.isNotEmpty) ...[
+        if (prompt.isNotEmpty)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
+              horizontal: AppSpacing.xl,
               vertical: AppSpacing.md,
             ),
             decoration: BoxDecoration(
-              color: ac.surfaceOverlay,
-              borderRadius: BorderRadius.circular(10),
+              color: ac.primarySub,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
             ),
             child: Text(
               prompt,
-              style: theme.textTheme.bodyMedium
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium
                   ?.copyWith(color: ac.textSecondary),
             ),
           ),
-          const SizedBox(height: AppSpacing.xl),
-        ],
 
-        // Предложение с пропуском
+        const Spacer(),
+
+        // Предложение с полем ввода
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 2,
+          spacing: 4,
+          runSpacing: AppSpacing.sm,
           children: [
             if (parts.isNotEmpty && parts[0].isNotEmpty)
               Text(parts[0], style: theme.textTheme.titleMedium),
@@ -134,18 +131,19 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 6,
+                    horizontal: 4,
+                  ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: cs.primary, width: 2),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: ac.primaryGlow, width: 2),
+                    borderSide: BorderSide(color: ac.primaryGlow, width: 2),
                   ),
                   disabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: _isSubmitted ? feedbackColor : ac.textMuted,
+                      color: _isSubmitted ? feedbackColor : ac.n500,
                       width: 2,
                     ),
                   ),
@@ -156,7 +154,8 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
               Text(parts[1], style: theme.textTheme.titleMedium),
           ],
         ),
-        const SizedBox(height: AppSpacing.xl),
+
+        const Spacer(),
 
         if (_isSubmitted)
           ExerciseFeedbackBanner(
@@ -169,8 +168,7 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed:
-                  _controller.text.trim().isEmpty ? null : _check,
+              onPressed: _controller.text.trim().isEmpty ? null : _check,
               child: Text(l10n.checkButton),
             ),
           ),
