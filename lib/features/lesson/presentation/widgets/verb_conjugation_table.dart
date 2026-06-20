@@ -99,9 +99,9 @@ class VerbConjugationTable extends StatelessWidget {
               style: tenseStyle,
             ),
           ),
-          const SizedBox.shrink(),
-          const SizedBox.shrink(),
-          const SizedBox.shrink(),
+          _pad(const SizedBox.shrink()),
+          _pad(const SizedBox.shrink()),
+          _pad(const SizedBox.shrink()),
         ],
       ));
 

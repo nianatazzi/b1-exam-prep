@@ -27,6 +27,7 @@
 | Сериализация | `freezed` + `json_serializable` |
 | Изображения | `cached_network_image` |
 | Аудио | `just_audio` |
+| STT (голосовые упражнения) | `speech_to_text` (нативный движок Android/iOS) |
 | Локализация | `flutter_localizations` + `intl` + ARB-файлы |
 | Логирование | `logger` через абстракцию `AppLogger` |
 | Shimmer | `shimmer` |
@@ -358,12 +359,34 @@ abstract class FirestorePaths {
 - **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
 - **`getLessonStepSummaries` — 3·N чтений Firestore на каждое открытие HomeScreen**: для N уроков выполняется `1` (уроки) + `1` (прогресс) + `3·N` (theory + lexical limit(1) + verbs limit(1)). На MVP допустимо: офлайн-кэш Firestore отдаёт повторные открытия, уроков немного. Долгосрочное решение: денормализовать `steps_summary` (массив `{type, title}` по каждому шагу) в документ урока — админ-панель пишет это поле при редактировании контента + бэкафилл существующих уроков; клиент читает сводку вместе со списком уроков, убирая все `3·N`. Админ-панель готова → задача разблокирована, выполнять **отдельной веткой** (схема FIRESTORE.md + клиент + миграция данных), не в рамках lesson-screen.
 
-### Фаза 4 (LessonScreen) — скелет реализован
+### Фаза 4 (LessonScreen) — реализована
 
-- **Виджеты упражнений**: `ExerciseWidget` — скелет (показывает `ex_id` + `type`). Детальный UI для каждого из 8 типов (`wordcard`, `flashcard`, `multiple_choice`, `fill_blank`, `mosaic`, `translate`, `listen_pick`, `voice_translate`) реализуется в отдельной сессии.
+- **Виджеты упражнений**: все 8 типов реализованы в `features/lesson/presentation/widgets/exercises/`:
+  - `wordcard` — карточка слова: слово, транскрипция, аудио, изображение, переводы
+  - `flashcard` — флэш-карточка с анимацией флипа: лицо (подсказка + поле ввода), обратная (слово + аудио + пример)
+  - `multiple_choice` — вставить слово из банка в пропуски предложения
+  - `fill_blank` — вписать слово в пропуск вручную
+  - `mosaic` — собрать предложение из чипов
+  - `translate_sentence` — перевести предложение текстом
+  - `listen_pick` — выбрать вариант после прослушивания аудио
+  - `voice_translate` — произнести перевод голосом (STT через `speech_to_text`) с текстовым fallback
+  - Роутер: `ExerciseWidget` делегирует по `exercise.type`. Все виджеты получают `key: ValueKey(exercise.exId)` для гарантированного сброса состояния между упражнениями.
+  - Общие виджеты: `ExerciseFeedbackBanner` (баннер правильно/неправильно + правильный ответ), `AudioPlayButton` (`shared/widgets/`) — воспроизведение через `just_audio`, disabled при `audioUrl == null`.
 - **Экран завершения урока**: `_LessonCompleteStub` — заглушка (иконка + текст + кнопка). Статистика, баллы, проблемные моменты — после MVP.
 - **Additional / подписка**: additional доступен через панель навигации (заглушка-диалог). Гейтинг по `subscription.plan` — после MVP.
 - **`IUserProgressRepository` cross-feature**: `LessonNotifier` зависит от репозитория из `features/home/`. Допустимо для MVP (аналогично `UserRepository`). Пост-MVP: вынести в `shared/` или `core/`.
 - **`BuildLessonUseCase` cross-feature**: UseCase в `features/lesson/domain/` использует `ILessonRepository` и `IUserProgressRepository` из `features/home/`. Долгосрочное решение: вынести общие интерфейсы в `shared/` или `core/`.
 - **`LessonStepSummary` в `LessonCard`**: `progressPercent` теперь учитывает все шаги (theory + lexical + verbs). Если последний урок завершён (нет nextLesson), `lastLesson` остаётся на нём — карточка показывается как active с 100%. Пост-MVP: добавить явное поле `isFullyCompleted` в прогресс.
 - **Генератор провайдера**: Riverpod 3.x для `@riverpod class LessonNotifier` генерирует `lessonProvider` (не `lessonNotifierProvider`) — суффикс `Notifier` убирается автоматически. Аналогично для других нотификаторов.
+
+### Технический долг — виджеты упражнений (feature/exercise-widgets)
+
+- **[TD-1] Debug Skip-кнопка (exercise_widget.dart)**: `ExerciseWidget` в debug-режиме оборачивает дочерний виджет в `Stack`, что нарушает bounded height для `Spacer()` внутри `fill_blank` и `mosaic` — в debug-сборке эти упражнения крашатся. Проблема самоустранится когда Skip-кнопка будет удалена перед релизом. **Действие: убрать весь debug-блок (`if (!kDebugMode) return child` + `Stack`) после завершения QA.**
+
+- **[TD-2] Молчаливый пропуск сломанных документов Firestore (exercise_repository.dart)**: Если `fromJson` падает на документе с отсутствующим обязательным полем, в release-сборке исключение поглощается без логирования — упражнение пропадает из урока без ошибки в UI. **Действие: заменить `kDebugMode`-print на `logger.warning(...)` чтобы проблема видела в release-логах тоже.**
+
+- **[TD-3] Пустое поле `form` в fill_blank (fill_blank_exercise_widget.dart)**: Если поле `form` в Firestore отсутствует или пустое, пользователь видит поле ввода без контекста предложения. **Действие: добавить guard — если `form` пустой, показывать заглушку или error-state вместо бессмысленного ввода.**
+
+- **[TD-4] Уникальность ключа виджетов по `exId` (exercise_widget.dart)**: `key: ValueKey(exercise.exId)` — если два упражнения в уроке имеют одинаковый `ex_id` (ошибка данных в Firestore), Flutter переиспользует State и второе упражнение открывается уже заполненным. Надёжнее использовать `ValueKey(exercise.id)` (DocumentSnapshot.id, гарантированно уникальный). **Действие: сменить ключ на `ValueKey(exercise.id)` — требует убедиться что `id` всегда непустой во всех сценариях загрузки.**
+
+- ~~**[TD-5]**~~ **ИСПРАВЛЕНО**: При ошибке сети `completeCurrentStep` теперь логирует через `AppLogger.e` и возвращает `state = AsyncData(current)` — экран урока остаётся, пользователь может нажать «Далее» ещё раз. Остаток: показывать SnackBar с ошибкой из UI (требует UI-callback или отдельного error-поля в `LessonState`).

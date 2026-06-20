@@ -105,8 +105,73 @@ exercises/                          # коллекция
       audio_url: string | null
       createdAt: timestamp
       updatedAt: timestamp
-      type_data: map                  # данные, специфичные для типа упражнения
+      type_data: map                  # данные, специфичные для типа упражнения (структура ниже)
       ex_id: number                   # порядковый номер 
+```
+
+### Структура `type_data` по типам упражнений
+
+```
+# wordcard — карточка слова
+type_data:
+  base_word: string                  # слово на изучаемом языке ("Bonjour")
+  pronunciation: string              # транскрипция ("bɔ̃ʒuʁ")
+  part_of_speech: string             # часть речи (не отображается в UI)
+  article: map<langCode, string>     # описательный текст о слове (показывается под картинкой)
+  translations: map<langCode, string> # переводы в виде строки: '"Вариант 1", "Вариант 2"'
+
+# flashcard — флэш-карточка с флипом
+type_data:
+  base_word: string                  # слово на изучаемом языке (обратная сторона)
+  translations: map<langCode, string> # переводы — подсказка (лицевая сторона)
+  context_sentence: map<langCode, string>  # пример использования (обратная сторона)
+  part_of_speech: string
+
+# fill_blank — вписать слово в пропуск
+type_data:
+  title: map<langCode, string>       # инструкция
+  prompts: map<langCode, string>     # перевод-подсказка
+  form: string                       # предложение с пропуском: "The dog [] quickly"
+  blanks: array
+    - accepted: array<string>        # допустимые варианты ответа
+
+# translate_sentence — перевести предложение текстом
+type_data:
+  title: map<langCode, string>       # инструкция
+  question: string                   # исходное предложение (на изучаемом языке)
+  correct_answer: map<langCode, string>  # правильный перевод
+  correct_pattern: map<langCode, string> # regex для проверки (может быть null)
+
+# mosaic — собрать предложение из чипов
+type_data:
+  title: map<langCode, string>       # инструкция
+  prompts: map<langCode, string>     # перевод-подсказка
+  answer: string                     # правильное предложение (слова через пробел)
+
+# multiple_choice — заполнить пропуски словами из банка
+type_data:
+  title: map<langCode, string>       # инструкция
+  prompts: map<langCode, string>     # перевод-подсказка
+  form: string                       # предложение с пропусками: "She [] to [] school"
+  blanks: array
+    - variants: array<string>        # варианты для этого пропуска (один правильный, остальные — дистракторы)
+      correct_index: number          # индекс правильного варианта в variants
+
+# listen_pick — выбрать вариант после прослушивания
+type_data:
+  title: map<langCode, string>       # инструкция
+  variants: array<string>            # варианты ответа
+  correct_index: number              # индекс правильного варианта
+  transcript: string                 # текст аудио (показывается после проверки)
+
+# voice_translate — произнести перевод голосом
+type_data:
+  title: map<langCode, string>       # инструкция
+  prompts: map<langCode, string>     # фраза для перевода (на языке пользователя)
+  correct_answer: string             # правильный ответ (на изучаемом языке)
+  correct_pattern: string | null     # regex для проверки STT-результата
+  accepted_answers: array<string> | null  # дополнительные допустимые варианты
+  stt_language_code: string          # язык для STT ("fr-FR", "en-US" и т.д.)
 ```
 
 ---

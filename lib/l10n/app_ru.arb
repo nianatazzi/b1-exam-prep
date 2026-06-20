@@ -62,5 +62,21 @@
   "tenseFuture": "Будущее",
   "tensePresent": "Настоящее",
   "tensePast": "Прошедшее",
-  "finalSection": "Финальные упражнения"
+  "finalSection": "Финальные упражнения",
+  "checkButton": "Проверить",
+  "correctLabel": "Правильно!",
+  "incorrectLabel": "Неправильно",
+  "correctAnswerLabel": "Правильный ответ:",
+  "answerHint": "Ваш перевод...",
+
+  "mosaicAnswerPlaceholder": "Нажмите слова, чтобы составить предложение",
+
+  "transcriptLabel": "Транскрипт",
+
+  "seeTranslation": "Нажмите, чтобы увидеть перевод",
+
+  "cantSpeakNow": "Я не могу сейчас говорить",
+  "tapToRecord": "Нажмите для записи",
+  "listeningLabel": "Слушаю...",
+  "recognizedText": "Распознано:"
 }

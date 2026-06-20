@@ -46,6 +46,30 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color n600;
   final Color n900;
 
+  // ВРЕМЕННО: превью светлой темы — удалить или оформить в полноценный AppTheme.light
+  static const lightPreview = AppColors(
+    primaryGlow:    Color(0xFFC45DF6),
+    primaryDim:     Color(0xFF7B12BC),
+    primarySub:     Color(0xFFF3E8FF),
+    secondarySub:   Color(0xFFFFF8E7),
+    success:        Color(0xFF16A34A),
+    successSub:     Color(0xFFDCFCE7),
+    errorSub:       Color(0xFFFEE2E2),
+    surfaceRaised:  Color(0xFFFFFFFF),
+    surfaceOverlay: Color(0xFFF5F2FF),
+    textPrimary:    Color(0xFF1A0F2E),
+    textSecondary:  Color(0xFF5A4878),
+    textMuted:      Color(0xFF9585BB),
+    n50:  Color(0xFFF7F5FA),
+    n100: Color(0xFFEDE8F5),
+    n200: Color(0xFFDDD5EE),
+    n300: Color(0xFFBFB3D9),
+    n400: Color(0xFF9585BB),
+    n500: Color(0xFF6B5A8E),
+    n600: Color(0xFFDDD5EE),
+    n900: Color(0xFF1A0F2E),
+  );
+
   static const dark = AppColors(
     primaryGlow:    Color(0xFFC45DF6),
     primaryDim:     Color(0xFF7B12BC),

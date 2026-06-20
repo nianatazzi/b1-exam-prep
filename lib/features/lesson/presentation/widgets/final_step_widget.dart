@@ -23,6 +23,12 @@ class FinalStepWidget extends StatefulWidget {
 
 class _FinalStepWidgetState extends State<FinalStepWidget> {
   int _exerciseIndex = 0;
+  bool _isReady = false;
+
+  void _onNext() => setState(() {
+        _exerciseIndex++;
+        _isReady = false;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +49,24 @@ class _FinalStepWidgetState extends State<FinalStepWidget> {
               ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        ExerciseWidget(exercise: exercises[_exerciseIndex]),
-        const Spacer(),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: isLast
-                ? widget.onComplete
-                : () => setState(() => _exerciseIndex++),
-            child: Text(isLast ? l10n.completeStepButton : l10n.nextButton),
+        Expanded(
+          child: ExerciseWidget(
+            exercise: exercises[_exerciseIndex],
+            onReady: () => setState(() => _isReady = true),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Visibility(
+          visible: _isReady,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isReady ? (isLast ? widget.onComplete : _onNext) : null,
+              child: Text(isLast ? l10n.completeStepButton : l10n.nextButton),
+            ),
           ),
         ),
       ],

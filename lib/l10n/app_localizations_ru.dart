@@ -190,4 +190,41 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get finalSection => 'Финальные упражнения';
+
+  @override
+  String get checkButton => 'Проверить';
+
+  @override
+  String get correctLabel => 'Правильно!';
+
+  @override
+  String get incorrectLabel => 'Неправильно';
+
+  @override
+  String get correctAnswerLabel => 'Правильный ответ:';
+
+  @override
+  String get answerHint => 'Ваш перевод...';
+
+  @override
+  String get mosaicAnswerPlaceholder =>
+      'Нажмите слова, чтобы составить предложение';
+
+  @override
+  String get transcriptLabel => 'Транскрипт';
+
+  @override
+  String get seeTranslation => 'Нажмите, чтобы увидеть перевод';
+
+  @override
+  String get cantSpeakNow => 'Я не могу сейчас говорить';
+
+  @override
+  String get tapToRecord => 'Нажмите для записи';
+
+  @override
+  String get listeningLabel => 'Слушаю...';
+
+  @override
+  String get recognizedText => 'Распознано:';
 }

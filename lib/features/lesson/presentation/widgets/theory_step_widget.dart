@@ -89,7 +89,7 @@ class _ContentPhase extends StatelessWidget {
   }
 }
 
-class _ExercisePhase extends StatelessWidget {
+class _ExercisePhase extends StatefulWidget {
   final TheoryLessonStep step;
   final int exerciseIndex;
   final VoidCallback onNext;
@@ -103,15 +103,30 @@ class _ExercisePhase extends StatelessWidget {
   });
 
   @override
+  State<_ExercisePhase> createState() => _ExercisePhaseState();
+}
+
+class _ExercisePhaseState extends State<_ExercisePhase> {
+  bool _isReady = false;
+
+  @override
+  void didUpdateWidget(_ExercisePhase oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.exerciseIndex != widget.exerciseIndex) {
+      setState(() => _isReady = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isLast = exerciseIndex >= step.exercises.length - 1;
+    final isLast = widget.exerciseIndex >= widget.step.exercises.length - 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${exerciseIndex + 1} / ${step.exercises.length}',
+          '${widget.exerciseIndex + 1} / ${widget.step.exercises.length}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -120,14 +135,24 @@ class _ExercisePhase extends StatelessWidget {
               ),
         ),
         const SizedBox(height: AppSpacing.lg),
-        ExerciseWidget(exercise: step.exercises[exerciseIndex]),
-        const Spacer(),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: isLast ? onComplete : onNext,
-            child: Text(
-                isLast ? l10n.completeStepButton : l10n.nextButton),
+        Expanded(
+          child: ExerciseWidget(
+            exercise: widget.step.exercises[widget.exerciseIndex],
+            onReady: () => setState(() => _isReady = true),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Visibility(
+          visible: _isReady,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isReady ? (isLast ? widget.onComplete : widget.onNext) : null,
+              child: Text(isLast ? l10n.completeStepButton : l10n.nextButton),
+            ),
           ),
         ),
       ],

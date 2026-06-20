@@ -192,4 +192,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get finalSection => 'Exercices finaux';
+
+  @override
+  String get checkButton => 'Vérifier';
+
+  @override
+  String get correctLabel => 'Correct !';
+
+  @override
+  String get incorrectLabel => 'Incorrect';
+
+  @override
+  String get correctAnswerLabel => 'Bonne réponse :';
+
+  @override
+  String get answerHint => 'Votre traduction...';
+
+  @override
+  String get mosaicAnswerPlaceholder =>
+      'Appuyez sur les mots pour construire une phrase';
+
+  @override
+  String get transcriptLabel => 'Transcription';
+
+  @override
+  String get seeTranslation => 'Appuyez pour voir la traduction';
+
+  @override
+  String get cantSpeakNow => 'Je ne peux pas parler maintenant';
+
+  @override
+  String get tapToRecord => 'Appuyez pour enregistrer';
+
+  @override
+  String get listeningLabel => 'J\'écoute...';
+
+  @override
+  String get recognizedText => 'Reconnu :';
 }

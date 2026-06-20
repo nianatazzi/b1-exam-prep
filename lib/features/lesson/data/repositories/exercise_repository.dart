@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:linguobyte/core/constants/firestore_paths.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
@@ -28,8 +29,15 @@ class ExerciseRepository implements IExerciseRepository {
           .where('lesson_id', isEqualTo: lessonLId)
           .get();
       final docs = snap.docs
-          .map((doc) =>
-              ExerciseModel.fromJson({...doc.data(), 'id': doc.id}))
+          .map((doc) {
+            try {
+              return ExerciseModel.fromJson({...doc.data(), 'id': doc.id});
+            } catch (e) {
+              if (kDebugMode) debugPrint('⚠️ [ExerciseRepository] пропущен документ ${doc.id}: $e');
+              return null;
+            }
+          })
+          .whereType<ExerciseModel>()
           .toList()
         ..sort((a, b) => a.exId.compareTo(b.exId));
       return docs;

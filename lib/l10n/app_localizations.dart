@@ -467,6 +467,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Final exercises'**
   String get finalSection;
+
+  /// Button to submit an exercise answer for checking
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get checkButton;
+
+  /// Feedback shown when the user's answer is correct
+  ///
+  /// In en, this message translates to:
+  /// **'Correct!'**
+  String get correctLabel;
+
+  /// Feedback shown when the user's answer is wrong
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get incorrectLabel;
+
+  /// Label before the correct answer shown after a wrong submission
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer:'**
+  String get correctAnswerLabel;
+
+  /// Placeholder in the translation exercise text field
+  ///
+  /// In en, this message translates to:
+  /// **'Your translation...'**
+  String get answerHint;
+
+  /// Placeholder shown in the mosaic answer area when no chunks are selected
+  ///
+  /// In en, this message translates to:
+  /// **'Tap words to build a sentence'**
+  String get mosaicAnswerPlaceholder;
+
+  /// Label shown above the audio transcript after a listen_pick exercise is submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Transcript'**
+  String get transcriptLabel;
+
+  /// Button on flashcard front face that flips the card to reveal the answer
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to see translation'**
+  String get seeTranslation;
+
+  /// Button in voice_translate exercise that switches to text input mode
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t speak right now'**
+  String get cantSpeakNow;
+
+  /// Hint below the mic button in voice_translate exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to record'**
+  String get tapToRecord;
+
+  /// Label shown while STT is active in voice_translate exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get listeningLabel;
+
+  /// Label before the STT result in voice_translate exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Recognized:'**
+  String get recognizedText;
 }
 
 class _AppLocalizationsDelegate

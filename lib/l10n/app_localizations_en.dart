@@ -190,4 +190,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finalSection => 'Final exercises';
+
+  @override
+  String get checkButton => 'Check';
+
+  @override
+  String get correctLabel => 'Correct!';
+
+  @override
+  String get incorrectLabel => 'Incorrect';
+
+  @override
+  String get correctAnswerLabel => 'Correct answer:';
+
+  @override
+  String get answerHint => 'Your translation...';
+
+  @override
+  String get mosaicAnswerPlaceholder => 'Tap words to build a sentence';
+
+  @override
+  String get transcriptLabel => 'Transcript';
+
+  @override
+  String get seeTranslation => 'Tap to see translation';
+
+  @override
+  String get cantSpeakNow => 'I can\'t speak right now';
+
+  @override
+  String get tapToRecord => 'Tap to record';
+
+  @override
+  String get listeningLabel => 'Listening...';
+
+  @override
+  String get recognizedText => 'Recognized:';
 }
