@@ -322,30 +322,39 @@ class _HomeShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Shimmer.fromColors(
       baseColor: colors.surfaceRaised,
       highlightColor: colors.surfaceOverlay,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(3, (i) {
-            return Container(
-              width: AppSizes.lessonCardWidth,
-              height: AppSizes.lessonCardHeight,
-              margin: EdgeInsets.only(right: i < 2 ? AppSpacing.md : 0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-              ),
-            );
-          }),
+      child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: screenWidth - AppSpacing.lg * 2,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(2, (i) {
+                return Container(
+                  width: AppSizes.lessonCardWidth,
+                  height: AppSizes.lessonCardHeight,
+                  margin: EdgeInsets.only(right: i < 1 ? AppSpacing.md : 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                  ),
+                );
+              }),
+            ),
+          ),
         ),
       ),
     );

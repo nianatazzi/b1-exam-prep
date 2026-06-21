@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
@@ -41,10 +42,10 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
         : ((blanks[0]['accepted'] as List?) ?? []).whereType<String>().toList();
     _correctAnswer = accepted.isNotEmpty ? accepted.first : '';
 
-    final userInput = _controller.text.trim().toLowerCase();
+    final userInput = normalizeAnswer(_controller.text);
     setState(() {
       _isSubmitted = true;
-      _isCorrect = accepted.any((a) => a.toLowerCase() == userInput);
+      _isCorrect = accepted.any((a) => normalizeAnswer(a) == userInput);
     });
     widget.onReady();
   }
@@ -86,10 +87,8 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
             style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
           ),
 
-        const Spacer(),
-
-        // Перевод-подсказка
-        if (prompt.isNotEmpty)
+        if (prompt.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.xl),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -108,8 +107,9 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
                   ?.copyWith(color: ac.textSecondary),
             ),
           ),
+        ],
 
-        const Spacer(),
+        const SizedBox(height: AppSpacing.xl),
 
         // Предложение с полем ввода
         Wrap(
@@ -155,7 +155,7 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
           ],
         ),
 
-        const Spacer(),
+        const SizedBox(height: AppSpacing.lg),
 
         if (_isSubmitted)
           ExerciseFeedbackBanner(

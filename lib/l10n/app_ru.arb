@@ -75,6 +75,8 @@
 
   "seeTranslation": "Нажмите, чтобы увидеть перевод",
 
+  "hideTranslation": "Нажмите, чтобы скрыть перевод",
+
   "cantSpeakNow": "Я не могу сейчас говорить",
   "tapToRecord": "Нажмите для записи",
   "listeningLabel": "Слушаю...",

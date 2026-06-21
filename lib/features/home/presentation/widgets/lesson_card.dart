@@ -189,66 +189,47 @@ class _StepRow extends StatelessWidget {
     final cs = theme.colorScheme;
 
     final Color dotColor;
-    final Color lineColor;
     final Color textColor;
     final bool isDotFilled;
     switch (state) {
       case LessonCardState.done:
         dotColor = cs.primary;
-        lineColor = cs.primary.withValues(alpha: 0.3);
         textColor = cs.onSurface;
         isDotFilled = true;
       case LessonCardState.active:
         // Кольцо вместо закрашенной точки: шаг текущий, но не завершён
         dotColor = cs.primary;
-        lineColor = cs.primary.withValues(alpha: 0.3);
         textColor = cs.onSurface;
         isDotFilled = false;
       case LessonCardState.locked:
         dotColor = cs.primary.withValues(alpha: 0.35);
-        lineColor = cs.primary.withValues(alpha: 0.2);
         textColor = cs.onSurface.withValues(alpha: 0.6);
         isDotFilled = true;
     }
 
-    return IntrinsicHeight(
+    return Padding(
+      padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.xs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: AppSpacing.lg,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: AppSpacing.xs),
-                  width: AppSizes.timelineDot,
-                  height: AppSizes.timelineDot,
-                  decoration: isDotFilled
-                      ? BoxDecoration(
-                          color: dotColor,
-                          shape: BoxShape.circle,
-                        )
-                      : BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: dotColor, width: 1.5),
-                        ),
-                ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: AppSizes.timelineLineWidth,
-                      color: lineColor,
-                    ),
-                  ),
-              ],
+            child: Center(
+              child: Container(
+                width: AppSizes.timelineDot,
+                height: AppSizes.timelineDot,
+                decoration: isDotFilled
+                    ? BoxDecoration(color: dotColor, shape: BoxShape.circle)
+                    : BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: dotColor, width: 1.5),
+                      ),
+              ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.sm,
-                bottom: AppSpacing.sm,
-              ),
+              padding: const EdgeInsets.only(left: AppSpacing.sm),
               child: Text(
                 _displayTitle(),
                 style: theme.textTheme.bodyMedium?.copyWith(color: textColor),

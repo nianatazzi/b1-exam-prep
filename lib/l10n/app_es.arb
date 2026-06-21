@@ -75,6 +75,8 @@
 
   "seeTranslation": "Toca para ver la traducción",
 
+  "hideTranslation": "Toca para ocultar la traducción",
+
   "cantSpeakNow": "No puedo hablar ahora",
   "tapToRecord": "Toca para grabar",
   "listeningLabel": "Escuchando...",

@@ -114,6 +114,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         }
 
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: _LessonAppBar(
             title: state.data.lesson.theme,
             progressIndex: state.progressIndex,

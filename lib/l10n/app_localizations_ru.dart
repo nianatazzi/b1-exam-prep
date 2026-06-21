@@ -217,6 +217,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get seeTranslation => 'Нажмите, чтобы увидеть перевод';
 
   @override
+  String get hideTranslation => 'Нажмите, чтобы скрыть перевод';
+
+  @override
   String get cantSpeakNow => 'Я не могу сейчас говорить';
 
   @override

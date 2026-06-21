@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
+import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
@@ -12,11 +13,13 @@ enum _VoiceState { idle, listening, done }
 class VoiceTranslateExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final VoidCallback? onAutoAdvance;
 
   const VoiceTranslateExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onAutoAdvance,
   });
 
   @override
@@ -60,6 +63,7 @@ class _VoiceTranslateExerciseWidgetState
     if (_voiceState == _VoiceState.listening) {
       await _speech.stop();
       setState(() => _voiceState = _VoiceState.done);
+      _checkAndAutoAdvance();
       return;
     }
 
@@ -76,6 +80,7 @@ class _VoiceTranslateExerciseWidgetState
           _recognizedText = result.recognizedWords;
           if (result.finalResult) _voiceState = _VoiceState.done;
         });
+        if (result.finalResult) _checkAndAutoAdvance();
       },
       listenOptions: SpeechListenOptions(
         localeId: localeId,
@@ -85,21 +90,37 @@ class _VoiceTranslateExerciseWidgetState
     );
   }
 
+  // Вызывается автоматически после окончания записи в голосовом режиме.
+  // В текстовом режиме или без onAutoAdvance — ничего не делает.
+  void _checkAndAutoAdvance() {
+    if (widget.onAutoAdvance == null || _useTextMode || _isSubmitted) return;
+    final td = widget.exercise.typeData ?? {};
+    final correctAnswer = (td['correct_answer'] as String?) ?? '';
+    final rawAccepted = td['accepted_answers'];
+    final acceptedAnswers =
+        rawAccepted is List ? rawAccepted.cast<String>() : <String>[];
+    _check(correctAnswer, acceptedAnswers);
+    if (_isCorrect) {
+      Future.delayed(const Duration(milliseconds: 1300), () {
+        if (mounted) widget.onAutoAdvance!();
+      });
+    }
+    // при ошибке — ждём тапа пользователя на кнопку "Продолжить"
+  }
+
   void _check(String correctAnswer, List<String> acceptedAnswers) {
     _correctAnswer = correctAnswer;
-    final input = _useTextMode
-        ? _textCtrl.text.trim()
-        : _recognizedText.trim();
-
-    final normalized = input.toLowerCase();
-    final isCorrect = normalized == correctAnswer.toLowerCase() ||
-        acceptedAnswers.any((a) => a.toLowerCase() == normalized);
+    final input = _useTextMode ? _textCtrl.text : _recognizedText;
+    final normalized = normalizeAnswer(input);
+    final isCorrect = normalized == normalizeAnswer(correctAnswer) ||
+        acceptedAnswers.any((a) => normalizeAnswer(a) == normalized);
 
     setState(() {
       _isSubmitted = true;
       _isCorrect = isCorrect;
     });
-    widget.onReady();
+    // в авто-голосовом режиме кнопка "Далее" не нужна
+    if (_useTextMode || widget.onAutoAdvance == null) widget.onReady();
   }
 
   @override
@@ -139,6 +160,8 @@ class _VoiceTranslateExerciseWidgetState
         ? _textCtrl.text.trim().isNotEmpty
         : _voiceState == _VoiceState.done && _recognizedText.isNotEmpty;
 
+    final bool isAutoVoiceMode = widget.onAutoAdvance != null && !_useTextMode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -149,10 +172,9 @@ class _VoiceTranslateExerciseWidgetState
             style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
           ),
 
-        const Spacer(),
-
-        // Фраза для перевода
-        if (prompt.isNotEmpty)
+        if (prompt.isNotEmpty) ...[
+          _useTextMode ? const SizedBox(height: AppSpacing.xl) : const Spacer(),
+          // Фраза для перевода
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -170,8 +192,9 @@ class _VoiceTranslateExerciseWidgetState
               style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
             ),
           ),
+        ],
 
-        const Spacer(),
+        _useTextMode ? const SizedBox(height: AppSpacing.xl) : const Spacer(),
 
         // Зона ввода: голос или текст
         if (_useTextMode)
@@ -179,17 +202,39 @@ class _VoiceTranslateExerciseWidgetState
         else
           _buildVoiceInput(theme, cs, ac, l10n, sttLocaleId),
 
-        const Spacer(),
+        _useTextMode ? const SizedBox(height: AppSpacing.lg) : const Spacer(),
 
         // Фидбэк или кнопки
-        if (_isSubmitted)
+        if (_isSubmitted) ...[
           ExerciseFeedbackBanner(
             isCorrect: _isCorrect,
             correctAnswer: _correctAnswer,
             color: feedbackColor,
             backgroundColor: feedbackBg,
-          )
-        else ...[
+          ),
+          // в авто-режиме при ошибке показываем кнопку продолжить
+          if (isAutoVoiceMode && !_isCorrect) ...[
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: widget.onAutoAdvance,
+                child: Text(l10n.nextButton),
+              ),
+            ),
+          ],
+        ] else if (isAutoVoiceMode) ...[
+          // авто-режим: кнопки "Проверить" нет, только ссылка на текстовый режим
+          Center(
+            child: TextButton(
+              onPressed: () => setState(() => _useTextMode = true),
+              child: Text(
+                l10n.cantSpeakNow,
+                style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
+              ),
+            ),
+          ),
+        ] else ...[
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -206,8 +251,7 @@ class _VoiceTranslateExerciseWidgetState
                 onPressed: () => setState(() => _useTextMode = true),
                 child: Text(
                   l10n.cantSpeakNow,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: ac.textMuted),
+                  style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
                 ),
               ),
             ),
@@ -227,7 +271,10 @@ class _VoiceTranslateExerciseWidgetState
     final isListening = _voiceState == _VoiceState.listening;
     final isDone = _voiceState == _VoiceState.done;
 
-    return Column(
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Кнопка микрофона
         GestureDetector(
@@ -299,6 +346,7 @@ class _VoiceTranslateExerciseWidgetState
           ),
         ],
       ],
+      ),
     );
   }
 
