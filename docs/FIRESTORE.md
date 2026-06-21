@@ -197,9 +197,10 @@ private_user_info/                      # коллекция
       {langId}/                         # документ: en | es | fr
         lastLesson: string              # id документа последнего урока (например "lesson_01")
         lastParagraph: number           # индекс последней завершённой пары "контент+упражнения" в последовательности шагов урока (не номер блока theory/lexical_set/verbs напрямую). Блок считается завершённым только после прохождения его упражнений.
-        oral_progress: number           # прогресс разговорной части (0–100)
+        speaking_progress: number       # прогресс разговорной части (0–100)
         grammar_progress: number        # прогресс грамматики (0–100)
         lexicon_progress: number        # прогресс лексики (0–100)
+        listening_progress: number      # прогресс аудирования (0-100)
         progress: map                   # детальный прогресс (заглушка для расширения)
 
         user_vocabulary/                # подколлекция
