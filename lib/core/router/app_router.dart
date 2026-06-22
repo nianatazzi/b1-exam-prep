@@ -7,6 +7,9 @@ import 'package:linguobyte/features/home/presentation/screens/home_screen.dart';
 import 'package:linguobyte/features/home/presentation/splash_screen.dart';
 import 'package:linguobyte/features/lesson/presentation/screens/lesson_screen.dart';
 import 'package:linguobyte/features/profile/presentation/profile_screen.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
+import 'package:linguobyte/features/profile/presentation/result_screen.dart';
+import 'package:linguobyte/features/profile/presentation/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -63,6 +66,16 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.result,
+        builder: (context, state) => ResultScreen(
+          results: state.extra! as List<ExerciseResult>,
+        ),
       ),
       GoRoute(
         path: AppRoutes.lesson,

@@ -34,6 +34,11 @@ _PrivateUserModel _$PrivateUserModelFromJson(Map<String, dynamic> json) =>
       subscription: SubscriptionModel.fromJson(
         json['subscription'] as Map<String, dynamic>,
       ),
+      lastActiveDate: json['lastActiveDate'] == null
+          ? null
+          : DateTime.parse(json['lastActiveDate'] as String),
+      currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
+      bestStreak: (json['bestStreak'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$PrivateUserModelToJson(_PrivateUserModel instance) =>
@@ -42,4 +47,7 @@ Map<String, dynamic> _$PrivateUserModelToJson(_PrivateUserModel instance) =>
       'email': instance.email,
       'phone': instance.phone,
       'subscription': instance.subscription,
+      'lastActiveDate': instance.lastActiveDate?.toIso8601String(),
+      'currentStreak': instance.currentStreak,
+      'bestStreak': instance.bestStreak,
     };

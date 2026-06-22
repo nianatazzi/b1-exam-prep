@@ -219,5 +219,146 @@
   "@listeningLabel": { "description": "Label shown while STT is active in voice_translate exercise" },
 
   "recognizedText": "Recognized:",
-  "@recognizedText": { "description": "Label before the STT result in voice_translate exercise" }
+  "@recognizedText": { "description": "Label before the STT result in voice_translate exercise" },
+
+  "settingsTitle": "Settings",
+  "@settingsTitle": { "description": "Settings screen title" },
+
+  "interfaceLanguageSection": "Interface language",
+  "@interfaceLanguageSection": { "description": "Settings section header for interface language" },
+
+  "appearanceSection": "Appearance",
+  "@appearanceSection": { "description": "Settings section header for appearance" },
+
+  "appearanceLabel": "Appearance",
+  "@appearanceLabel": { "description": "Appearance setting label" },
+
+  "darkMode": "Dark",
+  "@darkMode": { "description": "Dark theme option" },
+
+  "lightMode": "Light",
+  "@lightMode": { "description": "Light theme option" },
+
+  "darkModeSubtitle": "Dark mode",
+  "@darkModeSubtitle": { "description": "Subtitle when dark mode is active" },
+
+  "lightModeSubtitle": "Light mode",
+  "@lightModeSubtitle": { "description": "Subtitle when light mode is active" },
+
+  "speechSection": "Speech",
+  "@speechSection": { "description": "Settings section header for speech settings" },
+
+  "speechSpeedLabel": "Speech speed",
+  "@speechSpeedLabel": { "description": "Speech speed setting label" },
+
+  "speechSpeedNormal": "Normal",
+  "@speechSpeedNormal": { "description": "Normal speech speed label" },
+
+  "accountSection": "Account",
+  "@accountSection": { "description": "Settings section header for account" },
+
+  "currentStreakLabel": "Current streak",
+  "@currentStreakLabel": { "description": "Streak card title" },
+
+  "daysLabel": "days",
+  "@daysLabel": { "description": "Days unit label in streak card" },
+
+  "dayMon": "M",
+  "@dayMon": { "description": "Monday abbreviation" },
+  "dayTue": "T",
+  "@dayTue": { "description": "Tuesday abbreviation" },
+  "dayWed": "W",
+  "@dayWed": { "description": "Wednesday abbreviation" },
+  "dayThu": "T",
+  "@dayThu": { "description": "Thursday abbreviation" },
+  "dayFri": "F",
+  "@dayFri": { "description": "Friday abbreviation" },
+  "daySat": "S",
+  "@daySat": { "description": "Saturday abbreviation" },
+  "daySun": "S",
+  "@daySun": { "description": "Sunday abbreviation" },
+
+  "bestStreakLabel": "Best: {count}",
+  "@bestStreakLabel": {
+    "description": "Best streak badge",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "proficiencySection": "Proficiency",
+  "@proficiencySection": { "description": "Profile section header for skills radar chart" },
+
+  "grammarLabel": "Grammar",
+  "@grammarLabel": { "description": "Grammar skill label" },
+
+  "vocabularyLabel": "Vocabulary",
+  "@vocabularyLabel": { "description": "Vocabulary skill label" },
+
+  "listeningSkillLabel": "Listening",
+  "@listeningSkillLabel": { "description": "Listening skill label" },
+
+  "speakingLabel": "Speaking",
+  "@speakingLabel": { "description": "Speaking skill label" },
+
+  "achievementsSection": "Achievements",
+  "@achievementsSection": { "description": "Profile section header for achievements" },
+
+  "seeAll": "See all",
+  "@seeAll": { "description": "Link to see all achievements" },
+
+  "achievementMasterConjugator": "Master Conjugator",
+  "@achievementMasterConjugator": { "description": "Achievement name" },
+
+  "achievementFirstStep": "First Step",
+  "@achievementFirstStep": { "description": "Achievement name" },
+
+  "achievementFocusedLearner": "Focused Learner",
+  "@achievementFocusedLearner": { "description": "Achievement name" },
+
+  "achievementInterestedLearner": "Interested Learner",
+  "@achievementInterestedLearner": { "description": "Achievement name" },
+
+  "achievementVocabularyMaster": "Vocabulary Master",
+  "@achievementVocabularyMaster": { "description": "Achievement name" },
+
+  "achievementMasterConjugatorDesc": "Zero mistakes",
+  "@achievementMasterConjugatorDesc": { "description": "Achievement short description" },
+
+  "achievementFirstStepDesc": "Finish lesson 1",
+  "@achievementFirstStepDesc": { "description": "Achievement short description" },
+
+  "achievementFocusedLearnerDesc": "7-day streak",
+  "@achievementFocusedLearnerDesc": { "description": "Achievement short description" },
+
+  "achievementInterestedLearnerDesc": "All extras done",
+  "@achievementInterestedLearnerDesc": { "description": "Achievement short description" },
+
+  "achievementVocabularyMasterDesc": "All lexical sets",
+  "@achievementVocabularyMasterDesc": { "description": "Achievement short description" },
+
+  "resultTitle": "Results",
+  "@resultTitle": { "description": "Result screen title after completing a subpart" },
+
+  "resultScore": "{correct}/{total} correct",
+  "@resultScore": {
+    "description": "Score display on result screen",
+    "placeholders": {
+      "correct": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "resultPerfect": "Perfect score!",
+  "@resultPerfect": { "description": "Shown when all answers are correct" },
+
+  "resultGood": "Well done!",
+  "@resultGood": { "description": "Shown when score is above threshold" },
+
+  "resultNeedsWork": "Keep practicing!",
+  "@resultNeedsWork": { "description": "Shown when score is below threshold" },
+
+  "firstName": "First name",
+  "@firstName": { "description": "First name label on profile" },
+
+  "surname": "Surname",
+  "@surname": { "description": "Surname label on profile" }
 }

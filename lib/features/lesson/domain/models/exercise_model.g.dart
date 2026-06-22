@@ -16,6 +16,10 @@ _ExerciseModel _$ExerciseModelFromJson(Map<String, dynamic> json) =>
       audioUrl: json['audio_url'] as String?,
       imageUrl: json['image_url'] as String?,
       typeData: json['type_data'] as Map<String, dynamic>?,
+      grammarTypes: (json['grammar_types'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
     );
 
 Map<String, dynamic> _$ExerciseModelToJson(_ExerciseModel instance) =>
@@ -27,4 +31,5 @@ Map<String, dynamic> _$ExerciseModelToJson(_ExerciseModel instance) =>
       'audio_url': instance.audioUrl,
       'image_url': instance.imageUrl,
       'type_data': instance.typeData,
+      'grammar_types': instance.grammarTypes,
     };

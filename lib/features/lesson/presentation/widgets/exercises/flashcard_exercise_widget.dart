@@ -4,6 +4,7 @@ import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:linguobyte/shared/widgets/audio_play_button.dart';
@@ -11,11 +12,13 @@ import 'package:linguobyte/shared/widgets/audio_play_button.dart';
 class FlashcardExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const FlashcardExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override
@@ -72,6 +75,13 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
       _isSubmitted = true;
       _isCorrect = normalizeAnswer(_textCtrl.text) == normalizeAnswer(baseWord);
     });
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: isCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: input,
+      correctAnswer: baseWord,
+    ));
     widget.onReady();
   }
 

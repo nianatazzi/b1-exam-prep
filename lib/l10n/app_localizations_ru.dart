@@ -230,4 +230,146 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get recognizedText => 'Распознано:';
+
+  @override
+  String get settingsTitle => 'Настройки';
+
+  @override
+  String get interfaceLanguageSection => 'Язык интерфейса';
+
+  @override
+  String get appearanceSection => 'Оформление';
+
+  @override
+  String get appearanceLabel => 'Оформление';
+
+  @override
+  String get darkMode => 'Тёмная';
+
+  @override
+  String get lightMode => 'Светлая';
+
+  @override
+  String get darkModeSubtitle => 'Тёмная тема';
+
+  @override
+  String get lightModeSubtitle => 'Светлая тема';
+
+  @override
+  String get speechSection => 'Речь';
+
+  @override
+  String get speechSpeedLabel => 'Скорость речи';
+
+  @override
+  String get speechSpeedNormal => 'Обычная';
+
+  @override
+  String get accountSection => 'Аккаунт';
+
+  @override
+  String get currentStreakLabel => 'Текущая серия';
+
+  @override
+  String get daysLabel => 'дней';
+
+  @override
+  String get dayMon => 'Пн';
+
+  @override
+  String get dayTue => 'Вт';
+
+  @override
+  String get dayWed => 'Ср';
+
+  @override
+  String get dayThu => 'Чт';
+
+  @override
+  String get dayFri => 'Пт';
+
+  @override
+  String get daySat => 'Сб';
+
+  @override
+  String get daySun => 'Вс';
+
+  @override
+  String bestStreakLabel(int count) {
+    return 'Лучшее: $count';
+  }
+
+  @override
+  String get proficiencySection => 'Навыки';
+
+  @override
+  String get grammarLabel => 'Грамматика';
+
+  @override
+  String get vocabularyLabel => 'Лексика';
+
+  @override
+  String get listeningSkillLabel => 'Аудирование';
+
+  @override
+  String get speakingLabel => 'Говорение';
+
+  @override
+  String get achievementsSection => 'Достижения';
+
+  @override
+  String get seeAll => 'Все';
+
+  @override
+  String get achievementMasterConjugator => 'Мастер спряжения';
+
+  @override
+  String get achievementFirstStep => 'Первый шаг';
+
+  @override
+  String get achievementFocusedLearner => 'Увлечённый ученик';
+
+  @override
+  String get achievementInterestedLearner => 'Любознательный';
+
+  @override
+  String get achievementVocabularyMaster => 'Мастер лексики';
+
+  @override
+  String get achievementMasterConjugatorDesc => 'Без ошибок';
+
+  @override
+  String get achievementFirstStepDesc => 'Завершить урок 1';
+
+  @override
+  String get achievementFocusedLearnerDesc => '7 дней подряд';
+
+  @override
+  String get achievementInterestedLearnerDesc => 'Все доп. материалы';
+
+  @override
+  String get achievementVocabularyMasterDesc => 'Все лексические блоки';
+
+  @override
+  String get resultTitle => 'Результаты';
+
+  @override
+  String resultScore(int correct, int total) {
+    return '$correct/$total правильно';
+  }
+
+  @override
+  String get resultPerfect => 'Отличный результат!';
+
+  @override
+  String get resultGood => 'Хорошая работа!';
+
+  @override
+  String get resultNeedsWork => 'Продолжайте практиковать!';
+
+  @override
+  String get firstName => 'Имя';
+
+  @override
+  String get surname => 'Фамилия';
 }

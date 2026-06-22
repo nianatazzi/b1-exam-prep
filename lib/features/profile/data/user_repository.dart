@@ -102,10 +102,14 @@ class UserRepository {
             {
               'lastLesson': '',
               'lastParagraph': 0,
-              'oral_progress': 0,
-              'grammar_progress': 0,
-              'lexicon_progress': 0,
-              'progress': <String, dynamic>{},
+              'stats': {
+                'grammar': {'correct': 0, 'total': 0},
+                'vocabulary': {'correct': 0, 'total': 0},
+                'listening': {'correct': 0, 'total': 0},
+                'speaking': {'correct': 0, 'total': 0},
+              },
+              'stepResults': <String, dynamic>{},
+              'achievements': <String, dynamic>{},
             },
             SetOptions(merge: true),
           );
@@ -131,6 +135,10 @@ class UserRepository {
           'expiresAt': expiresAt.toDate().toIso8601String(),
         };
       }
+    }
+    final lastActive = result['lastActiveDate'];
+    if (lastActive is Timestamp) {
+      result['lastActiveDate'] = lastActive.toDate().toIso8601String();
     }
     return result;
   }

@@ -3,17 +3,20 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
 class TranslateSentenceExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const TranslateSentenceExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override
@@ -66,6 +69,14 @@ class _TranslateSentenceExerciseWidgetState
       _isSubmitted = true;
       _isCorrect = isCorrect;
     });
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: isCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: userInput,
+      correctAnswer: _correctAnswer,
+      question: (widget.exercise.typeData?['question'] as String?) ?? '',
+    ));
     widget.onReady();
   }
 

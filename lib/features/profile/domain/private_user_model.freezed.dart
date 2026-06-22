@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionModel {
 
- SubscriptionPlan get plan;// null для плана free
- DateTime? get expiresAt;
+ SubscriptionPlan get plan; DateTime? get expiresAt;
 /// Create a copy of SubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -79,18 +78,6 @@ as DateTime?,
 
 /// Adds pattern-matching-related methods to [SubscriptionModel].
 extension SubscriptionModelPatterns on SubscriptionModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SubscriptionModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -100,18 +87,6 @@ return $default(_that);case _:
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SubscriptionModel value)  $default,){
 final _that = this;
@@ -122,17 +97,6 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SubscriptionModel value)?  $default,){
 final _that = this;
@@ -143,17 +107,6 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
@@ -163,18 +116,6 @@ return $default(_that.plan,_that.expiresAt);case _:
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)  $default,) {final _that = this;
 switch (_that) {
@@ -184,17 +125,6 @@ return $default(_that.plan,_that.expiresAt);case _:
 
 }
 }
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
@@ -215,7 +145,6 @@ class _SubscriptionModel implements SubscriptionModel {
   factory _SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
 
 @override final  SubscriptionPlan plan;
-// null для плана free
 @override final  DateTime? expiresAt;
 
 /// Create a copy of SubscriptionModel
@@ -283,8 +212,7 @@ as DateTime?,
 /// @nodoc
 mixin _$PrivateUserModel {
 
-// id берётся из DocumentSnapshot.id — не хранится в теле документа
-@JsonKey(includeToJson: false) String get id; String get deviceId; String get email; String get phone; SubscriptionModel get subscription;
+@JsonKey(includeToJson: false) String get id; String get deviceId; String get email; String get phone; SubscriptionModel get subscription; DateTime? get lastActiveDate; int get currentStreak; int get bestStreak;
 /// Create a copy of PrivateUserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +225,16 @@ $PrivateUserModelCopyWith<PrivateUserModel> get copyWith => _$PrivateUserModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrivateUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.subscription, subscription) || other.subscription == subscription));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrivateUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&(identical(other.lastActiveDate, lastActiveDate) || other.lastActiveDate == lastActiveDate)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.bestStreak, bestStreak) || other.bestStreak == bestStreak));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,deviceId,email,phone,subscription);
+int get hashCode => Object.hash(runtimeType,id,deviceId,email,phone,subscription,lastActiveDate,currentStreak,bestStreak);
 
 @override
 String toString() {
-  return 'PrivateUserModel(id: $id, deviceId: $deviceId, email: $email, phone: $phone, subscription: $subscription)';
+  return 'PrivateUserModel(id: $id, deviceId: $deviceId, email: $email, phone: $phone, subscription: $subscription, lastActiveDate: $lastActiveDate, currentStreak: $currentStreak, bestStreak: $bestStreak)';
 }
 
 
@@ -317,7 +245,7 @@ abstract mixin class $PrivateUserModelCopyWith<$Res>  {
   factory $PrivateUserModelCopyWith(PrivateUserModel value, $Res Function(PrivateUserModel) _then) = _$PrivateUserModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String deviceId, String email, String phone, SubscriptionModel subscription
+@JsonKey(includeToJson: false) String id, String deviceId, String email, String phone, SubscriptionModel subscription, DateTime? lastActiveDate, int currentStreak, int bestStreak
 });
 
 
@@ -334,14 +262,17 @@ class _$PrivateUserModelCopyWithImpl<$Res>
 
 /// Create a copy of PrivateUserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? deviceId = null,Object? email = null,Object? phone = null,Object? subscription = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? deviceId = null,Object? email = null,Object? phone = null,Object? subscription = null,Object? lastActiveDate = freezed,Object? currentStreak = null,Object? bestStreak = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,subscription: null == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
-as SubscriptionModel,
+as SubscriptionModel,lastActiveDate: freezed == lastActiveDate ? _self.lastActiveDate : lastActiveDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int,bestStreak: null == bestStreak ? _self.bestStreak : bestStreak // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 /// Create a copy of PrivateUserModel
@@ -349,7 +280,7 @@ as SubscriptionModel,
 @override
 @pragma('vm:prefer-inline')
 $SubscriptionModelCopyWith<$Res> get subscription {
-  
+
   return $SubscriptionModelCopyWith<$Res>(_self.subscription, (value) {
     return _then(_self.copyWith(subscription: value));
   });
@@ -359,18 +290,6 @@ $SubscriptionModelCopyWith<$Res> get subscription {
 
 /// Adds pattern-matching-related methods to [PrivateUserModel].
 extension PrivateUserModelPatterns on PrivateUserModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PrivateUserModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -380,18 +299,6 @@ return $default(_that);case _:
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PrivateUserModel value)  $default,){
 final _that = this;
@@ -402,17 +309,6 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PrivateUserModel value)?  $default,){
 final _that = this;
@@ -423,63 +319,29 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrivateUserModel() when $default != null:
-return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription);case _:
+return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription,_that.lastActiveDate,_that.currentStreak,_that.bestStreak);case _:
   return orElse();
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)  $default,) {final _that = this;
 switch (_that) {
 case _PrivateUserModel():
-return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription);case _:
+return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription,_that.lastActiveDate,_that.currentStreak,_that.bestStreak);case _:
   throw StateError('Unexpected subclass');
 
 }
 }
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)?  $default,) {final _that = this;
 switch (_that) {
 case _PrivateUserModel() when $default != null:
-return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription);case _:
+return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscription,_that.lastActiveDate,_that.currentStreak,_that.bestStreak);case _:
   return null;
 
 }
@@ -491,15 +353,17 @@ return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscripti
 @JsonSerializable()
 
 class _PrivateUserModel implements PrivateUserModel {
-  const _PrivateUserModel({@JsonKey(includeToJson: false) required this.id, required this.deviceId, required this.email, required this.phone, required this.subscription});
+  const _PrivateUserModel({@JsonKey(includeToJson: false) required this.id, required this.deviceId, required this.email, required this.phone, required this.subscription, this.lastActiveDate, this.currentStreak = 0, this.bestStreak = 0});
   factory _PrivateUserModel.fromJson(Map<String, dynamic> json) => _$PrivateUserModelFromJson(json);
 
-// id берётся из DocumentSnapshot.id — не хранится в теле документа
 @override@JsonKey(includeToJson: false) final  String id;
 @override final  String deviceId;
 @override final  String email;
 @override final  String phone;
 @override final  SubscriptionModel subscription;
+@override final  DateTime? lastActiveDate;
+@override final  int currentStreak;
+@override final  int bestStreak;
 
 /// Create a copy of PrivateUserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -514,16 +378,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrivateUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.subscription, subscription) || other.subscription == subscription));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrivateUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&(identical(other.lastActiveDate, lastActiveDate) || other.lastActiveDate == lastActiveDate)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.bestStreak, bestStreak) || other.bestStreak == bestStreak));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,deviceId,email,phone,subscription);
+int get hashCode => Object.hash(runtimeType,id,deviceId,email,phone,subscription,lastActiveDate,currentStreak,bestStreak);
 
 @override
 String toString() {
-  return 'PrivateUserModel(id: $id, deviceId: $deviceId, email: $email, phone: $phone, subscription: $subscription)';
+  return 'PrivateUserModel(id: $id, deviceId: $deviceId, email: $email, phone: $phone, subscription: $subscription, lastActiveDate: $lastActiveDate, currentStreak: $currentStreak, bestStreak: $bestStreak)';
 }
 
 
@@ -534,7 +398,7 @@ abstract mixin class _$PrivateUserModelCopyWith<$Res> implements $PrivateUserMod
   factory _$PrivateUserModelCopyWith(_PrivateUserModel value, $Res Function(_PrivateUserModel) _then) = __$PrivateUserModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String deviceId, String email, String phone, SubscriptionModel subscription
+@JsonKey(includeToJson: false) String id, String deviceId, String email, String phone, SubscriptionModel subscription, DateTime? lastActiveDate, int currentStreak, int bestStreak
 });
 
 
@@ -551,14 +415,17 @@ class __$PrivateUserModelCopyWithImpl<$Res>
 
 /// Create a copy of PrivateUserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? deviceId = null,Object? email = null,Object? phone = null,Object? subscription = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? deviceId = null,Object? email = null,Object? phone = null,Object? subscription = null,Object? lastActiveDate = freezed,Object? currentStreak = null,Object? bestStreak = null,}) {
   return _then(_PrivateUserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,subscription: null == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
-as SubscriptionModel,
+as SubscriptionModel,lastActiveDate: freezed == lastActiveDate ? _self.lastActiveDate : lastActiveDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int,bestStreak: null == bestStreak ? _self.bestStreak : bestStreak // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -567,7 +434,7 @@ as SubscriptionModel,
 @override
 @pragma('vm:prefer-inline')
 $SubscriptionModelCopyWith<$Res> get subscription {
-  
+
   return $SubscriptionModelCopyWith<$Res>(_self.subscription, (value) {
     return _then(_self.copyWith(subscription: value));
   });

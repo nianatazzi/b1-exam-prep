@@ -187,6 +187,9 @@ private_user_info/                      # коллекция
     subscription: map                   # данные подписки
       plan: string                      # "free" | "premium"
       expiresAt: timestamp | null       # null для free
+    lastActiveDate: timestamp           # дата последней активности (для стрика)
+    currentStreak: number               # текущий стрик (дни подряд)
+    bestStreak: number                  # рекорд стрика
 
     friends/                            # подколлекция
       {friendId}/                       # документ
@@ -197,11 +200,45 @@ private_user_info/                      # коллекция
       {langId}/                         # документ: en | es | fr
         lastLesson: string              # id документа последнего урока (например "lesson_01")
         lastParagraph: number           # индекс последней завершённой пары "контент+упражнения" в последовательности шагов урока (не номер блока theory/lexical_set/verbs напрямую). Блок считается завершённым только после прохождения его упражнений.
-        speaking_progress: number       # прогресс разговорной части (0–100)
-        grammar_progress: number        # прогресс грамматики (0–100)
-        lexicon_progress: number        # прогресс лексики (0–100)
-        listening_progress: number      # прогресс аудирования (0-100)
-        progress: map                   # детальный прогресс (заглушка для расширения)
+
+        stats: map                      # агрегированная статистика по типам навыков (для radar-диаграммы)
+          grammar: map
+            correct: number
+            total: number
+          vocabulary: map
+            correct: number
+            total: number
+          listening: map
+            correct: number
+            total: number
+          speaking: map
+            correct: number
+            total: number
+
+        stepResults: map                # результаты по субпартам уроков (для цветов кругов на HomeScreen)
+          "{lessonLId}_{segmentType}_{linkedItemId}": map   # например "1_theory_1"
+            correct: number             # кол-во правильных ответов
+            total: number               # кол-во упражнений
+            firstAttempt: boolean       # все ли правильно с первой попытки
+            completedAt: timestamp
+            incorrectExerciseIds: array<string>  # id упражнений с ошибками (для повторения)
+
+        achievements: map               # достижения пользователя по языку
+          master_conjugator: map
+            level: number               # 0 = не получено, I=1, II=2...
+            updatedAt: timestamp
+          first_step: map
+            level: number
+            updatedAt: timestamp
+          focused_learner: map
+            level: number
+            updatedAt: timestamp
+          interested_learner: map
+            level: number
+            updatedAt: timestamp
+          vocabulary_master: map
+            level: number
+            updatedAt: timestamp
 
         user_vocabulary/                # подколлекция
           {wordId}/                     # документ
@@ -227,9 +264,11 @@ public_user_info/                       # коллекция
     surname: string
     avatar: string                      # url
     points: number
-    preference: map                     # {theme, notifications, ...}
+    preference: map
       uiLanguage: string              # язык интерфейса (en | ru | fr | es)
       selectedLanguage: string        # id языка обучения (en | es | fr | ru)
+      theme: string                   # "dark" | "light"
+      speechSpeed: number             # скорость воспроизведения аудио (0.5–2.0, default 1.0)
 ```
 
 ---
@@ -269,6 +308,10 @@ public_user_info/                       # коллекция
 | `exercises` — отдельная корневая коллекция | Привязка к языку через `course_id` (`{courseType}_{langId}`, например `basic_fr`), к уроку через `lesson_id` (= числовой `l_id` документа урока, не строка id), к блоку через `segment_type` + `linked_item_id`. Все упражнения урока загружаются одним запросом и группируются в памяти. |
 | Порядок lesson - по полю `l_id`, theory - по полю `th_id`, lexical_set - по полю `voc_id`, verbs - по полю `v_id`, exercise — по полю `ex_id`|
 | `subscription` — map с `plan` и `expiresAt` | Позволяет хранить тип подписки и дату истечения; легко расширяется (например, `autoRenew`) |
-| `oral_progress`, `grammar_progress`, `lexicon_progress` — отдельные числа | Простота чтения и обновления на MVP; `progress: map` оставлен как заглушка для детального трекинга |
+| `stats` map вместо отдельных `*_progress` полей | Один источник правды: сырые счётчики correct/total по 4 навыкам (grammar, vocabulary, listening, speaking). Проценты вычисляются на клиенте. Приходит вместе с документом `languages/{langId}` за 0 дополнительных reads |
+| `stepResults` map в документе `languages/{langId}` | Результаты субпартов хранятся в том же документе что и прогресс — 0 дополнительных reads для HomeScreen (цвета кругов) и ProfileScreen (достижения) |
+| `achievements` map в документе `languages/{langId}` | 5 типов достижений = 5 ключей. Map читается вместе с документом за 0 reads. Подколлекция потребовала бы +1 read |
+| `incorrectExerciseIds` в `stepResults` | Хранит id упражнений с ошибками для будущего flow повторения. Firestore `whereIn` поддерживает до 30 значений за запрос |
+| Streak (`lastActiveDate`, `currentStreak`, `bestStreak`) в корне `private_user_info` | Стрик не привязан к языку — общий для пользователя |
 | `personalized_courses` — заглушка | Зарезервировано для персональных курсов (например, подготовка к просмотру фильмов) |
 | `AIPreference`, `botSettings` — заглушки в `service` | Будущие фичи после MVP |

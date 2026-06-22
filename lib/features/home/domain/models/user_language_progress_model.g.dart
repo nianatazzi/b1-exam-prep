@@ -12,9 +12,19 @@ _UserLanguageProgressModel _$UserLanguageProgressModelFromJson(
   id: json['id'] as String,
   lastLesson: json['lastLesson'] as String?,
   lastParagraph: (json['lastParagraph'] as num).toInt(),
-  oralProgress: (json['oral_progress'] as num?)?.toInt() ?? 0,
-  grammarProgress: (json['grammar_progress'] as num?)?.toInt() ?? 0,
-  lexiconProgress: (json['lexicon_progress'] as num?)?.toInt() ?? 0,
+  stats: json['stats'] == null
+      ? const ExerciseStatsModel()
+      : ExerciseStatsModel.fromJson(json['stats'] as Map<String, dynamic>),
+  stepResults: (json['stepResults'] as Map<String, dynamic>?)?.map(
+        (k, e) =>
+            MapEntry(k, StepResultModel.fromJson(e as Map<String, dynamic>)),
+      ) ??
+      const <String, StepResultModel>{},
+  achievements: (json['achievements'] as Map<String, dynamic>?)?.map(
+        (k, e) =>
+            MapEntry(k, AchievementModel.fromJson(e as Map<String, dynamic>)),
+      ) ??
+      const <String, AchievementModel>{},
 );
 
 Map<String, dynamic> _$UserLanguageProgressModelToJson(
@@ -22,7 +32,9 @@ Map<String, dynamic> _$UserLanguageProgressModelToJson(
 ) => <String, dynamic>{
   'lastLesson': instance.lastLesson,
   'lastParagraph': instance.lastParagraph,
-  'oral_progress': instance.oralProgress,
-  'grammar_progress': instance.grammarProgress,
-  'lexicon_progress': instance.lexiconProgress,
+  'stats': instance.stats.toJson(),
+  'stepResults':
+      instance.stepResults.map((k, e) => MapEntry(k, e.toJson())),
+  'achievements':
+      instance.achievements.map((k, e) => MapEntry(k, e.toJson())),
 };

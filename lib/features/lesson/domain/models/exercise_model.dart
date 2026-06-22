@@ -16,6 +16,7 @@ abstract class ExerciseModel with _$ExerciseModel {
     @JsonKey(name: 'audio_url') String? audioUrl,
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'type_data') Map<String, dynamic>? typeData,
+    @JsonKey(name: 'grammar_types') @Default(<String>[]) List<String> grammarTypes,
   }) = _ExerciseModel;
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) =>

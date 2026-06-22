@@ -7,6 +7,7 @@ import 'package:linguobyte/features/home/domain/models/lesson_model.dart';
 import 'package:linguobyte/features/home/domain/models/user_language_progress_model.dart';
 import 'package:linguobyte/features/home/domain/repositories/i_lesson_repository.dart';
 import 'package:linguobyte/features/home/domain/repositories/i_user_progress_repository.dart';
+import 'package:linguobyte/features/profile/domain/step_result_model.dart';
 import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,12 +35,16 @@ class LessonCardData {
   /// Значим только для active-карточки.
   final int lastParagraph;
 
+  /// Результаты упражнений по stepKey для каждого шага.
+  final Map<String, StepResultModel> stepResults;
+
   const LessonCardData({
     required this.lesson,
     required this.steps,
     required this.state,
     required this.progressPercent,
     required this.lastParagraph,
+    this.stepResults = const {},
   });
 }
 
@@ -81,7 +86,9 @@ class GetHomeDataUseCase {
       ),
     );
 
-    final lessonCards = _buildLessonCards(lessons, stepsList, progress);
+    final lessonCards = _buildLessonCards(
+      lessons, stepsList, progress,
+    );
 
     return HomeScreenData(lessonCards: lessonCards, userProgress: progress);
   }
@@ -155,6 +162,7 @@ class GetHomeDataUseCase {
         state: state,
         progressPercent: progressPercent,
         lastParagraph: lastParagraph,
+        stepResults: progress.stepResults,
       );
     });
   }

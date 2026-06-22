@@ -180,6 +180,8 @@ lib/
 - `AuthorizationScreen` (вход, регистрация, восстановление пароля)
 - `HomeScreen`
 - `ProfileScreen`
+- `SettingsScreen` — настройки (тема, язык интерфейса, скорость речи). Открывается из `ProfileScreen`.
+- `ResultScreen` — результат прохождения субпарта (correct/total, список упражнений). Показывается после завершения шага.
 - `LessonScreen` — один экран, шаги урока (теория / лексика / глаголы / упражнения / доп. материалы) переключаются внутри него, без отдельных маршрутов. См. раздел 6.1.
 
 ---
@@ -191,6 +193,7 @@ lib/
   - `basic` — чтение для всех авторизованных пользователей
   - `private_user_info/{userId}` — только владелец
 - Все пути к коллекциям — только через `FirestorePaths`. Строки напрямую в коде запрещены.
+- **`update()` для вложенных полей через dot-notation** (`'stepResults.$stepKey'`, `'stats.$category.correct'`). `set(merge: true)` с dot-notation ключами создаёт плоские поля с точками в имени вместо вложенных map — использовать только для top-level полей.
 - Роль пользователя проверяется в Security Rules или Cloud Functions. Проверка только на клиенте запрещена.
 - Структура коллекций описана в `FIRESTORE.md`.
 
@@ -353,8 +356,8 @@ abstract class FirestorePaths {
 ### Фаза 3 (HomeScreen)
 
 - **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
-- **Exercise dots** (`LessonCard`): точки прогресса упражнений отсутствуют (Вариант MVP). После MVP добавить `completedExercises` в схему Firestore и вернуть ex-dots в `LessonCard`.
-- **Новый пользователь**: при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Сохранение прогресса нового пользователя реализовано: `updateProgress` создаёт документ `languages/{langId}` через `set(merge:true)`, а `oral/grammar/lexicon_progress` имеют `@Default(0)` — частичный документ читается корректно. Полная инициализация документа (`updateLearningLanguage` со всеми полями и `progress`-map) пока не вызывается — это часть будущего онбординга, для MVP не требуется.
+- ~~**Exercise dots**~~ **ЗАМЕНЕНО на stepResults**: цвета кругов субпартов (красный/жёлтый/зелёный) реализуются через `stepResults` map в `languages/{langId}`. Порог зелёный/жёлтый: 78% правильных ответов.
+- **Новый пользователь**: при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Сохранение прогресса нового пользователя реализовано: `updateProgress` создаёт документ `languages/{langId}` через `set(merge:true)`, а `stats`/`stepResults`/`achievements` имеют `@Default({})` — частичный документ читается корректно. Полная инициализация документа (`updateLearningLanguage` со всеми полями) пока не вызывается — это часть будущего онбординга, для MVP не требуется.
 - **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
 - **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
 - **`getLessonStepSummaries` — 3·N чтений Firestore на каждое открытие HomeScreen**: для N уроков выполняется `1` (уроки) + `1` (прогресс) + `3·N` (theory + lexical limit(1) + verbs limit(1)). На MVP допустимо: офлайн-кэш Firestore отдаёт повторные открытия, уроков немного. Долгосрочное решение: денормализовать `steps_summary` (массив `{type, title}` по каждому шагу) в документ урока — админ-панель пишет это поле при редактировании контента + бэкафилл существующих уроков; клиент читает сводку вместе со списком уроков, убирая все `3·N`. Админ-панель готова → задача разблокирована, выполнять **отдельной веткой** (схема FIRESTORE.md + клиент + миграция данных), не в рамках lesson-screen.
@@ -390,3 +393,14 @@ abstract class FirestorePaths {
 - **[TD-4] Уникальность ключа виджетов по `exId` (exercise_widget.dart)**: `key: ValueKey(exercise.exId)` — если два упражнения в уроке имеют одинаковый `ex_id` (ошибка данных в Firestore), Flutter переиспользует State и второе упражнение открывается уже заполненным. Надёжнее использовать `ValueKey(exercise.id)` (DocumentSnapshot.id, гарантированно уникальный). **Действие: сменить ключ на `ValueKey(exercise.id)` — требует убедиться что `id` всегда непустой во всех сценариях загрузки.**
 
 - ~~**[TD-5]**~~ **ИСПРАВЛЕНО**: При ошибке сети `completeCurrentStep` теперь логирует через `AppLogger.e` и возвращает `state = AsyncData(current)` — экран урока остаётся, пользователь может нажать «Далее» ещё раз. Остаток: показывать SnackBar с ошибкой из UI (требует UI-callback или отдельного error-поля в `LessonState`).
+
+### Фаза 5 (ProfileScreen + Settings + Achievements)
+
+- **[TD-6] Инвалидация stepResults при изменении контента**: если админ заменяет содержимое theory-блока (th_id=2), старый результат `"1_theory_2"` в `stepResults` остаётся от предыдущего контента и показывается как зелёный. **Действие (пост-MVP):** добавить `contentVersion` в документы уроков; при изменении контента — инвалидировать соответствующие результаты в `stepResults`.
+- **Миграция `oral_progress` / `grammar_progress` / `lexicon_progress` → `stats` map**: старые поля заменены на `stats` map с сырыми счётчиками correct/total по 4 навыкам. Существующие документы обновляются вручную. Код модели должен толерантно обрабатывать документы без `stats` (`@Default`).
+- **`fl_chart` для radar-диаграммы**: пакет добавлен для ProfileScreen. Используется только в `_ProficiencyChart` виджете.
+- **Light theme**: реализована как заглушка (`AppTheme.light`). Полная проработка цветов и контрастов — после MVP.
+- **`speechSpeed` preference**: хранится в `public_user_info.preference.speechSpeed`. Используется в `just_audio` playback rate для `listen_pick` и `voice_translate` упражнений.
+- **`UserRepository` без интерфейса**: единственный репозиторий без `IUserRepository` в `domain/repositories/`. Используется из нескольких фич. Пост-MVP: добавить интерфейс и вынести в `shared/`.
+- **`ExerciseResult` не freezed**: используется только in-memory во время прохождения субпарта, не сериализуется. Допустимо для MVP.
+- **`StreakRepository` и таймзоны**: `DateTime.now()` использует локальное время — при смене таймзоны стрик может ошибочно пропустить или удвоить день. Допустимо для MVP.

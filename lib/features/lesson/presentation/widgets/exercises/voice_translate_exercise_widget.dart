@@ -4,6 +4,7 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:speech_to_text/speech_to_text.dart';

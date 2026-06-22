@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercise_widget.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
@@ -10,11 +11,13 @@ import 'package:linguobyte/l10n/app_localizations.dart';
 class FinalStepWidget extends StatefulWidget {
   final FinalLessonStep step;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const FinalStepWidget({
     super.key,
     required this.step,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -53,6 +56,7 @@ class _FinalStepWidgetState extends State<FinalStepWidget> {
           child: ExerciseWidget(
             exercise: exercises[_exerciseIndex],
             onReady: () => setState(() => _isReady = true),
+            onResult: widget.onExerciseResult,
             onSkip: isLast ? widget.onComplete : _onNext,
           ),
         ),

@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseModel {
 
-@JsonKey(includeToJson: false) String get id;@JsonKey(name: 'ex_id') int get exId; String get type;@JsonKey(name: 'segment_type') String get segmentType;// null для vocab-упражнений (lexical_set не имеет linked_item_id)
-@JsonKey(name: 'linked_item_id') int? get linkedItemId;@JsonKey(name: 'audio_url') String? get audioUrl;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'type_data') Map<String, dynamic>? get typeData;
+@JsonKey(includeToJson: false) String get id;@JsonKey(name: 'ex_id') int get exId; String get type;@JsonKey(name: 'segment_type') String get segmentType;@JsonKey(name: 'linked_item_id') int? get linkedItemId;@JsonKey(name: 'audio_url') String? get audioUrl;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'type_data') Map<String, dynamic>? get typeData;@JsonKey(name: 'grammar_types') List<String> get grammarTypes;
 /// Create a copy of ExerciseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +28,16 @@ $ExerciseModelCopyWith<ExerciseModel> get copyWith => _$ExerciseModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.exId, exId) || other.exId == exId)&&(identical(other.type, type) || other.type == type)&&(identical(other.segmentType, segmentType) || other.segmentType == segmentType)&&(identical(other.linkedItemId, linkedItemId) || other.linkedItemId == linkedItemId)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other.typeData, typeData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.exId, exId) || other.exId == exId)&&(identical(other.type, type) || other.type == type)&&(identical(other.segmentType, segmentType) || other.segmentType == segmentType)&&(identical(other.linkedItemId, linkedItemId) || other.linkedItemId == linkedItemId)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other.typeData, typeData)&&const DeepCollectionEquality().equals(other.grammarTypes, grammarTypes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,exId,type,segmentType,linkedItemId,audioUrl,imageUrl,const DeepCollectionEquality().hash(typeData));
+int get hashCode => Object.hash(runtimeType,id,exId,type,segmentType,linkedItemId,audioUrl,imageUrl,const DeepCollectionEquality().hash(typeData),const DeepCollectionEquality().hash(grammarTypes));
 
 @override
 String toString() {
-  return 'ExerciseModel(id: $id, exId: $exId, type: $type, segmentType: $segmentType, linkedItemId: $linkedItemId, audioUrl: $audioUrl, imageUrl: $imageUrl, typeData: $typeData)';
+  return 'ExerciseModel(id: $id, exId: $exId, type: $type, segmentType: $segmentType, linkedItemId: $linkedItemId, audioUrl: $audioUrl, imageUrl: $imageUrl, typeData: $typeData, grammarTypes: $grammarTypes)';
 }
 
 
@@ -49,7 +48,7 @@ abstract mixin class $ExerciseModelCopyWith<$Res>  {
   factory $ExerciseModelCopyWith(ExerciseModel value, $Res Function(ExerciseModel) _then) = _$ExerciseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(name: 'ex_id') int exId, String type,@JsonKey(name: 'segment_type') String segmentType,@JsonKey(name: 'linked_item_id') int? linkedItemId,@JsonKey(name: 'audio_url') String? audioUrl,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'type_data') Map<String, dynamic>? typeData
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 'ex_id') int exId, String type,@JsonKey(name: 'segment_type') String segmentType,@JsonKey(name: 'linked_item_id') int? linkedItemId,@JsonKey(name: 'audio_url') String? audioUrl,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'type_data') Map<String, dynamic>? typeData,@JsonKey(name: 'grammar_types') List<String> grammarTypes
 });
 
 
@@ -66,7 +65,7 @@ class _$ExerciseModelCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? exId = null,Object? type = null,Object? segmentType = null,Object? linkedItemId = freezed,Object? audioUrl = freezed,Object? imageUrl = freezed,Object? typeData = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? exId = null,Object? type = null,Object? segmentType = null,Object? linkedItemId = freezed,Object? audioUrl = freezed,Object? imageUrl = freezed,Object? typeData = freezed,Object? grammarTypes = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,exId: null == exId ? _self.exId : exId // ignore: cast_nullable_to_non_nullable
@@ -76,7 +75,8 @@ as String,linkedItemId: freezed == linkedItemId ? _self.linkedItemId : linkedIte
 as int?,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,typeData: freezed == typeData ? _self.typeData : typeData // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,grammarTypes: null == grammarTypes ? _self.grammarTypes : grammarTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -85,18 +85,6 @@ as Map<String, dynamic>?,
 
 /// Adds pattern-matching-related methods to [ExerciseModel].
 extension ExerciseModelPatterns on ExerciseModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ExerciseModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -106,18 +94,6 @@ return $default(_that);case _:
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ExerciseModel value)  $default,){
 final _that = this;
@@ -128,17 +104,6 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ExerciseModel value)?  $default,){
 final _that = this;
@@ -149,63 +114,29 @@ return $default(_that);case _:
 
 }
 }
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExerciseModel() when $default != null:
-return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData);case _:
+return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData,_that.grammarTypes);case _:
   return orElse();
 
 }
 }
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseModel():
-return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData);case _:
+return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData,_that.grammarTypes);case _:
   throw StateError('Unexpected subclass');
 
 }
 }
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)?  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseModel() when $default != null:
-return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData);case _:
+return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedItemId,_that.audioUrl,_that.imageUrl,_that.typeData,_that.grammarTypes);case _:
   return null;
 
 }
@@ -217,14 +148,13 @@ return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedIte
 @JsonSerializable()
 
 class _ExerciseModel implements ExerciseModel {
-  const _ExerciseModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'ex_id') required this.exId, required this.type, @JsonKey(name: 'segment_type') required this.segmentType, @JsonKey(name: 'linked_item_id') this.linkedItemId, @JsonKey(name: 'audio_url') this.audioUrl, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'type_data') final  Map<String, dynamic>? typeData}): _typeData = typeData;
+  const _ExerciseModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'ex_id') required this.exId, required this.type, @JsonKey(name: 'segment_type') required this.segmentType, @JsonKey(name: 'linked_item_id') this.linkedItemId, @JsonKey(name: 'audio_url') this.audioUrl, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'type_data') final  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types') final  List<String> grammarTypes = const <String>[]}): _typeData = typeData, _grammarTypes = grammarTypes;
   factory _ExerciseModel.fromJson(Map<String, dynamic> json) => _$ExerciseModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override@JsonKey(name: 'ex_id') final  int exId;
 @override final  String type;
 @override@JsonKey(name: 'segment_type') final  String segmentType;
-// null для vocab-упражнений (lexical_set не имеет linked_item_id)
 @override@JsonKey(name: 'linked_item_id') final  int? linkedItemId;
 @override@JsonKey(name: 'audio_url') final  String? audioUrl;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;
@@ -235,6 +165,13 @@ class _ExerciseModel implements ExerciseModel {
   if (_typeData is EqualUnmodifiableMapView) return _typeData;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(value);
+}
+
+ final  List<String> _grammarTypes;
+@override@JsonKey(name: 'grammar_types') List<String> get grammarTypes {
+  if (_grammarTypes is EqualUnmodifiableListView) return _grammarTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_grammarTypes);
 }
 
 
@@ -251,16 +188,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.exId, exId) || other.exId == exId)&&(identical(other.type, type) || other.type == type)&&(identical(other.segmentType, segmentType) || other.segmentType == segmentType)&&(identical(other.linkedItemId, linkedItemId) || other.linkedItemId == linkedItemId)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other._typeData, _typeData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.exId, exId) || other.exId == exId)&&(identical(other.type, type) || other.type == type)&&(identical(other.segmentType, segmentType) || other.segmentType == segmentType)&&(identical(other.linkedItemId, linkedItemId) || other.linkedItemId == linkedItemId)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other._typeData, _typeData)&&const DeepCollectionEquality().equals(other._grammarTypes, _grammarTypes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,exId,type,segmentType,linkedItemId,audioUrl,imageUrl,const DeepCollectionEquality().hash(_typeData));
+int get hashCode => Object.hash(runtimeType,id,exId,type,segmentType,linkedItemId,audioUrl,imageUrl,const DeepCollectionEquality().hash(_typeData),const DeepCollectionEquality().hash(_grammarTypes));
 
 @override
 String toString() {
-  return 'ExerciseModel(id: $id, exId: $exId, type: $type, segmentType: $segmentType, linkedItemId: $linkedItemId, audioUrl: $audioUrl, imageUrl: $imageUrl, typeData: $typeData)';
+  return 'ExerciseModel(id: $id, exId: $exId, type: $type, segmentType: $segmentType, linkedItemId: $linkedItemId, audioUrl: $audioUrl, imageUrl: $imageUrl, typeData: $typeData, grammarTypes: $grammarTypes)';
 }
 
 
@@ -271,7 +208,7 @@ abstract mixin class _$ExerciseModelCopyWith<$Res> implements $ExerciseModelCopy
   factory _$ExerciseModelCopyWith(_ExerciseModel value, $Res Function(_ExerciseModel) _then) = __$ExerciseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(name: 'ex_id') int exId, String type,@JsonKey(name: 'segment_type') String segmentType,@JsonKey(name: 'linked_item_id') int? linkedItemId,@JsonKey(name: 'audio_url') String? audioUrl,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'type_data') Map<String, dynamic>? typeData
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 'ex_id') int exId, String type,@JsonKey(name: 'segment_type') String segmentType,@JsonKey(name: 'linked_item_id') int? linkedItemId,@JsonKey(name: 'audio_url') String? audioUrl,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'type_data') Map<String, dynamic>? typeData,@JsonKey(name: 'grammar_types') List<String> grammarTypes
 });
 
 
@@ -288,7 +225,7 @@ class __$ExerciseModelCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? exId = null,Object? type = null,Object? segmentType = null,Object? linkedItemId = freezed,Object? audioUrl = freezed,Object? imageUrl = freezed,Object? typeData = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? exId = null,Object? type = null,Object? segmentType = null,Object? linkedItemId = freezed,Object? audioUrl = freezed,Object? imageUrl = freezed,Object? typeData = freezed,Object? grammarTypes = null,}) {
   return _then(_ExerciseModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,exId: null == exId ? _self.exId : exId // ignore: cast_nullable_to_non_nullable
@@ -298,7 +235,8 @@ as String,linkedItemId: freezed == linkedItemId ? _self.linkedItemId : linkedIte
 as int?,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,typeData: freezed == typeData ? _self._typeData : typeData // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,grammarTypes: null == grammarTypes ? _self._grammarTypes : grammarTypes // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

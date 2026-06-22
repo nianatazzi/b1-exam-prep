@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
 class MultipleChoiceExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const MultipleChoiceExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override
@@ -82,6 +85,16 @@ class _MultipleChoiceExerciseWidgetState
       _isSubmitted = true;
       _isCorrect = allCorrect;
     });
+    final form = (td['sentence_form'] as String?) ?? '';
+    final userAnswer = _slotBankIndex.map((bi) =>
+        bi != null ? _allBankChunks[bi] : '?').join(', ');
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: allCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: userAnswer,
+      correctAnswer: _buildCorrectSentence(form, blanks),
+    ));
     widget.onReady();
   }
 

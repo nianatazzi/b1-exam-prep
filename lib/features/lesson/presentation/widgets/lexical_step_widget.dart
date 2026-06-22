@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/domain/models/lexical_set_model.dart';
@@ -14,6 +15,7 @@ class LexicalStepWidget extends StatelessWidget {
   final VoidCallback onToExercises;
   final VoidCallback onNextExercise;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const LexicalStepWidget({
     super.key,
@@ -23,6 +25,7 @@ class LexicalStepWidget extends StatelessWidget {
     required this.onToExercises,
     required this.onNextExercise,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -33,6 +36,7 @@ class LexicalStepWidget extends StatelessWidget {
             exerciseIndex: exerciseIndex,
             onNext: onNextExercise,
             onComplete: onComplete,
+            onExerciseResult: onExerciseResult,
           )
         : _ContentPhase(
             step: step,
@@ -191,12 +195,14 @@ class _ExercisePhase extends StatefulWidget {
   final int exerciseIndex;
   final VoidCallback onNext;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const _ExercisePhase({
     required this.step,
     required this.exerciseIndex,
     required this.onNext,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -236,6 +242,7 @@ class _ExercisePhaseState extends State<_ExercisePhase> {
           child: ExerciseWidget(
             exercise: widget.step.exercises[widget.exerciseIndex],
             onReady: () => setState(() => _isReady = true),
+            onResult: widget.onExerciseResult,
             onSkip: isLast ? widget.onComplete : widget.onNext,
           ),
         ),

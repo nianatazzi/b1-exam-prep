@@ -232,4 +232,146 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get recognizedText => 'Reconocido:';
+
+  @override
+  String get settingsTitle => 'Ajustes';
+
+  @override
+  String get interfaceLanguageSection => 'Idioma de la interfaz';
+
+  @override
+  String get appearanceSection => 'Apariencia';
+
+  @override
+  String get appearanceLabel => 'Apariencia';
+
+  @override
+  String get darkMode => 'Oscuro';
+
+  @override
+  String get lightMode => 'Claro';
+
+  @override
+  String get darkModeSubtitle => 'Modo oscuro';
+
+  @override
+  String get lightModeSubtitle => 'Modo claro';
+
+  @override
+  String get speechSection => 'Voz';
+
+  @override
+  String get speechSpeedLabel => 'Velocidad del habla';
+
+  @override
+  String get speechSpeedNormal => 'Normal';
+
+  @override
+  String get accountSection => 'Cuenta';
+
+  @override
+  String get currentStreakLabel => 'Racha actual';
+
+  @override
+  String get daysLabel => 'días';
+
+  @override
+  String get dayMon => 'L';
+
+  @override
+  String get dayTue => 'M';
+
+  @override
+  String get dayWed => 'X';
+
+  @override
+  String get dayThu => 'J';
+
+  @override
+  String get dayFri => 'V';
+
+  @override
+  String get daySat => 'S';
+
+  @override
+  String get daySun => 'D';
+
+  @override
+  String bestStreakLabel(int count) {
+    return 'Mejor: $count';
+  }
+
+  @override
+  String get proficiencySection => 'Competencias';
+
+  @override
+  String get grammarLabel => 'Gramática';
+
+  @override
+  String get vocabularyLabel => 'Vocabulario';
+
+  @override
+  String get listeningSkillLabel => 'Comprensión auditiva';
+
+  @override
+  String get speakingLabel => 'Expresión oral';
+
+  @override
+  String get achievementsSection => 'Logros';
+
+  @override
+  String get seeAll => 'Ver todo';
+
+  @override
+  String get achievementMasterConjugator => 'Maestro conjugador';
+
+  @override
+  String get achievementFirstStep => 'Primer paso';
+
+  @override
+  String get achievementFocusedLearner => 'Estudiante dedicado';
+
+  @override
+  String get achievementInterestedLearner => 'Curioso';
+
+  @override
+  String get achievementVocabularyMaster => 'Maestro del vocabulario';
+
+  @override
+  String get achievementMasterConjugatorDesc => 'Sin errores';
+
+  @override
+  String get achievementFirstStepDesc => 'Completar lección 1';
+
+  @override
+  String get achievementFocusedLearnerDesc => '7 días seguidos';
+
+  @override
+  String get achievementInterestedLearnerDesc => 'Todos los extras';
+
+  @override
+  String get achievementVocabularyMasterDesc => 'Todos los conjuntos léxicos';
+
+  @override
+  String get resultTitle => 'Resultados';
+
+  @override
+  String resultScore(int correct, int total) {
+    return '$correct/$total correctas';
+  }
+
+  @override
+  String get resultPerfect => '¡Puntuación perfecta!';
+
+  @override
+  String get resultGood => '¡Bien hecho!';
+
+  @override
+  String get resultNeedsWork => '¡Sigue practicando!';
+
+  @override
+  String get firstName => 'Nombre';
+
+  @override
+  String get surname => 'Apellido';
 }

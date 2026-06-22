@@ -8,6 +8,9 @@ abstract class AppRoutes {
   // не зависел от HomeNotifier для определения языка обучения
   static const String lesson = '/lesson/:langId/:lessonId';
 
+  static const String settings = '/settings';
+  static const String result = '/result';
+
   static String lessonPath(String langId, String lessonId) =>
       '/lesson/$langId/$lessonId';
 }

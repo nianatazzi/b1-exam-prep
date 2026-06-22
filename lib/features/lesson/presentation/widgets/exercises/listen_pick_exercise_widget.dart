@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:linguobyte/shared/widgets/audio_play_button.dart';
@@ -9,11 +10,13 @@ import 'package:linguobyte/shared/widgets/audio_play_button.dart';
 class ListenPickExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const ListenPickExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override
@@ -44,6 +47,15 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
       _isSubmitted = true;
       _isCorrect = _selectedIndex == _correctShuffledIndex;
     });
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: isCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: _selectedIndex != null && _selectedIndex! < options.length
+          ? options[_selectedIndex!]
+          : '',
+      correctAnswer: answerIndex < options.length ? options[answerIndex] : '',
+    ));
     widget.onReady();
   }
 

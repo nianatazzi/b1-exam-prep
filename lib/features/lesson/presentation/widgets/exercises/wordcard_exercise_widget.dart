@@ -4,16 +4,19 @@ import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/shared/widgets/audio_play_button.dart';
 
 class WordcardExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const WordcardExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override

@@ -545,6 +545,261 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recognized:'**
   String get recognizedText;
+
+  /// Settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// Settings section header for interface language
+  ///
+  /// In en, this message translates to:
+  /// **'Interface language'**
+  String get interfaceLanguageSection;
+
+  /// Settings section header for appearance
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceSection;
+
+  /// Appearance setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceLabel;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get darkMode;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get lightMode;
+
+  /// Subtitle when dark mode is active
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode'**
+  String get darkModeSubtitle;
+
+  /// Subtitle when light mode is active
+  ///
+  /// In en, this message translates to:
+  /// **'Light mode'**
+  String get lightModeSubtitle;
+
+  /// Settings section header for speech settings
+  ///
+  /// In en, this message translates to:
+  /// **'Speech'**
+  String get speechSection;
+
+  /// Speech speed setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Speech speed'**
+  String get speechSpeedLabel;
+
+  /// Normal speech speed label
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get speechSpeedNormal;
+
+  /// Settings section header for account
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSection;
+
+  /// Streak card title
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get currentStreakLabel;
+
+  /// Days unit label in streak card
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysLabel;
+
+  /// Monday abbreviation
+  String get dayMon;
+
+  /// Tuesday abbreviation
+  String get dayTue;
+
+  /// Wednesday abbreviation
+  String get dayWed;
+
+  /// Thursday abbreviation
+  String get dayThu;
+
+  /// Friday abbreviation
+  String get dayFri;
+
+  /// Saturday abbreviation
+  String get daySat;
+
+  /// Sunday abbreviation
+  String get daySun;
+
+  /// Best streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'Best: {count}'**
+  String bestStreakLabel(int count);
+
+  /// Profile section header for skills radar chart
+  ///
+  /// In en, this message translates to:
+  /// **'Proficiency'**
+  String get proficiencySection;
+
+  /// Grammar skill label
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get grammarLabel;
+
+  /// Vocabulary skill label
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get vocabularyLabel;
+
+  /// Listening skill label
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get listeningSkillLabel;
+
+  /// Speaking skill label
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get speakingLabel;
+
+  /// Profile section header for achievements
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievementsSection;
+
+  /// Link to see all achievements
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Master Conjugator'**
+  String get achievementMasterConjugator;
+
+  /// Achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'First Step'**
+  String get achievementFirstStep;
+
+  /// Achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Focused Learner'**
+  String get achievementFocusedLearner;
+
+  /// Achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Interested Learner'**
+  String get achievementInterestedLearner;
+
+  /// Achievement name
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary Master'**
+  String get achievementVocabularyMaster;
+
+  /// Achievement short description
+  ///
+  /// In en, this message translates to:
+  /// **'Zero mistakes'**
+  String get achievementMasterConjugatorDesc;
+
+  /// Achievement short description
+  ///
+  /// In en, this message translates to:
+  /// **'Finish lesson 1'**
+  String get achievementFirstStepDesc;
+
+  /// Achievement short description
+  ///
+  /// In en, this message translates to:
+  /// **'7-day streak'**
+  String get achievementFocusedLearnerDesc;
+
+  /// Achievement short description
+  ///
+  /// In en, this message translates to:
+  /// **'All extras done'**
+  String get achievementInterestedLearnerDesc;
+
+  /// Achievement short description
+  ///
+  /// In en, this message translates to:
+  /// **'All lexical sets'**
+  String get achievementVocabularyMasterDesc;
+
+  /// Result screen title after completing a subpart
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get resultTitle;
+
+  /// Score display on result screen
+  ///
+  /// In en, this message translates to:
+  /// **'{correct}/{total} correct'**
+  String resultScore(int correct, int total);
+
+  /// Shown when all answers are correct
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect score!'**
+  String get resultPerfect;
+
+  /// Shown when score is above threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Well done!'**
+  String get resultGood;
+
+  /// Shown when score is below threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Keep practicing!'**
+  String get resultNeedsWork;
+
+  /// First name label on profile
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get firstName;
+
+  /// Surname label on profile
+  ///
+  /// In en, this message translates to:
+  /// **'Surname'**
+  String get surname;
 }
 
 class _AppLocalizationsDelegate

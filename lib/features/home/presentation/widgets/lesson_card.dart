@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.dart';
+import 'package:linguobyte/features/profile/domain/step_result_model.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 
@@ -23,18 +25,32 @@ class LessonCard extends StatelessWidget {
     this.onTap,
   });
 
+  StepResultModel? _findStepResult(LessonStepSummary step) {
+    final lId = cardData.lesson.lId;
+    final prefix = switch (step.type) {
+      LessonStepType.theory => '${lId}_theory_',
+      LessonStepType.lexical => '${lId}_vocab_',
+      LessonStepType.verbs => '${lId}_verb_',
+    };
+    for (final entry in cardData.stepResults.entries) {
+      if (entry.key.startsWith(prefix)) {
+        return entry.value;
+      }
+    }
+    return null;
+  }
+
   /// Вычисляет состояние шага по его позиции (0-based index) в списке.
   LessonCardState _stepState(int index) {
-    switch (cardData.state) {
-      case LessonCardState.done:
-        return LessonCardState.done;
-      case LessonCardState.locked:
-        return LessonCardState.locked;
-      case LessonCardState.active:
-        if (index < cardData.lastParagraph) return LessonCardState.done;
-        if (index == cardData.lastParagraph) return LessonCardState.active;
-        return LessonCardState.locked;
-    }
+    return switch (cardData.state) {
+      LessonCardState.done => LessonCardState.done,
+      LessonCardState.locked => LessonCardState.locked,
+      LessonCardState.active => index < cardData.lastParagraph
+          ? LessonCardState.done
+          : index == cardData.lastParagraph
+              ? LessonCardState.active
+              : LessonCardState.locked,
+    };
   }
 
   @override
@@ -133,6 +149,7 @@ class LessonCard extends StatelessWidget {
                         state: _stepState(i),
                         isLast: i == steps.length - 1,
                         l10n: l10n,
+                        stepResult: _findStepResult(step),
                       );
                     }),
                   ),
@@ -167,13 +184,22 @@ class _StepRow extends StatelessWidget {
   final LessonCardState state;
   final bool isLast;
   final AppLocalizations l10n;
+  final StepResultModel? stepResult;
 
   const _StepRow({
     required this.step,
     required this.state,
     required this.isLast,
     required this.l10n,
+    this.stepResult,
   });
+
+  /// Зелёный ≥78%, красный <78%, primary если нет результатов.
+  Color _resultDotColor(ColorScheme cs, AppColors ac) {
+    if (stepResult == null || stepResult!.total == 0) return cs.primary;
+    final percent = stepResult!.correct / stepResult!.total * 100;
+    return percent >= 78 ? ac.success : cs.error;
+  }
 
   String _displayTitle() {
     return switch (step.type) {
@@ -188,6 +214,8 @@ class _StepRow extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
+    final ac = theme.extension<AppColors>()!;
+
     final Color dotColor;
     final Color textColor;
     final bool isDotFilled;
@@ -197,7 +225,6 @@ class _StepRow extends StatelessWidget {
         textColor = cs.onSurface;
         isDotFilled = true;
       case LessonCardState.active:
-        // Кольцо вместо закрашенной точки: шаг текущий, но не завершён
         dotColor = cs.primary;
         textColor = cs.onSurface;
         isDotFilled = false;

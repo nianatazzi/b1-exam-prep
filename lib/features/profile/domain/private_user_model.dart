@@ -27,12 +27,14 @@ abstract class SubscriptionModel with _$SubscriptionModel {
 @freezed
 abstract class PrivateUserModel with _$PrivateUserModel {
   const factory PrivateUserModel({
-    // id берётся из DocumentSnapshot.id — не хранится в теле документа
     @JsonKey(includeToJson: false) required String id,
     required String deviceId,
     required String email,
     required String phone,
     required SubscriptionModel subscription,
+    DateTime? lastActiveDate,
+    @Default(0) int currentStreak,
+    @Default(0) int bestStreak,
   }) = _PrivateUserModel;
 
   factory PrivateUserModel.fromJson(Map<String, dynamic> json) =>

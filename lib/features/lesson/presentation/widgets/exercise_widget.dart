@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/fill_blank_exercise_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/listen_pick_exercise_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/multiple_choice_exercise_widget.dart';
@@ -15,6 +17,7 @@ import 'package:linguobyte/features/lesson/presentation/widgets/exercises/transl
 /// Роутер упражнений: делегирует в под-виджет по [ExerciseModel.type].
 /// [onReady] вызывается после того, как пользователь проверил ответ —
 /// родительский шаг разблокирует кнопку "Далее".
+/// [onResult] вызывается с результатом упражнения для записи статистики.
 class ExerciseWidget extends StatelessWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
@@ -38,36 +41,43 @@ class ExerciseWidget extends StatelessWidget {
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'translate_sentence' => TranslateSentenceExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'mosaic' => MosaicExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'listen_pick' => ListenPickExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'multiple_choice' => MultipleChoiceExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'wordcard' => WordcardExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'flashcard' => FlashcardExerciseWidget(
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
         ),
       'voice_translate' => VoiceTranslateExerciseWidget(
           key: ValueKey(exercise.exId),
@@ -125,7 +135,7 @@ class _UnknownExerciseStub extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
       ),
       child: Center(
         child: Column(

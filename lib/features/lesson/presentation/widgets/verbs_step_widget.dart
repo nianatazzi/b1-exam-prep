@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercise_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/verb_conjugation_table.dart';
@@ -11,11 +12,13 @@ import 'package:linguobyte/l10n/app_localizations.dart';
 class VerbsStepWidget extends StatefulWidget {
   final VerbsLessonStep step;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const VerbsStepWidget({
     super.key,
     required this.step,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -56,6 +59,7 @@ class _VerbsStepWidgetState extends State<VerbsStepWidget> {
             isLastVerb: _isLastVerb,
             onNext: _onNextExercise,
             onComplete: _onSubStepComplete,
+            onExerciseResult: widget.onExerciseResult,
           )
         : _ContentPhase(
             subStep: subStep,
@@ -122,7 +126,6 @@ class _ContentPhase extends StatelessWidget {
           ),
         if (totalVerbs > 1) const SizedBox(height: AppSpacing.sm),
 
-        // Название, транскрипция, перевод
         Text(
           verb.title,
           style: theme.textTheme.headlineSmall?.copyWith(color: cs.primary),
@@ -139,7 +142,6 @@ class _ContentPhase extends StatelessWidget {
           ),
         const SizedBox(height: AppSpacing.lg),
 
-        // Таблица спряжения
         Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -171,6 +173,7 @@ class _ExercisePhase extends StatefulWidget {
   final bool isLastVerb;
   final VoidCallback onNext;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const _ExercisePhase({
     required this.subStep,
@@ -178,6 +181,7 @@ class _ExercisePhase extends StatefulWidget {
     required this.isLastVerb,
     required this.onNext,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -227,6 +231,7 @@ class _ExercisePhaseState extends State<_ExercisePhase> {
           child: ExerciseWidget(
             exercise: exercises[widget.exerciseIndex],
             onReady: () => setState(() => _isReady = true),
+            onResult: widget.onExerciseResult,
             onSkip: isLastExercise ? widget.onComplete : widget.onNext,
             onAutoAdvance: isLastExercise ? widget.onComplete : widget.onNext,
           ),

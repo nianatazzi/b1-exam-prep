@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:linguobyte/core/constants/app_routes.dart';
+import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/home/presentation/providers/home_notifier.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/presentation/providers/lesson_notifier.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/final_step_widget.dart';
@@ -55,11 +57,21 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   void _onNextExercise() => setState(() => _exerciseIndex++);
 
-  Future<void> _onComplete() async {
-    await ref
+  void _onExerciseResult(ExerciseResult result) {
+    ref
         .read(lessonProvider(widget.langId, widget.lessonId).notifier)
-        .completeCurrentStep();
+        .recordExerciseResult(result);
+  }
+
+  Future<void> _onComplete() async {
+    final notifier = ref.read(
+        lessonProvider(widget.langId, widget.lessonId).notifier);
+    final results = List<ExerciseResult>.of(notifier.currentStepResults);
+    await notifier.completeCurrentStep();
     _resetStepPhase();
+    if (results.isNotEmpty && mounted) {
+      context.push(AppRoutes.result, extra: results);
+    }
   }
 
   void _onNavigateToStep(int index) {
@@ -135,7 +147,6 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                   onContinue: () => context.go(AppRoutes.home),
                 )
               : _StepBody(
-                  // Ключ сбрасывает внутренний стейт VerbsStepWidget при смене шага
                   key: ValueKey(state.viewIndex),
                   step: state.currentStep!,
                   isExercisePhase: _isExercisePhase,
@@ -143,6 +154,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                   onToExercises: _onToExercises,
                   onNextExercise: _onNextExercise,
                   onComplete: _onComplete,
+                  onExerciseResult: _onExerciseResult,
                 ),
         );
       },
@@ -171,7 +183,7 @@ class _LessonAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize =>
       const Size.fromHeight(kToolbarHeight + _progressBarHeight);
 
-  static const double _progressBarHeight = 36.0;
+  static const double _progressBarHeight = AppSizes.progressBarHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +243,7 @@ class _StepBody extends StatelessWidget {
   final VoidCallback onToExercises;
   final VoidCallback onNextExercise;
   final VoidCallback onComplete;
+  final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const _StepBody({
     super.key,
@@ -240,6 +253,7 @@ class _StepBody extends StatelessWidget {
     required this.onToExercises,
     required this.onNextExercise,
     required this.onComplete,
+    this.onExerciseResult,
   });
 
   @override
@@ -254,6 +268,7 @@ class _StepBody extends StatelessWidget {
             onToExercises: onToExercises,
             onNextExercise: onNextExercise,
             onComplete: onComplete,
+            onExerciseResult: onExerciseResult,
           ),
         LexicalLessonStep s => LexicalStepWidget(
             step: s,
@@ -262,16 +277,17 @@ class _StepBody extends StatelessWidget {
             onToExercises: onToExercises,
             onNextExercise: onNextExercise,
             onComplete: onComplete,
+            onExerciseResult: onExerciseResult,
           ),
-        // VerbsStepWidget управляет суб-навигацией самостоятельно
         VerbsLessonStep s => VerbsStepWidget(
             step: s,
             onComplete: onComplete,
+            onExerciseResult: onExerciseResult,
           ),
-        // FinalStepWidget управляет счётчиком упражнений самостоятельно
         FinalLessonStep s => FinalStepWidget(
             step: s,
             onComplete: onComplete,
+            onExerciseResult: onExerciseResult,
           ),
       },
     );
@@ -302,7 +318,7 @@ class _LessonCompleteStub extends StatelessWidget {
           children: [
             Icon(
               Icons.check_circle_rounded,
-              size: 72,
+              size: AppSizes.completionIconSize,
               color: theme.colorScheme.primary,
             ),
             const SizedBox(height: AppSpacing.lg),

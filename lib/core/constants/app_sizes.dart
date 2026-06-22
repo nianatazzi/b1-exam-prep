@@ -29,4 +29,14 @@ abstract class AppSizes {
 
   // Кнопка воспроизведения аудио в упражнениях
   static const double audioButtonSize = 64;
+
+  // Streak карточка
+  static const double streakDot = 28;
+
+  // LessonScreen
+  static const double progressBarHeight = 36;
+  static const double completionIconSize = 72;
+
+  // Достижения
+  static const double achievementIconBg = 44;
 }

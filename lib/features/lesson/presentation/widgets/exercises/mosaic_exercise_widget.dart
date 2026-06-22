@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
 class MosaicExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
 
   const MosaicExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
   });
 
   @override
@@ -54,10 +57,19 @@ class _MosaicExerciseWidgetState extends State<MosaicExerciseWidget> {
   void _check() {
     final td = widget.exercise.typeData ?? {};
     final answerChunks = (td['answer_chunks'] as List?)?.cast<String>() ?? [];
+    final userChunks = _answer.map((e) => e.label).toList();
+    final isCorrect = listEquals(userChunks, answerChunks);
     setState(() {
       _isSubmitted = true;
-      _isCorrect = listEquals(_answer.map((e) => e.label).toList(), answerChunks);
+      _isCorrect = isCorrect;
     });
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: isCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: userChunks.join(' '),
+      correctAnswer: answerChunks.join(' '),
+    ));
     widget.onReady();
   }
 
