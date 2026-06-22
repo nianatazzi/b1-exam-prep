@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-
+$ExerciseStatsModelCopyWith<$Res> get stats;
 
 }
 /// @nodoc
@@ -76,12 +76,33 @@ as Map<String, StepResultModel>,achievements: null == achievements ? _self.achie
 as Map<String, AchievementModel>,
   ));
 }
-
+/// Create a copy of UserLanguageProgressModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ExerciseStatsModelCopyWith<$Res> get stats {
+  
+  return $ExerciseStatsModelCopyWith<$Res>(_self.stats, (value) {
+    return _then(_self.copyWith(stats: value));
+  });
+}
 }
 
 
 /// Adds pattern-matching-related methods to [UserLanguageProgressModel].
 extension UserLanguageProgressModelPatterns on UserLanguageProgressModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserLanguageProgressModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -91,6 +112,18 @@ return $default(_that);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserLanguageProgressModel value)  $default,){
 final _that = this;
@@ -101,6 +134,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserLanguageProgressModel value)?  $default,){
 final _that = this;
@@ -111,6 +155,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String? lastLesson,  int lastParagraph,  ExerciseStatsModel stats,  Map<String, StepResultModel> stepResults,  Map<String, AchievementModel> achievements)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
@@ -120,6 +175,18 @@ return $default(_that.id,_that.lastLesson,_that.lastParagraph,_that.stats,_that.
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String? lastLesson,  int lastParagraph,  ExerciseStatsModel stats,  Map<String, StepResultModel> stepResults,  Map<String, AchievementModel> achievements)  $default,) {final _that = this;
 switch (_that) {
@@ -129,6 +196,17 @@ return $default(_that.id,_that.lastLesson,_that.lastParagraph,_that.stats,_that.
 
 }
 }
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String? lastLesson,  int lastParagraph,  ExerciseStatsModel stats,  Map<String, StepResultModel> stepResults,  Map<String, AchievementModel> achievements)?  $default,) {final _that = this;
 switch (_that) {
@@ -145,15 +223,27 @@ return $default(_that.id,_that.lastLesson,_that.lastParagraph,_that.stats,_that.
 @JsonSerializable()
 
 class _UserLanguageProgressModel implements UserLanguageProgressModel {
-  const _UserLanguageProgressModel({@JsonKey(includeToJson: false) required this.id, this.lastLesson, required this.lastParagraph, this.stats = const ExerciseStatsModel(), this.stepResults = const <String, StepResultModel>{}, this.achievements = const <String, AchievementModel>{}});
+  const _UserLanguageProgressModel({@JsonKey(includeToJson: false) required this.id, this.lastLesson, required this.lastParagraph, this.stats = const ExerciseStatsModel(), final  Map<String, StepResultModel> stepResults = const <String, StepResultModel>{}, final  Map<String, AchievementModel> achievements = const <String, AchievementModel>{}}): _stepResults = stepResults,_achievements = achievements;
   factory _UserLanguageProgressModel.fromJson(Map<String, dynamic> json) => _$UserLanguageProgressModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override final  String? lastLesson;
 @override final  int lastParagraph;
-@override final  ExerciseStatsModel stats;
-@override final  Map<String, StepResultModel> stepResults;
-@override final  Map<String, AchievementModel> achievements;
+@override@JsonKey() final  ExerciseStatsModel stats;
+ final  Map<String, StepResultModel> _stepResults;
+@override@JsonKey() Map<String, StepResultModel> get stepResults {
+  if (_stepResults is EqualUnmodifiableMapView) return _stepResults;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_stepResults);
+}
+
+ final  Map<String, AchievementModel> _achievements;
+@override@JsonKey() Map<String, AchievementModel> get achievements {
+  if (_achievements is EqualUnmodifiableMapView) return _achievements;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_achievements);
+}
+
 
 /// Create a copy of UserLanguageProgressModel
 /// with the given fields replaced by the non-null parameter values.
@@ -168,12 +258,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLanguageProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.lastLesson, lastLesson) || other.lastLesson == lastLesson)&&(identical(other.lastParagraph, lastParagraph) || other.lastParagraph == lastParagraph)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other.stepResults, stepResults)&&const DeepCollectionEquality().equals(other.achievements, achievements));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLanguageProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.lastLesson, lastLesson) || other.lastLesson == lastLesson)&&(identical(other.lastParagraph, lastParagraph) || other.lastParagraph == lastParagraph)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other._stepResults, _stepResults)&&const DeepCollectionEquality().equals(other._achievements, _achievements));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,lastLesson,lastParagraph,stats,const DeepCollectionEquality().hash(stepResults),const DeepCollectionEquality().hash(achievements));
+int get hashCode => Object.hash(runtimeType,id,lastLesson,lastParagraph,stats,const DeepCollectionEquality().hash(_stepResults),const DeepCollectionEquality().hash(_achievements));
 
 @override
 String toString() {
@@ -192,7 +282,7 @@ $Res call({
 });
 
 
-
+@override $ExerciseStatsModelCopyWith<$Res> get stats;
 
 }
 /// @nodoc
@@ -211,13 +301,22 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,lastLesson: freezed == lastLesson ? _self.lastLesson : lastLesson // ignore: cast_nullable_to_non_nullable
 as String?,lastParagraph: null == lastParagraph ? _self.lastParagraph : lastParagraph // ignore: cast_nullable_to_non_nullable
 as int,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
-as ExerciseStatsModel,stepResults: null == stepResults ? _self.stepResults : stepResults // ignore: cast_nullable_to_non_nullable
-as Map<String, StepResultModel>,achievements: null == achievements ? _self.achievements : achievements // ignore: cast_nullable_to_non_nullable
+as ExerciseStatsModel,stepResults: null == stepResults ? _self._stepResults : stepResults // ignore: cast_nullable_to_non_nullable
+as Map<String, StepResultModel>,achievements: null == achievements ? _self._achievements : achievements // ignore: cast_nullable_to_non_nullable
 as Map<String, AchievementModel>,
   ));
 }
 
-
+/// Create a copy of UserLanguageProgressModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ExerciseStatsModelCopyWith<$Res> get stats {
+  
+  return $ExerciseStatsModelCopyWith<$Res>(_self.stats, (value) {
+    return _then(_self.copyWith(stats: value));
+  });
+}
 }
 
 // dart format on

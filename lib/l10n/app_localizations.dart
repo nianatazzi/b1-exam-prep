@@ -631,24 +631,45 @@ abstract class AppLocalizations {
   String get daysLabel;
 
   /// Monday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
   String get dayMon;
 
   /// Tuesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
   String get dayTue;
 
   /// Wednesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
   String get dayWed;
 
   /// Thursday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
   String get dayThu;
 
   /// Friday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
   String get dayFri;
 
   /// Saturday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
   String get daySat;
 
   /// Sunday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
   String get daySun;
 
   /// Best streak badge

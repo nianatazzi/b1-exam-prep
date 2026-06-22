@@ -49,12 +49,14 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
     });
     widget.onResult?.call(ExerciseResult(
       exerciseId: widget.exercise.exId.toString(),
-      isCorrect: isCorrect,
+      isCorrect: _isCorrect,
       grammarTypes: widget.exercise.grammarTypes,
-      userAnswer: _selectedIndex != null && _selectedIndex! < options.length
-          ? options[_selectedIndex!]
+      userAnswer: _selectedIndex != null && _selectedIndex! < _shuffledVariants.length
+          ? _shuffledVariants[_selectedIndex!]
           : '',
-      correctAnswer: answerIndex < options.length ? options[answerIndex] : '',
+      correctAnswer: _correctShuffledIndex < _shuffledVariants.length
+          ? _shuffledVariants[_correctShuffledIndex]
+          : '',
     ));
     widget.onReady();
   }

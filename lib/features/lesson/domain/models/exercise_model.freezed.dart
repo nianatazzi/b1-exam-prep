@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseModel {
 
-@JsonKey(includeToJson: false) String get id;@JsonKey(name: 'ex_id') int get exId; String get type;@JsonKey(name: 'segment_type') String get segmentType;@JsonKey(name: 'linked_item_id') int? get linkedItemId;@JsonKey(name: 'audio_url') String? get audioUrl;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'type_data') Map<String, dynamic>? get typeData;@JsonKey(name: 'grammar_types') List<String> get grammarTypes;
+@JsonKey(includeToJson: false) String get id;@JsonKey(name: 'ex_id') int get exId; String get type;@JsonKey(name: 'segment_type') String get segmentType;// null для vocab-упражнений (lexical_set не имеет linked_item_id)
+@JsonKey(name: 'linked_item_id') int? get linkedItemId;@JsonKey(name: 'audio_url') String? get audioUrl;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'type_data') Map<String, dynamic>? get typeData;@JsonKey(name: 'grammar_types') List<String> get grammarTypes;
 /// Create a copy of ExerciseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -85,6 +86,18 @@ as List<String>,
 
 /// Adds pattern-matching-related methods to [ExerciseModel].
 extension ExerciseModelPatterns on ExerciseModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ExerciseModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -94,6 +107,18 @@ return $default(_that);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ExerciseModel value)  $default,){
 final _that = this;
@@ -104,6 +129,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ExerciseModel value)?  $default,){
 final _that = this;
@@ -114,6 +150,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
@@ -123,6 +170,18 @@ return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedIte
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)  $default,) {final _that = this;
 switch (_that) {
@@ -132,6 +191,17 @@ return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedIte
 
 }
 }
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 'ex_id')  int exId,  String type, @JsonKey(name: 'segment_type')  String segmentType, @JsonKey(name: 'linked_item_id')  int? linkedItemId, @JsonKey(name: 'audio_url')  String? audioUrl, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'type_data')  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types')  List<String> grammarTypes)?  $default,) {final _that = this;
 switch (_that) {
@@ -148,13 +218,14 @@ return $default(_that.id,_that.exId,_that.type,_that.segmentType,_that.linkedIte
 @JsonSerializable()
 
 class _ExerciseModel implements ExerciseModel {
-  const _ExerciseModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'ex_id') required this.exId, required this.type, @JsonKey(name: 'segment_type') required this.segmentType, @JsonKey(name: 'linked_item_id') this.linkedItemId, @JsonKey(name: 'audio_url') this.audioUrl, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'type_data') final  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types') final  List<String> grammarTypes = const <String>[]}): _typeData = typeData, _grammarTypes = grammarTypes;
+  const _ExerciseModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'ex_id') required this.exId, required this.type, @JsonKey(name: 'segment_type') required this.segmentType, @JsonKey(name: 'linked_item_id') this.linkedItemId, @JsonKey(name: 'audio_url') this.audioUrl, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'type_data') final  Map<String, dynamic>? typeData, @JsonKey(name: 'grammar_types') final  List<String> grammarTypes = const <String>[]}): _typeData = typeData,_grammarTypes = grammarTypes;
   factory _ExerciseModel.fromJson(Map<String, dynamic> json) => _$ExerciseModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override@JsonKey(name: 'ex_id') final  int exId;
 @override final  String type;
 @override@JsonKey(name: 'segment_type') final  String segmentType;
+// null для vocab-упражнений (lexical_set не имеет linked_item_id)
 @override@JsonKey(name: 'linked_item_id') final  int? linkedItemId;
 @override@JsonKey(name: 'audio_url') final  String? audioUrl;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;

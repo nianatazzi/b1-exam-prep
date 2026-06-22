@@ -16,7 +16,8 @@ _ExerciseModel _$ExerciseModelFromJson(Map<String, dynamic> json) =>
       audioUrl: json['audio_url'] as String?,
       imageUrl: json['image_url'] as String?,
       typeData: json['type_data'] as Map<String, dynamic>?,
-      grammarTypes: (json['grammar_types'] as List<dynamic>?)
+      grammarTypes:
+          (json['grammar_types'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],
