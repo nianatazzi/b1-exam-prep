@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionModel {
 
- SubscriptionPlan get plan; DateTime? get expiresAt;
+ SubscriptionPlan get plan;// null для плана free
+ DateTime? get expiresAt;
 /// Create a copy of SubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -78,6 +79,18 @@ as DateTime?,
 
 /// Adds pattern-matching-related methods to [SubscriptionModel].
 extension SubscriptionModelPatterns on SubscriptionModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SubscriptionModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -87,6 +100,18 @@ return $default(_that);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SubscriptionModel value)  $default,){
 final _that = this;
@@ -97,6 +122,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SubscriptionModel value)?  $default,){
 final _that = this;
@@ -107,6 +143,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
@@ -116,6 +163,18 @@ return $default(_that.plan,_that.expiresAt);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)  $default,) {final _that = this;
 switch (_that) {
@@ -125,6 +184,17 @@ return $default(_that.plan,_that.expiresAt);case _:
 
 }
 }
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
@@ -145,6 +215,7 @@ class _SubscriptionModel implements SubscriptionModel {
   factory _SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
 
 @override final  SubscriptionPlan plan;
+// null для плана free
 @override final  DateTime? expiresAt;
 
 /// Create a copy of SubscriptionModel
@@ -280,7 +351,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SubscriptionModelCopyWith<$Res> get subscription {
-
+  
   return $SubscriptionModelCopyWith<$Res>(_self.subscription, (value) {
     return _then(_self.copyWith(subscription: value));
   });
@@ -290,6 +361,18 @@ $SubscriptionModelCopyWith<$Res> get subscription {
 
 /// Adds pattern-matching-related methods to [PrivateUserModel].
 extension PrivateUserModelPatterns on PrivateUserModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PrivateUserModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -299,6 +382,18 @@ return $default(_that);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PrivateUserModel value)  $default,){
 final _that = this;
@@ -309,6 +404,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PrivateUserModel value)?  $default,){
 final _that = this;
@@ -319,6 +425,17 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
@@ -328,6 +445,18 @@ return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscripti
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)  $default,) {final _that = this;
 switch (_that) {
@@ -337,6 +466,17 @@ return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscripti
 
 }
 }
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String deviceId,  String email,  String phone,  SubscriptionModel subscription,  DateTime? lastActiveDate,  int currentStreak,  int bestStreak)?  $default,) {final _that = this;
 switch (_that) {
@@ -362,8 +502,8 @@ class _PrivateUserModel implements PrivateUserModel {
 @override final  String phone;
 @override final  SubscriptionModel subscription;
 @override final  DateTime? lastActiveDate;
-@override final  int currentStreak;
-@override final  int bestStreak;
+@override@JsonKey() final  int currentStreak;
+@override@JsonKey() final  int bestStreak;
 
 /// Create a copy of PrivateUserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -434,7 +574,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SubscriptionModelCopyWith<$Res> get subscription {
-
+  
   return $SubscriptionModelCopyWith<$Res>(_self.subscription, (value) {
     return _then(_self.copyWith(subscription: value));
   });

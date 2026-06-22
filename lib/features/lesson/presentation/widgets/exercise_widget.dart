@@ -21,6 +21,7 @@ import 'package:linguobyte/features/lesson/presentation/widgets/exercises/transl
 class ExerciseWidget extends StatelessWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
   // только для дебаг-кнопки Skip — переходит к следующему упражнению без проверки
   final VoidCallback? onSkip;
   // автопереход после ответа (используется в verbs для voice_translate)
@@ -30,6 +31,7 @@ class ExerciseWidget extends StatelessWidget {
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
     this.onSkip,
     this.onAutoAdvance,
   });

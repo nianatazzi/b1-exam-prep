@@ -15,12 +15,14 @@ _UserLanguageProgressModel _$UserLanguageProgressModelFromJson(
   stats: json['stats'] == null
       ? const ExerciseStatsModel()
       : ExerciseStatsModel.fromJson(json['stats'] as Map<String, dynamic>),
-  stepResults: (json['stepResults'] as Map<String, dynamic>?)?.map(
+  stepResults:
+      (json['stepResults'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, StepResultModel.fromJson(e as Map<String, dynamic>)),
       ) ??
       const <String, StepResultModel>{},
-  achievements: (json['achievements'] as Map<String, dynamic>?)?.map(
+  achievements:
+      (json['achievements'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, AchievementModel.fromJson(e as Map<String, dynamic>)),
       ) ??
@@ -32,9 +34,7 @@ Map<String, dynamic> _$UserLanguageProgressModelToJson(
 ) => <String, dynamic>{
   'lastLesson': instance.lastLesson,
   'lastParagraph': instance.lastParagraph,
-  'stats': instance.stats.toJson(),
-  'stepResults':
-      instance.stepResults.map((k, e) => MapEntry(k, e.toJson())),
-  'achievements':
-      instance.achievements.map((k, e) => MapEntry(k, e.toJson())),
+  'stats': instance.stats,
+  'stepResults': instance.stepResults,
+  'achievements': instance.achievements,
 };

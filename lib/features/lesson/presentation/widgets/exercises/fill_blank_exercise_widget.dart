@@ -52,7 +52,7 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
     });
     widget.onResult?.call(ExerciseResult(
       exerciseId: widget.exercise.exId.toString(),
-      isCorrect: isCorrect,
+      isCorrect: _isCorrect,
       grammarTypes: widget.exercise.grammarTypes,
       userAnswer: _controller.text.trim(),
       correctAnswer: _correctAnswer,

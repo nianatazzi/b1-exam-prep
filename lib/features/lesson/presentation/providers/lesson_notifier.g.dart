@@ -50,7 +50,7 @@ final class LessonNotifierProvider
   }
 }
 
-String _$lessonNotifierHash() => r'7f9f7ddd2b3ee88b548d8af36c31f4ad977d31f9';
+String _$lessonNotifierHash() => r'0d84fcfd78b1c01c58ddb8ae45df0693fe75352f';
 
 final class LessonNotifierFamily extends $Family
     with
