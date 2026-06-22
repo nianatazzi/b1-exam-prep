@@ -227,6 +227,8 @@ class _ExercisePhaseState extends State<_ExercisePhase> {
           child: ExerciseWidget(
             exercise: exercises[widget.exerciseIndex],
             onReady: () => setState(() => _isReady = true),
+            onSkip: isLastExercise ? widget.onComplete : widget.onNext,
+            onAutoAdvance: isLastExercise ? widget.onComplete : widget.onNext,
           ),
         ),
         const SizedBox(height: AppSpacing.lg),

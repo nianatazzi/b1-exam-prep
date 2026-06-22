@@ -25,13 +25,24 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
   int? _selectedIndex;
   bool _isSubmitted = false;
   bool _isCorrect = false;
+  late final List<String> _shuffledVariants;
+  late final int _correctShuffledIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    final td = widget.exercise.typeData ?? {};
+    final variants = (td['variants'] as List?)?.cast<String>() ?? [];
+    final answerIndex = (td['answer_index'] as num?)?.toInt() ?? 0;
+    final correctAnswer = answerIndex < variants.length ? variants[answerIndex] : '';
+    _shuffledVariants = List<String>.from(variants)..shuffle();
+    _correctShuffledIndex = _shuffledVariants.indexOf(correctAnswer);
+  }
 
   void _check() {
-    final td = widget.exercise.typeData ?? {};
-    final answerIndex = (td['answer_index'] as num?)?.toInt() ?? 0;
     setState(() {
       _isSubmitted = true;
-      _isCorrect = _selectedIndex == answerIndex;
+      _isCorrect = _selectedIndex == _correctShuffledIndex;
     });
     widget.onReady();
   }
@@ -48,13 +59,11 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
     final titleMap = (td['title'] as Map?)?.cast<String, dynamic>() ?? {};
     final title = (titleMap[langCode] ?? titleMap['en'] ?? '').toString();
 
-    final variants = (td['variants'] as List?)?.cast<String>() ?? [];
-    final answerIndex = (td['answer_index'] as num?)?.toInt() ?? 0;
     final transcript = (td['transcript'] as String?) ?? '';
     final audioUrl = widget.exercise.audioUrl;
 
-    final correctAnswer = answerIndex < variants.length
-        ? variants[answerIndex]
+    final correctAnswer = _correctShuffledIndex < _shuffledVariants.length
+        ? _shuffledVariants[_correctShuffledIndex]
         : '';
 
     final Color feedbackColor;
@@ -88,9 +97,9 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
 
         // Варианты ответа
         Column(
-          children: List.generate(variants.length, (i) {
+          children: List.generate(_shuffledVariants.length, (i) {
             final isSelected = _selectedIndex == i;
-            final isCorrectItem = i == answerIndex;
+            final isCorrectItem = i == _correctShuffledIndex;
 
             final Color borderColor;
             final Color bgColor;
@@ -130,7 +139,7 @@ class _ListenPickExerciseWidgetState extends State<ListenPickExerciseWidget> {
                   children: [
                     Expanded(
                       child: Text(
-                        variants[i],
+                        _shuffledVariants[i],
                         style: theme.textTheme.bodyLarge
                             ?.copyWith(color: ac.textPrimary),
                       ),

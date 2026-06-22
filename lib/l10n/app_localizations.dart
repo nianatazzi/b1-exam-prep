@@ -516,6 +516,12 @@ abstract class AppLocalizations {
   /// **'Tap to see translation'**
   String get seeTranslation;
 
+  /// Button on flashcard back face that flips the card back to the front
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to hide translation'**
+  String get hideTranslation;
+
   /// Button in voice_translate exercise that switches to text input mode
   ///
   /// In en, this message translates to:

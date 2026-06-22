@@ -219,6 +219,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get seeTranslation => 'Toca para ver la traducción';
 
   @override
+  String get hideTranslation => 'Toca para ocultar la traducción';
+
+  @override
   String get cantSpeakNow => 'No puedo hablar ahora';
 
   @override

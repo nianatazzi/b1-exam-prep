@@ -206,6 +206,9 @@
   "seeTranslation": "Tap to see translation",
   "@seeTranslation": { "description": "Button on flashcard front face that flips the card to reveal the answer" },
 
+  "hideTranslation": "Tap to hide translation",
+  "@hideTranslation": { "description": "Button on flashcard back face that flips the card back to the front" },
+
   "cantSpeakNow": "I can't speak right now",
   "@cantSpeakNow": { "description": "Button in voice_translate exercise that switches to text input mode" },
 

@@ -18,11 +18,17 @@ import 'package:linguobyte/features/lesson/presentation/widgets/exercises/transl
 class ExerciseWidget extends StatelessWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  // только для дебаг-кнопки Skip — переходит к следующему упражнению без проверки
+  final VoidCallback? onSkip;
+  // автопереход после ответа (используется в verbs для voice_translate)
+  final VoidCallback? onAutoAdvance;
 
   const ExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onSkip,
+    this.onAutoAdvance,
   });
 
   @override
@@ -67,6 +73,7 @@ class ExerciseWidget extends StatelessWidget {
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onAutoAdvance: onAutoAdvance,
         ),
       _ => _UnknownExerciseStub(exercise: exercise, onReady: onReady),
     };
@@ -80,7 +87,7 @@ class ExerciseWidget extends StatelessWidget {
           top: 0,
           right: 0,
           child: TextButton(
-            onPressed: onReady,
+            onPressed: onSkip,
             child: Text(
               'Skip',
               style: TextStyle(

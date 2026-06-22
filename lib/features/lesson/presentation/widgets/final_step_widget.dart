@@ -53,6 +53,7 @@ class _FinalStepWidgetState extends State<FinalStepWidget> {
           child: ExerciseWidget(
             exercise: exercises[_exerciseIndex],
             onReady: () => setState(() => _isReady = true),
+            onSkip: isLast ? widget.onComplete : _onNext,
           ),
         ),
         const SizedBox(height: AppSpacing.lg),

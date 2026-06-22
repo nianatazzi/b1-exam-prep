@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
@@ -54,18 +55,22 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
   }
 
   void _flipCard() {
-    if (_isFlipped || _isSubmitted) return;
-    _flipCtrl.forward();
-    setState(() => _isFlipped = true);
-    widget.onReady();
+    if (_isSubmitted) return;
+    if (_isFlipped) {
+      _flipCtrl.reverse();
+      setState(() => _isFlipped = false);
+    } else {
+      _flipCtrl.forward();
+      setState(() => _isFlipped = true);
+      widget.onReady();
+    }
   }
 
   void _check(String baseWord) {
     _correctAnswer = baseWord;
-    final input = _textCtrl.text.trim();
     setState(() {
       _isSubmitted = true;
-      _isCorrect = input.toLowerCase() == baseWord.toLowerCase();
+      _isCorrect = normalizeAnswer(_textCtrl.text) == normalizeAnswer(baseWord);
     });
     widget.onReady();
   }
@@ -113,79 +118,71 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
       feedbackBg = Colors.transparent;
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Анимированная карточка
-                AnimatedBuilder(
-                  animation: _flipAnim,
-                  builder: (context, _) {
-                    final value = _flipAnim.value;
-                    final angle = value * pi;
-                    final showFront = value <= 0.5;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AnimatedBuilder(
+              animation: _flipAnim,
+              builder: (context, _) {
+                final value = _flipAnim.value;
+                final angle = value * pi;
+                final showFront = value <= 0.5;
 
-                    Widget face = showFront
-                        ? _buildFront(
-                            theme: theme,
-                            cs: cs,
-                            ac: ac,
-                            l10n: l10n,
-                            translations: translations,
-                          )
-                        : Transform(
-                            // Зеркалируем обратную сторону, чтобы текст не отражался
-                            transform: Matrix4.identity()..rotateY(pi),
-                            alignment: Alignment.center,
-                            child: _buildBack(
-                              theme: theme,
-                              ac: ac,
-                              baseWord: baseWord,
-                              audioUrl: audioUrl,
-                              contextSentence: contextSentence,
-                            ),
-                          );
+                Widget face = showFront
+                    ? _buildFront(
+                        theme: theme,
+                        cs: cs,
+                        ac: ac,
+                        l10n: l10n,
+                        translations: translations,
+                      )
+                    : Transform(
+                        // Зеркалируем обратную сторону, чтобы текст не отражался
+                        transform: Matrix4.identity()..rotateY(pi),
+                        alignment: Alignment.center,
+                        child: _buildBack(
+                          theme: theme,
+                          ac: ac,
+                          l10n: l10n,
+                          baseWord: baseWord,
+                          audioUrl: audioUrl,
+                          contextSentence: contextSentence,
+                        ),
+                      );
 
-                    return Transform(
-                      transform: Matrix4.identity()
-                        ..setEntry(3, 2, 0.001) // перспектива
-                        ..rotateY(angle),
-                      alignment: Alignment.center,
-                      child: face,
-                    );
-                  },
-                ),
+                return Transform(
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.001) // перспектива
+                    ..rotateY(angle),
+                  alignment: Alignment.center,
+                  child: face,
+                );
+              },
+        ),
 
-                // Нижняя зона: кнопка Проверить или фидбэк, или пусто после флипа
-                if (_isFlipped)
-                  const SizedBox.shrink()
-                else if (_isSubmitted)
-                  ExerciseFeedbackBanner(
-                    isCorrect: _isCorrect,
-                    correctAnswer: _correctAnswer,
-                    color: feedbackColor,
-                    backgroundColor: feedbackBg,
-                  )
-                else
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _textCtrl.text.trim().isEmpty
-                          ? null
-                          : () => _check(baseWord),
-                      child: Text(l10n.checkButton),
-                    ),
-                  ),
-              ],
+        const SizedBox(height: AppSpacing.md),
+
+        // Нижняя зона: кнопка Проверить или фидбэк, или пусто после флипа
+        if (_isFlipped)
+          const SizedBox.shrink()
+        else if (_isSubmitted)
+          ExerciseFeedbackBanner(
+            isCorrect: _isCorrect,
+            correctAnswer: _correctAnswer,
+            color: feedbackColor,
+            backgroundColor: feedbackBg,
+          )
+        else
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _textCtrl.text.trim().isEmpty
+                  ? null
+                  : () => _check(baseWord),
+              child: Text(l10n.checkButton),
             ),
           ),
-        );
-      },
+      ],
     );
   }
 
@@ -265,6 +262,7 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
   Widget _buildBack({
     required ThemeData theme,
     required AppColors ac,
+    required AppLocalizations l10n,
     required String baseWord,
     required String? audioUrl,
     required String contextSentence,
@@ -280,7 +278,6 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Слово на изучаемом языке
           Text(
             baseWord,
             textAlign: TextAlign.center,
@@ -303,6 +300,18 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
                   ?.copyWith(color: ac.textSecondary),
             ),
           ],
+
+          const SizedBox(height: AppSpacing.md),
+
+          TextButton.icon(
+            onPressed: _flipCard,
+            icon: Icon(Icons.rotate_left_rounded,
+                size: 16, color: ac.textMuted),
+            label: Text(
+              l10n.hideTranslation,
+              style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
+            ),
+          ),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
@@ -54,11 +55,11 @@ class _TranslateSentenceExerciseWidgetState
         regexMatch = RegExp(pattern).hasMatch(userInput);
       } on FormatException {
         // Невалидный regex в Firestore — откатываемся к строковому сравнению
-        regexMatch = userInput.toLowerCase() == _correctAnswer.toLowerCase();
+        regexMatch = normalizeAnswer(userInput) == normalizeAnswer(_correctAnswer);
       }
       isCorrect = regexMatch;
     } else {
-      isCorrect = userInput.toLowerCase() == _correctAnswer.toLowerCase();
+      isCorrect = normalizeAnswer(userInput) == normalizeAnswer(_correctAnswer);
     }
 
     setState(() {
@@ -91,99 +92,87 @@ class _TranslateSentenceExerciseWidgetState
       feedbackBg = Colors.transparent;
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (title.isNotEmpty)
-                  Text(
-                    title,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: ac.textPrimary),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title.isNotEmpty)
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
+          ),
 
-                // Исходное предложение для перевода
-                if (question.isNotEmpty)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xl,
-                      vertical: AppSpacing.lg,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ac.primarySub,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          color: cs.primary.withValues(alpha: 0.25)),
-                    ),
-                    child: Text(
-                      question,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(color: ac.textPrimary),
-                    ),
-                  ),
-
-                // Поле ввода перевода
-                TextField(
-                  controller: _controller,
-                  enabled: !_isSubmitted,
-                  onChanged: (_) => setState(() {}),
-                  maxLines: 3,
-                  minLines: 2,
-                  style:
-                      theme.textTheme.bodyLarge?.copyWith(color: ac.textPrimary),
-                  decoration: InputDecoration(
-                    hintText: l10n.answerHint,
-                    hintStyle:
-                        theme.textTheme.bodyLarge?.copyWith(color: ac.textMuted),
-                    filled: true,
-                    fillColor: ac.surfaceOverlay,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: ac.n500, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: cs.primary, width: 1.5),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: ac.n600, width: 1),
-                    ),
-                  ),
-                ),
-
-                if (_isSubmitted)
-                  ExerciseFeedbackBanner(
-                    isCorrect: _isCorrect,
-                    correctAnswer: _correctAnswer,
-                    color: feedbackColor,
-                    backgroundColor: feedbackBg,
-                  )
-                else
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed:
-                          _controller.text.trim().isEmpty ? null : _check,
-                      child: Text(l10n.checkButton),
-                    ),
-                  ),
-              ],
+        if (question.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.lg),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xl,
+              vertical: AppSpacing.lg,
+            ),
+            decoration: BoxDecoration(
+              color: ac.primarySub,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
+            ),
+            child: Text(
+              question,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(color: ac.textPrimary),
             ),
           ),
-        );
-      },
+          const SizedBox(height: AppSpacing.lg),
+        ],
+
+        TextField(
+          controller: _controller,
+          enabled: !_isSubmitted,
+          onChanged: (_) => setState(() {}),
+          maxLines: 3,
+          minLines: 2,
+          style: theme.textTheme.bodyLarge?.copyWith(color: ac.textPrimary),
+          decoration: InputDecoration(
+            hintText: l10n.answerHint,
+            hintStyle:
+                theme.textTheme.bodyLarge?.copyWith(color: ac.textMuted),
+            filled: true,
+            fillColor: ac.surfaceOverlay,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ac.n500, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: cs.primary, width: 1.5),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ac.n600, width: 1),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: AppSpacing.md),
+
+        if (_isSubmitted)
+          ExerciseFeedbackBanner(
+            isCorrect: _isCorrect,
+            correctAnswer: _correctAnswer,
+            color: feedbackColor,
+            backgroundColor: feedbackBg,
+          )
+        else
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _controller.text.trim().isEmpty ? null : _check,
+              child: Text(l10n.checkButton),
+            ),
+          ),
+      ],
     );
   }
 }

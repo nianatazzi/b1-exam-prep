@@ -381,7 +381,7 @@ abstract class FirestorePaths {
 
 ### Технический долг — виджеты упражнений (feature/exercise-widgets)
 
-- **[TD-1] Debug Skip-кнопка (exercise_widget.dart)**: `ExerciseWidget` в debug-режиме оборачивает дочерний виджет в `Stack`, что нарушает bounded height для `Spacer()` внутри `fill_blank` и `mosaic` — в debug-сборке эти упражнения крашатся. Проблема самоустранится когда Skip-кнопка будет удалена перед релизом. **Действие: убрать весь debug-блок (`if (!kDebugMode) return child` + `Stack`) после завершения QA.**
+- **[TD-1] Debug Skip-кнопка (exercise_widget.dart)**: `ExerciseWidget` в debug-режиме оборачивает дочерний виджет в `Stack`, что ограничивает bounded height. `Spacer()` в виджетах упражнений заменён на `SizedBox` — краши устранены. Skip-кнопка теперь принимает `onSkip: VoidCallback?` и корректно выполняет переход; `onReady` больше не смешивается с навигацией. **Действие: убрать весь debug-блок (`if (!kDebugMode) return child` + `Stack`) перед релизом.**
 
 - **[TD-2] Молчаливый пропуск сломанных документов Firestore (exercise_repository.dart)**: Если `fromJson` падает на документе с отсутствующим обязательным полем, в release-сборке исключение поглощается без логирования — упражнение пропадает из урока без ошибки в UI. **Действие: заменить `kDebugMode`-print на `logger.warning(...)` чтобы проблема видела в release-логах тоже.**
 

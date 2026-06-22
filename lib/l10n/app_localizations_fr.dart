@@ -219,6 +219,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get seeTranslation => 'Appuyez pour voir la traduction';
 
   @override
+  String get hideTranslation => 'Appuyez pour masquer la traduction';
+
+  @override
   String get cantSpeakNow => 'Je ne peux pas parler maintenant';
 
   @override
