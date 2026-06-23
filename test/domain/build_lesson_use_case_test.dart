@@ -9,6 +9,7 @@ import 'package:linguobyte/features/home/domain/repositories/i_lesson_repository
 import 'package:linguobyte/features/home/domain/repositories/i_user_progress_repository.dart';
 import 'package:linguobyte/features/lesson/domain/models/additional_model.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/domain/models/lexical_set_model.dart';
 import 'package:linguobyte/features/lesson/domain/models/theory_model.dart';
@@ -16,6 +17,8 @@ import 'package:linguobyte/features/lesson/domain/models/verb_model.dart';
 import 'package:linguobyte/features/lesson/domain/repositories/i_exercise_repository.dart';
 import 'package:linguobyte/features/lesson/domain/repositories/i_lesson_content_repository.dart';
 import 'package:linguobyte/features/lesson/domain/usecases/build_lesson_use_case.dart';
+import 'package:linguobyte/features/profile/domain/achievement_model.dart';
+import 'package:linguobyte/features/profile/domain/step_result_model.dart';
 import 'package:linguobyte/shared/models/lesson_step_summary.dart';
 
 // ── Fake-репозитории ──────────────────────────────────────────────────────────
@@ -41,6 +44,21 @@ class _FakeProgressRepo implements IUserProgressRepository {
   @override
   Future<void> updateProgress(
       String userId, String langId, String lastLesson, int lastParagraph) async {}
+  @override
+  Future<void> saveStepResult({
+    required String userId,
+    required String langId,
+    required String stepKey,
+    required StepResultModel result,
+    required List<ExerciseResult> exerciseResults,
+  }) async {}
+  @override
+  Future<void> updateAchievement({
+    required String userId,
+    required String langId,
+    required AchievementType type,
+    required int newLevel,
+  }) async {}
 }
 
 class _FakeContentRepo implements ILessonContentRepository {

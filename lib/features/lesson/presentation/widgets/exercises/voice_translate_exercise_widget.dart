@@ -4,6 +4,7 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -13,12 +14,14 @@ enum _VoiceState { idle, listening, done }
 class VoiceTranslateExerciseWidget extends StatefulWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
+  final ValueChanged<ExerciseResult>? onResult;
   final VoidCallback? onAutoAdvance;
 
   const VoiceTranslateExerciseWidget({
     super.key,
     required this.exercise,
     required this.onReady,
+    this.onResult,
     this.onAutoAdvance,
   });
 
@@ -130,6 +133,15 @@ class _VoiceTranslateExerciseWidgetState
       _isCorrect = exactMatch || accentMatch;
       _hasDiacriticsMismatch = accentMatch;
     });
+    // Сообщаем результат наружу — без этого голосовые упражнения не попадают
+    // в stepResults/stats (и verb-субпарт не сохраняется).
+    widget.onResult?.call(ExerciseResult(
+      exerciseId: widget.exercise.exId.toString(),
+      isCorrect: _isCorrect,
+      grammarTypes: widget.exercise.grammarTypes,
+      userAnswer: input.trim(),
+      correctAnswer: correctAnswer,
+    ));
     // в авто-голосовом режиме кнопка "Далее" не нужна
     if (_useTextMode || widget.onAutoAdvance == null) widget.onReady();
   }
