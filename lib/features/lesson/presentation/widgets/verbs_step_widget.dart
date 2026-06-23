@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
-import 'package:linguobyte/features/lesson/presentation/widgets/exercise_widget.dart';
+import 'package:linguobyte/features/lesson/presentation/widgets/exercise_phase_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/verb_conjugation_table.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
@@ -57,15 +57,20 @@ class _VerbsStepWidgetState extends State<VerbsStepWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final subStep = _current;
     return _isExercisePhase
-        ? _ExercisePhase(
-            subStep: subStep,
+        ? ExercisePhaseWidget(
+            exercises: subStep.exercises,
             exerciseIndex: _exerciseIndex,
-            isLastVerb: _isLastVerb,
             onNext: _onNextExercise,
             onComplete: _onSubStepComplete,
-            onExerciseResult: widget.onExerciseResult,
+            onResult: widget.onExerciseResult,
+            nextButtonLabel: l10n.nextButton,
+            completeButtonLabel: _isLastVerb
+                ? l10n.completeStepButton
+                : l10n.nextVerbButton,
+            autoAdvance: true,
           )
         : _ContentPhase(
             subStep: subStep,
@@ -171,92 +176,3 @@ class _ContentPhase extends StatelessWidget {
   }
 }
 
-// ── Фаза упражнений ───────────────────────────────────────────────────────────
-
-class _ExercisePhase extends StatefulWidget {
-  final VerbSubStep subStep;
-  final int exerciseIndex;
-  final bool isLastVerb;
-  final VoidCallback onNext;
-  final VoidCallback onComplete;
-  final ValueChanged<ExerciseResult>? onExerciseResult;
-
-  const _ExercisePhase({
-    required this.subStep,
-    required this.exerciseIndex,
-    required this.isLastVerb,
-    required this.onNext,
-    required this.onComplete,
-    this.onExerciseResult,
-  });
-
-  @override
-  State<_ExercisePhase> createState() => _ExercisePhaseState();
-}
-
-class _ExercisePhaseState extends State<_ExercisePhase> {
-  bool _isReady = false;
-
-  @override
-  void didUpdateWidget(_ExercisePhase oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.exerciseIndex != widget.exerciseIndex) {
-      setState(() => _isReady = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final exercises = widget.subStep.exercises;
-    final isLastExercise = widget.exerciseIndex >= exercises.length - 1;
-
-    final String buttonLabel;
-    if (!isLastExercise) {
-      buttonLabel = l10n.nextButton;
-    } else if (widget.isLastVerb) {
-      buttonLabel = l10n.completeStepButton;
-    } else {
-      buttonLabel = l10n.nextVerbButton;
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${widget.exerciseIndex + 1} / ${exercises.length}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.5),
-              ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Expanded(
-          child: ExerciseWidget(
-            exercise: exercises[widget.exerciseIndex],
-            onReady: () => setState(() => _isReady = true),
-            onResult: widget.onExerciseResult,
-            onSkip: isLastExercise ? widget.onComplete : widget.onNext,
-            onAutoAdvance: isLastExercise ? widget.onComplete : widget.onNext,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Visibility(
-          visible: _isReady,
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isReady ? (isLastExercise ? widget.onComplete : widget.onNext) : null,
-              child: Text(buttonLabel),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

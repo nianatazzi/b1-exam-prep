@@ -98,40 +98,15 @@ class ProfileNotifier extends _$ProfileNotifier {
     }
   }
 
-  /// Меняет язык интерфейса.
-  Future<void> setUiLanguage(String langCode) async {
-    final user = ref.read(authProvider).asData?.value;
-    if (user == null) return;
-
-    ref.read(appLocaleProvider.notifier).setLocale(Locale(langCode));
-
-    try {
-      await ref
-          .read(userRepositoryProvider)
-          .updatePublicProfile(user.id, {'preference.uiLanguage': langCode});
-    } on AppError {
-      // MVP: ошибка сохранения не откатывает визуальное изменение
-    }
-  }
-
   /// Конвертирует map достижений в отсортированный список.
   List<AchievementModel> _buildAchievementList(
     Map<String, AchievementModel> raw,
   ) {
     final all = <AchievementModel>[];
     for (final type in AchievementType.values) {
-      final key = _achievementKey(type);
-      final existing = raw[key];
+      final existing = raw[type.key];
       all.add(existing ?? AchievementModel(type: type, level: 0));
     }
     return all;
   }
-
-  String _achievementKey(AchievementType type) => switch (type) {
-        AchievementType.masterConjugator => 'master_conjugator',
-        AchievementType.firstStep => 'first_step',
-        AchievementType.focusedLearner => 'focused_learner',
-        AchievementType.interestedLearner => 'interested_learner',
-        AchievementType.vocabularyMaster => 'vocabulary_master',
-      };
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:linguobyte/core/constants/app_constants.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
@@ -23,13 +24,13 @@ class ResultScreen extends StatelessWidget {
 
     final feedback = percent == 100
         ? l10n.resultPerfect
-        : percent >= 78
+        : percent >= AppConstants.passThresholdPercent
             ? l10n.resultGood
             : l10n.resultNeedsWork;
 
     final feedbackColor = percent == 100
         ? colors.success
-        : percent >= 78
+        : percent >= AppConstants.passThresholdPercent
             ? theme.colorScheme.primary
             : theme.colorScheme.error;
 

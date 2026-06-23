@@ -72,6 +72,7 @@ class LessonRepository implements ILessonRepository {
         summaries.add(LessonStepSummary(
           type: LessonStepType.theory,
           title: doc.data()['topic'] as String? ?? '',
+          ref: (doc.data()['th_id'] as num?)?.toInt() ?? 0,
         ));
       }
 

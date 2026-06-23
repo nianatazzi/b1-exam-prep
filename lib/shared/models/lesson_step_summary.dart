@@ -22,6 +22,8 @@ abstract class LessonStepSummary with _$LessonStepSummary {
     required LessonStepType type,
     // topic для theory, set_title для lexical, '' для verbs (виджет подставит ARB)
     required String title,
+    // th_id для theory — точное сопоставление stepResults (цвет точки); иначе 0
+    @Default(0) int ref,
   }) = _LessonStepSummary;
 
   factory LessonStepSummary.fromJson(Map<String, dynamic> json) =>

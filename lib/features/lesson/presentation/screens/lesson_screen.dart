@@ -14,6 +14,7 @@ import 'package:linguobyte/features/lesson/presentation/widgets/lexical_step_wid
 import 'package:linguobyte/features/lesson/presentation/widgets/theory_step_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/verbs_step_widget.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:linguobyte/shared/widgets/error_view.dart';
 
 class LessonScreen extends ConsumerStatefulWidget {
   final String langId;
@@ -116,19 +117,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         body: Center(child: CircularProgressIndicator()),
       ),
       error: (_, _) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(l10n.errorGeneric),
-              const SizedBox(height: AppSpacing.lg),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(
-                  lessonProvider(widget.langId, widget.lessonId),
-                ),
-                child: Text(l10n.retry),
-              ),
-            ],
+        body: ErrorView(
+          message: l10n.errorGeneric,
+          onRetry: () => ref.invalidate(
+            lessonProvider(widget.langId, widget.lessonId),
           ),
         ),
       ),

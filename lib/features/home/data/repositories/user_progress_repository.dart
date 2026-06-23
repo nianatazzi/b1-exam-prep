@@ -102,7 +102,7 @@ class UserProgressRepository implements IUserProgressRepository {
     required int newLevel,
   }) async {
     try {
-      final key = _achievementKey(type);
+      final key = type.key;
       final docRef =
           _firestore.doc(FirestorePaths.userLanguage(userId, langId));
       await _updateOrInit(docRef, {
@@ -182,14 +182,6 @@ class UserProgressRepository implements IUserProgressRepository {
 
     return increments;
   }
-
-  String _achievementKey(AchievementType type) => switch (type) {
-        AchievementType.masterConjugator => 'master_conjugator',
-        AchievementType.firstStep => 'first_step',
-        AchievementType.focusedLearner => 'focused_learner',
-        AchievementType.interestedLearner => 'interested_learner',
-        AchievementType.vocabularyMaster => 'vocabulary_master',
-      };
 
   /// Конвертирует Timestamp → ISO строку в stepResults и achievements,
   /// подставляет type достижения из ключа map для старых документов.

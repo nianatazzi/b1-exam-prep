@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:linguobyte/core/constants/app_constants.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
@@ -27,16 +28,19 @@ class LessonCard extends StatelessWidget {
 
   StepResultModel? _findStepResult(LessonStepSummary step) {
     final lId = cardData.lesson.lId;
-    final prefix = switch (step.type) {
-      LessonStepType.theory => '${lId}_theory_',
-      LessonStepType.lexical => '${lId}_vocab_',
-      LessonStepType.verbs => '${lId}_verb_',
-      LessonStepType.finalStep => '${lId}_final_',
+    // Точный ключ по типу шага (theory различается по ref = th_id).
+    final exactKey = switch (step.type) {
+      LessonStepType.theory => '${lId}_theory_${step.ref}',
+      LessonStepType.lexical => '${lId}_vocab_0',
+      LessonStepType.finalStep => '${lId}_final_0',
+      LessonStepType.verbs => null,
     };
+    if (exactKey != null) return cardData.stepResults[exactKey];
+
+    // verbs — один шаг из нескольких глаголов, берём первый результат.
+    final verbPrefix = '${lId}_verb_';
     for (final entry in cardData.stepResults.entries) {
-      if (entry.key.startsWith(prefix)) {
-        return entry.value;
-      }
+      if (entry.key.startsWith(verbPrefix)) return entry.value;
     }
     return null;
   }
@@ -195,11 +199,11 @@ class _StepRow extends StatelessWidget {
     this.stepResult,
   });
 
-  /// Зелёный ≥78%, красный <78%, primary если нет результатов.
+  /// Зелёный ≥ порога, красный ниже, primary если нет результатов.
   Color _resultDotColor(ColorScheme cs, AppColors ac) {
     if (stepResult == null || stepResult!.total == 0) return cs.primary;
     final percent = stepResult!.correct / stepResult!.total * 100;
-    return percent >= 78 ? ac.success : cs.error;
+    return percent >= AppConstants.passThresholdPercent ? ac.success : cs.error;
   }
 
   String _displayTitle() {
@@ -223,7 +227,8 @@ class _StepRow extends StatelessWidget {
     final bool isDotFilled;
     switch (state) {
       case LessonCardState.done:
-        dotColor = cs.primary;
+        // Завершённый шаг — цвет по результату (зелёный/красный/нейтральный).
+        dotColor = _resultDotColor(cs, ac);
         textColor = cs.onSurface;
         isDotFilled = true;
       case LessonCardState.active:
