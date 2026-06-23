@@ -28,6 +28,7 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
   final _controller = TextEditingController();
   bool _isSubmitted = false;
   bool _isCorrect = false;
+  bool _hasDiacriticsMismatch = false;
   String _correctAnswer = '';
 
   @override
@@ -46,9 +47,24 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
     _correctAnswer = accepted.isNotEmpty ? accepted.first : '';
 
     final userInput = normalizeAnswer(_controller.text);
+    final bool exactMatch = accepted.any((a) => normalizeAnswer(a) == userInput);
+    final bool accentMatch = !exactMatch &&
+        accepted.any((a) =>
+            normalizeAnswer(stripDiacritics(a)) ==
+            normalizeAnswer(stripDiacritics(_controller.text)));
+    // При совпадении без акцентов — находим каноническую форму для подсказки
+    if (accentMatch) {
+      _correctAnswer = accepted.firstWhere(
+        (a) =>
+            normalizeAnswer(stripDiacritics(a)) ==
+            normalizeAnswer(stripDiacritics(_controller.text)),
+        orElse: () => _correctAnswer,
+      );
+    }
     setState(() {
       _isSubmitted = true;
-      _isCorrect = accepted.any((a) => normalizeAnswer(a) == userInput);
+      _isCorrect = exactMatch || accentMatch;
+      _hasDiacriticsMismatch = accentMatch;
     });
     widget.onResult?.call(ExerciseResult(
       exerciseId: widget.exercise.exId.toString(),
@@ -174,6 +190,7 @@ class _FillBlankExerciseWidgetState extends State<FillBlankExerciseWidget> {
             correctAnswer: _correctAnswer,
             color: feedbackColor,
             backgroundColor: feedbackBg,
+            accentWarning: _hasDiacriticsMismatch ? l10n.accentWarning : null,
           )
         else
           SizedBox(

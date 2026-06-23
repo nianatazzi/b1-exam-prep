@@ -371,4 +371,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get surname => 'Surname';
+
+  @override
+  String get accentWarning =>
+      'Your answer is understood, but accents are missing.';
 }

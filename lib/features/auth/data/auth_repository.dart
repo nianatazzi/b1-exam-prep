@@ -20,13 +20,35 @@ class AuthRepository {
   const AuthRepository(this._auth, this._firestore);
 
   /// Стрим состояния авторизации — null когда пользователь не вошёл.
+  ///
+  /// При первом событии вызывает `reload()` чтобы проверить валидность
+  /// кэшированной сессии на сервере. Это обнаруживает случай когда аккаунт
+  /// был удалён через Firebase Console пока токен ещё не истёк.
   Stream<UserModel?> authStateChanges() {
-    return _auth.authStateChanges().map((user) {
-      if (user == null) return null;
+    var isFirstEvent = true;
+    return _auth.authStateChanges().asyncMap((user) async {
+      if (user == null) {
+        isFirstEvent = false;
+        return null;
+      }
+      if (isFirstEvent) {
+        isFirstEvent = false;
+        try {
+          await user.reload();
+        } on FirebaseAuthException {
+          // Аккаунт удалён или заблокирован — Firebase сбросит сессию,
+          // stream пришлёт null следующим событием.
+          return null;
+        } catch (_) {
+          // Сетевая ошибка — не ломаем offline, используем кэш.
+        }
+      }
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) return null;
       return UserModel(
-        id: user.uid,
-        email: user.email ?? '',
-        displayName: user.displayName,
+        id: currentUser.uid,
+        email: currentUser.email ?? '',
+        displayName: currentUser.displayName,
       );
     });
   }

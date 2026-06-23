@@ -127,5 +127,6 @@
   "resultGood": "Bien joué !",
   "resultNeedsWork": "Continuez à pratiquer !",
   "firstName": "Prénom",
-  "surname": "Nom"
+  "surname": "Nom",
+  "accentWarning": "Votre réponse est comprise, mais les accents manquent."
 }

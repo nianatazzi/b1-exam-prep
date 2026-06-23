@@ -4,7 +4,6 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/core/utils/string_utils.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/exercises/exercise_feedback_banner.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -40,6 +39,7 @@ class _VoiceTranslateExerciseWidgetState
   final _textCtrl = TextEditingController();
   bool _isSubmitted = false;
   bool _isCorrect = false;
+  bool _hasDiacriticsMismatch = false;
   String _correctAnswer = '';
 
   @override
@@ -113,12 +113,22 @@ class _VoiceTranslateExerciseWidgetState
     _correctAnswer = correctAnswer;
     final input = _useTextMode ? _textCtrl.text : _recognizedText;
     final normalized = normalizeAnswer(input);
-    final isCorrect = normalized == normalizeAnswer(correctAnswer) ||
+    final exactMatch = normalized == normalizeAnswer(correctAnswer) ||
         acceptedAnswers.any((a) => normalizeAnswer(a) == normalized);
+
+    // Проверка без акцентов только для текстового режима (STT и так не даёт акценты)
+    final bool accentMatch = !exactMatch &&
+        _useTextMode &&
+        (normalizeAnswer(stripDiacritics(input)) ==
+                normalizeAnswer(stripDiacritics(correctAnswer)) ||
+            acceptedAnswers.any((a) =>
+                normalizeAnswer(stripDiacritics(a)) ==
+                normalizeAnswer(stripDiacritics(input))));
 
     setState(() {
       _isSubmitted = true;
-      _isCorrect = isCorrect;
+      _isCorrect = exactMatch || accentMatch;
+      _hasDiacriticsMismatch = accentMatch;
     });
     // в авто-голосовом режиме кнопка "Далее" не нужна
     if (_useTextMode || widget.onAutoAdvance == null) widget.onReady();
@@ -212,6 +222,7 @@ class _VoiceTranslateExerciseWidgetState
             correctAnswer: _correctAnswer,
             color: feedbackColor,
             backgroundColor: feedbackBg,
+            accentWarning: _hasDiacriticsMismatch ? l10n.accentWarning : null,
           ),
           // в авто-режиме при ошибке показываем кнопку продолжить
           if (isAutoVoiceMode && !_isCorrect) ...[

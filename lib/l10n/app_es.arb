@@ -127,5 +127,6 @@
   "resultGood": "¡Bien hecho!",
   "resultNeedsWork": "¡Sigue practicando!",
   "firstName": "Nombre",
-  "surname": "Apellido"
+  "surname": "Apellido",
+  "accentWarning": "Tu respuesta se entiende, pero faltan los acentos."
 }

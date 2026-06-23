@@ -23,6 +23,7 @@ class SettingsNotifier extends _$SettingsNotifier {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.theme': theme});
+      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setTheme failed', error: e, stackTrace: st);
@@ -40,6 +41,7 @@ class SettingsNotifier extends _$SettingsNotifier {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.speechSpeed': speed});
+      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setSpeechSpeed failed', error: e, stackTrace: st);
@@ -53,12 +55,15 @@ class SettingsNotifier extends _$SettingsNotifier {
     final user = ref.read(authProvider).asData?.value;
     if (user == null) return;
 
+    // setLocale перестраивает дерево виджетов — settingsProvider может быть
+    // диспозен до завершения await. ref.mounted проверяем перед invalidate.
     ref.read(appLocaleProvider.notifier).setLocale(Locale(langCode));
 
     try {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.uiLanguage': langCode});
+      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setUiLanguage failed', error: e, stackTrace: st);

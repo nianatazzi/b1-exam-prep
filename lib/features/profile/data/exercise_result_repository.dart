@@ -27,10 +27,8 @@ class ExerciseResultRepository implements IExerciseResultRepository {
   }) async {
     try {
       final docRef = _firestore.doc(FirestorePaths.userLanguage(userId, langId));
-
       final statsIncrements = _buildStatsIncrements(exerciseResults);
-
-      await docRef.update({
+      final updateData = {
         'stepResults.$stepKey': {
           'correct': result.correct,
           'total': result.total,
@@ -39,7 +37,28 @@ class ExerciseResultRepository implements IExerciseResultRepository {
           'incorrectExerciseIds': result.incorrectExerciseIds,
         },
         ...statsIncrements,
-      });
+      };
+
+      try {
+        await docRef.update(updateData);
+      } on FirebaseException catch (e) {
+        if (e.code != 'not-found') rethrow;
+        // Документ languages/{langId} ещё не существует (первый шаг нового
+        // пользователя). Создаём с полной начальной структурой и повторяем.
+        await docRef.set({
+          'lastLesson': '',
+          'lastParagraph': 0,
+          'stats': {
+            'grammar': {'correct': 0, 'total': 0},
+            'vocabulary': {'correct': 0, 'total': 0},
+            'listening': {'correct': 0, 'total': 0},
+            'speaking': {'correct': 0, 'total': 0},
+          },
+          'stepResults': <String, dynamic>{},
+          'achievements': <String, dynamic>{},
+        });
+        await docRef.update(updateData);
+      }
     } on FirebaseException catch (e) {
       throw mapFirebaseException(e);
     } catch (e) {

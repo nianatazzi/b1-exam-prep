@@ -374,4 +374,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get surname => 'Nom';
+
+  @override
+  String get accentWarning =>
+      'Votre réponse est comprise, mais les accents manquent.';
 }

@@ -20,7 +20,18 @@ class UserRepository {
   Future<PublicUserModel> getPublicProfile(String userId) async {
     try {
       final doc = await _firestore.doc(FirestorePaths.publicUser(userId)).get();
-      if (!doc.exists || doc.data() == null) throw const NotFoundError();
+      // Документ может отсутствовать при гонке на регистрации или ручном удалении.
+      // Возвращаем пустую модель — экран должен отобразиться, а не упасть.
+      if (!doc.exists || doc.data() == null) {
+        return PublicUserModel(
+          id: userId,
+          name: '',
+          surname: '',
+          avatar: null,
+          points: 0,
+          preference: {},
+        );
+      }
       return PublicUserModel.fromJson({'id': doc.id, ...doc.data()!});
     } on AppError {
       rethrow;
@@ -35,7 +46,20 @@ class UserRepository {
     try {
       final doc =
           await _firestore.doc(FirestorePaths.privateUser(userId)).get();
-      if (!doc.exists || doc.data() == null) throw const NotFoundError();
+      // Документ может отсутствовать если пользователь удалил его вручную.
+      // Возвращаем дефолтную модель чтобы ProfileScreen не крашился.
+      if (!doc.exists || doc.data() == null) {
+        return PrivateUserModel(
+          id: userId,
+          deviceId: '',
+          email: '',
+          phone: '',
+          subscription: const SubscriptionModel(plan: SubscriptionPlan.free),
+          currentStreak: 0,
+          bestStreak: 0,
+          lastActiveDate: null,
+        );
+      }
       final data = _preprocessPrivateData(doc.data()!);
       return PrivateUserModel.fromJson({'id': doc.id, ...data});
     } on AppError {
@@ -52,7 +76,7 @@ class UserRepository {
     Map<String, dynamic> data,
   ) async {
     try {
-      await _firestore.doc(FirestorePaths.publicUser(userId)).update(data);
+      await _updateOrCreate(userId, data);
     } on AppError {
       rethrow;
     } on FirebaseException catch (e) {
@@ -64,15 +88,40 @@ class UserRepository {
 
   Future<void> saveSelectedLanguage(String userId, String langId) async {
     try {
-      await _firestore
-          .doc(FirestorePaths.publicUser(userId))
-          .update({'preference.selectedLanguage': langId});
+      await _updateOrCreate(userId, {'preference.selectedLanguage': langId});
     } on AppError {
       rethrow;
     } on FirebaseException catch (e) {
       throw mapFirebaseException(e);
     } catch (e) {
       throw UnknownError(e.toString());
+    }
+  }
+
+  /// Выполняет update() документа public_user_info.
+  /// Если документа не существует — создаёт его с дефолтами и повторяет update().
+  /// Нужно для гонки на регистрации: Firebase Auth stream стреляет до того,
+  /// как _createUserDocuments завершит batch-запись.
+  Future<void> _updateOrCreate(
+    String userId,
+    Map<String, dynamic> data,
+  ) async {
+    final ref = _firestore.doc(FirestorePaths.publicUser(userId));
+    try {
+      await ref.update(data);
+    } on FirebaseException catch (e) {
+      if (e.code == 'not-found') {
+        await ref.set({
+          'name': '',
+          'surname': '',
+          'avatar': null,
+          'points': 0,
+          'preference': <String, dynamic>{},
+        });
+        await ref.update(data);
+      } else {
+        throw mapFirebaseException(e);
+      }
     }
   }
 

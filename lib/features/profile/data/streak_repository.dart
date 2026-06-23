@@ -53,11 +53,15 @@ class StreakRepository implements IStreakRepository {
 
       final newBest = newStreak > bestStreak ? newStreak : bestStreak;
 
-      await docRef.update({
-        'lastActiveDate': Timestamp.fromDate(today),
-        'currentStreak': newStreak,
-        'bestStreak': newBest,
-      });
+      // set(merge:true) — top-level поля, безопасно создаёт документ если нет
+      await docRef.set(
+        {
+          'lastActiveDate': Timestamp.fromDate(today),
+          'currentStreak': newStreak,
+          'bestStreak': newBest,
+        },
+        SetOptions(merge: true),
+      );
 
       return newStreak;
     } on FirebaseException catch (e) {

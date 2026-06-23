@@ -821,6 +821,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Surname'**
   String get surname;
+
+  /// Shown when the user's answer matches only after stripping diacritics
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer is understood, but accents are missing.'**
+  String get accentWarning;
 }
 
 class _AppLocalizationsDelegate

@@ -360,5 +360,8 @@
   "@firstName": { "description": "First name label on profile" },
 
   "surname": "Surname",
-  "@surname": { "description": "Surname label on profile" }
+  "@surname": { "description": "Surname label on profile" },
+
+  "accentWarning": "Your answer is understood, but accents are missing.",
+  "@accentWarning": { "description": "Shown when the user's answer matches only after stripping diacritics" }
 }

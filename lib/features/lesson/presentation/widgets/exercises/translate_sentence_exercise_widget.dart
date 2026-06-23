@@ -29,6 +29,7 @@ class _TranslateSentenceExerciseWidgetState
   final _controller = TextEditingController();
   bool _isSubmitted = false;
   bool _isCorrect = false;
+  bool _hasDiacriticsMismatch = false;
   String _correctAnswer = '';
 
   @override
@@ -52,6 +53,8 @@ class _TranslateSentenceExerciseWidgetState
 
     final userInput = _controller.text.trim();
     final bool isCorrect;
+    bool accentMatch = false;
+
     if (pattern.isNotEmpty) {
       bool regexMatch;
       try {
@@ -59,15 +62,27 @@ class _TranslateSentenceExerciseWidgetState
       } on FormatException {
         // Невалидный regex в Firestore — откатываемся к строковому сравнению
         regexMatch = normalizeAnswer(userInput) == normalizeAnswer(_correctAnswer);
+        if (!regexMatch) {
+          accentMatch = normalizeAnswer(stripDiacritics(userInput)) ==
+              normalizeAnswer(stripDiacritics(_correctAnswer));
+          regexMatch = accentMatch;
+        }
       }
       isCorrect = regexMatch;
     } else {
-      isCorrect = normalizeAnswer(userInput) == normalizeAnswer(_correctAnswer);
+      final exactMatch =
+          normalizeAnswer(userInput) == normalizeAnswer(_correctAnswer);
+      if (!exactMatch) {
+        accentMatch = normalizeAnswer(stripDiacritics(userInput)) ==
+            normalizeAnswer(stripDiacritics(_correctAnswer));
+      }
+      isCorrect = exactMatch || accentMatch;
     }
 
     setState(() {
       _isSubmitted = true;
       _isCorrect = isCorrect;
+      _hasDiacriticsMismatch = accentMatch;
     });
     widget.onResult?.call(ExerciseResult(
       exerciseId: widget.exercise.exId.toString(),
@@ -174,6 +189,7 @@ class _TranslateSentenceExerciseWidgetState
             correctAnswer: _correctAnswer,
             color: feedbackColor,
             backgroundColor: feedbackBg,
+            accentWarning: _hasDiacriticsMismatch ? l10n.accentWarning : null,
           )
         else
           SizedBox(

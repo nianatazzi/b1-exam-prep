@@ -34,6 +34,7 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
   bool _isFlipped = false;
   bool _isSubmitted = false;
   bool _isCorrect = false;
+  bool _hasDiacriticsMismatch = false;
   String _correctAnswer = '';
   final _textCtrl = TextEditingController();
 
@@ -71,9 +72,14 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
 
   void _check(String baseWord) {
     _correctAnswer = baseWord;
+    final exactMatch = normalizeAnswer(_textCtrl.text) == normalizeAnswer(baseWord);
+    final accentMatch = !exactMatch &&
+        normalizeAnswer(stripDiacritics(_textCtrl.text)) ==
+            normalizeAnswer(stripDiacritics(baseWord));
     setState(() {
       _isSubmitted = true;
-      _isCorrect = normalizeAnswer(_textCtrl.text) == normalizeAnswer(baseWord);
+      _isCorrect = exactMatch || accentMatch;
+      _hasDiacriticsMismatch = accentMatch;
     });
     widget.onResult?.call(ExerciseResult(
       exerciseId: widget.exercise.exId.toString(),
@@ -181,6 +187,7 @@ class _FlashcardExerciseWidgetState extends State<FlashcardExerciseWidget>
             correctAnswer: _correctAnswer,
             color: feedbackColor,
             backgroundColor: feedbackBg,
+            accentWarning: _hasDiacriticsMismatch ? l10n.accentWarning : null,
           )
         else
           SizedBox(

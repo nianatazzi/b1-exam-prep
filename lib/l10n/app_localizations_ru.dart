@@ -372,4 +372,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get surname => 'Фамилия';
+
+  @override
+  String get accentWarning => 'Ваш ответ понятен, но пропущены акценты.';
 }

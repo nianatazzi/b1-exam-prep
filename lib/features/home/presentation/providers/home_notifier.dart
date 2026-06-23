@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
+import 'package:linguobyte/core/locale/locale_provider.dart';
 import 'package:linguobyte/features/home/data/repositories/language_repository.dart';
 import 'package:linguobyte/features/home/domain/models/language_model.dart';
 import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.dart';
@@ -38,14 +40,21 @@ class HomeNotifier extends _$HomeNotifier {
       throw const NotFoundError();
     }
 
-    final saved = await ref
-        .read(userRepositoryProvider)
-        .getSelectedLanguage(_userId);
+    // Читаем public_user_info одним запросом: берём selectedLanguage и
+    // восстанавливаем uiLanguage, чтобы HomeScreen открывался с правильной локалью.
+    final publicProfile =
+        await ref.read(userRepositoryProvider).getPublicProfile(_userId);
 
+    final saved = publicProfile.preference['selectedLanguage'] as String?;
     final selectedLangId =
         (saved != null && languages.any((l) => l.id == saved))
             ? saved
             : languages.first.id;
+
+    final uiLang = publicProfile.preference['uiLanguage'] as String?;
+    if (uiLang != null) {
+      ref.read(appLocaleProvider.notifier).setLocale(Locale(uiLang));
+    }
 
     final screenData = await ref
         .read(getHomeDataUseCaseProvider)
