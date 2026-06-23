@@ -103,6 +103,7 @@ void main() {
       langId: 'fr',
       data: _data(lId: 3, steps: [step, _theoryStep(2)]),
       progressIndex: 0,
+      viewIndex: 0,
       currentStep: step,
       exerciseResults: [_correct()],
     );
@@ -124,6 +125,7 @@ void main() {
       langId: 'fr',
       data: _data(lId: 1, steps: [step]), // один шаг → урок завершается
       progressIndex: 0,
+      viewIndex: 0,
       currentStep: step,
       exerciseResults: [_correct()],
     );
@@ -147,6 +149,7 @@ void main() {
         nextLesson: const LessonModel(id: 'lesson_02', lId: 2, theme: 'B'),
       ),
       progressIndex: 0,
+      viewIndex: 0,
       currentStep: step,
       exerciseResults: [_correct()],
     );
@@ -168,6 +171,31 @@ void main() {
     );
 
     expect(repo.savedStepKeys, ['4_verb_2']);
+  });
+
+  test('переигровка пройденного шага не двигает прогресс за предел', () async {
+    final repo = _SpyProgressRepo();
+    final useCase = CompleteStepUseCase(
+        progressRepository: repo, streakRepository: _FakeStreak(1));
+    final step = _theoryStep(1);
+
+    // Урок из 2 шагов уже пройден дальше (progressIndex=2),
+    // пользователь вернулся на шаг 0 и завершает его снова (viewIndex=0).
+    final outcome = await useCase.execute(
+      userId: 'u',
+      langId: 'fr',
+      data: _data(lId: 3, steps: [step, _theoryStep(2)]),
+      progressIndex: 2,
+      viewIndex: 0,
+      currentStep: step,
+      exerciseResults: [_correct()],
+    );
+
+    expect(outcome.newProgressIndex, 2, reason: 'прогресс не уходит за предел');
+    expect(repo.savedStepKeys, ['3_theory_1'],
+        reason: 'результаты переигровки всё равно сохраняются');
+    expect(repo.lastParagraphWritten, isNull,
+        reason: 'updateProgress при переигровке не вызывается');
   });
 
   test('глагол без упражнений + persistEmpty=true → пишет stepResult total=0',

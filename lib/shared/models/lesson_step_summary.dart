@@ -4,7 +4,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'lesson_step_summary.freezed.dart';
 part 'lesson_step_summary.g.dart';
 
-enum LessonStepType { theory, lexical, verbs }
+enum LessonStepType {
+  @JsonValue('theory')
+  theory,
+  @JsonValue('lexical')
+  lexical,
+  @JsonValue('verbs')
+  verbs,
+  // final — зарезервированное слово, поэтому finalStep с JsonValue 'final'
+  @JsonValue('final')
+  finalStep,
+}
 
 @freezed
 abstract class LessonStepSummary with _$LessonStepSummary {

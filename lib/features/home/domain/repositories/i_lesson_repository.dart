@@ -6,5 +6,6 @@ abstract class ILessonRepository {
   Future<List<LessonStepSummary>> getLessonStepSummaries(
     String langId,
     String lessonId,
+    int lessonLId,
   );
 }

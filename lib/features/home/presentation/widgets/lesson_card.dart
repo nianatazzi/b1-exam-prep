@@ -31,6 +31,7 @@ class LessonCard extends StatelessWidget {
       LessonStepType.theory => '${lId}_theory_',
       LessonStepType.lexical => '${lId}_vocab_',
       LessonStepType.verbs => '${lId}_verb_',
+      LessonStepType.finalStep => '${lId}_final_',
     };
     for (final entry in cardData.stepResults.entries) {
       if (entry.key.startsWith(prefix)) {
@@ -206,6 +207,7 @@ class _StepRow extends StatelessWidget {
       LessonStepType.theory => step.title,
       LessonStepType.lexical => l10n.lexicalSection,
       LessonStepType.verbs => l10n.verbsSection,
+      LessonStepType.finalStep => l10n.finalSection,
     };
   }
 
@@ -260,7 +262,7 @@ class _StepRow extends StatelessWidget {
               child: Text(
                 _displayTitle(),
                 style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

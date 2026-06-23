@@ -20,7 +20,8 @@ abstract class AppSizes {
 
   // Карточка урока на HomeScreen
   static const double lessonCardWidth   = 200;
-  static const double lessonCardHeight  = 320;
+  // Высота вмещает до ~6 шагов (theory[] + lexical + verbs + final) без overflow
+  static const double lessonCardHeight  = 340;
   static const double timelineDot       = 7;
   static const double timelineLineWidth = 0.5;
 

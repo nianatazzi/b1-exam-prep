@@ -417,15 +417,14 @@ abstract class FirestorePaths {
 - **Хрупкие модели:** некритичные поля `TheoryModel`/`LexicalSetModel`/`VerbModel`/`PrivateUserModel` стали терпимыми (`@Default`/`unknownEnumValue`); `LessonContentRepository._parseDocs` пропускает битый документ с логом (частично закрывает TD-2), не роняя урок.
 - **Порядок уроков:** `getLessons` теперь с `orderBy('l_id')`.
 
-**Волна 2 — ядро прогресса (в работе):**
-- **2-I (готово):** три репозитория прогресса (`UserProgress` + `ExerciseResult` + `Achievement`) объединены в `UserProgressRepository`; инициализация документа языка дедуплицирована (`_initialLanguageDocument` + `_updateOrInit`).
-- **2-II (готово):** оркестрация завершения шага вынесена в `CompleteStepUseCase` (domain); `LessonNotifier` управляет только in-memory результатами и `state`. Мёртвая `_toAchievementMap` удалена.
-- **Фикс `voice_translate` (готово):** виджет не передавал `onResult` → голосовые упражнения не попадали в `stepResults`/`stats` (и verb-субпарт не сохранялся, speaking всегда 0). Добавлен `onResult`. Глагол без упражнений теперь отмечается пройденным (`saveSubStepResult(persistEmpty: true)`).
-- **2-III (план, выбран вариант +1 запрос):** единый enum типов шага; `getLessonStepSummaries` добавит проверку `final` (4·N вместо 3·N), карточка и экран считают шаги одинаково. Денормализация `steps_summary` отклонена как преждевременная (риск устаревания + правка админки).
-- **2-IV (план):** унификация получения `userId`, типизированная `PreferenceModel`.
+**Волна 2 — ядро прогресса (готово):**
+- **2-I:** три репозитория прогресса (`UserProgress` + `ExerciseResult` + `Achievement`) объединены в `UserProgressRepository`; инициализация документа языка дедуплицирована (`_initialLanguageDocument` + `_updateOrInit`).
+- **2-II:** оркестрация завершения шага вынесена в `CompleteStepUseCase` (domain); `LessonNotifier` управляет только in-memory результатами и `state`. Мёртвая `_toAchievementMap` удалена.
+- **Фикс `voice_translate`:** виджет не передавал `onResult` → голосовые упражнения не попадали в `stepResults`/`stats` (и verb-субпарт не сохранялся, speaking всегда 0). Добавлен `onResult`. Глагол без упражнений теперь отмечается пройденным (`saveSubStepResult(persistEmpty: true)`).
+- **2-III (вариант +1 запрос):** `LessonStepType` получил `finalStep`; `getLessonStepSummaries` проверяет наличие `final`-упражнений (4·N вместо 3·N, +параметр `lessonLId`), карточка и экран считают шаги одинаково. Денормализация `steps_summary` отклонена как преждевременная (риск устаревания + правка админки).
+- **2-IV:** `userId` унифицирован через `authProvider` (HomeNotifier больше не ходит в FirebaseAuth напрямую); краевой баг `lastParagraph` исправлен — переигровка пройденного шага (`viewIndex < progressIndex`) обновляет результаты/достижения, но не двигает прогресс урока (`execute` получил `viewIndex`).
 
-**Волны 3–4 (план):** единый `ExercisePhaseWidget` (4 копии `_ExercisePhase`); чистка дублей маппинга `AchievementType`, `setUiLanguage`, мёртвого `_resultDotColor` в `lesson_card`, решение по `points`/`reward`.
+**Волны 3–4 (план):** единый `ExercisePhaseWidget` (4 копии `_ExercisePhase`); типизированная `PreferenceModel` (отложена из 2-IV); чистка дублей маппинга `AchievementType`, `setUiLanguage`, мёртвого `_resultDotColor` в `lesson_card`, решение по `points`/`reward`.
 
-**Новые заметки техдолга:**
-- **Рост `stepResults`**: map растёт линейно по числу уроков (~1.5 KB/урок). Для MVP не проблема (потолок ~сотни уроков до тяжести чтения, ~680 до лимита 1 MiB). Пост-MVP при масштабе — вынести в подколлекцию `languages/{langId}/stepResults/{stepKey}`, читать точечно.
-- **`lastParagraph` за пределом**: возврат на пройденный шаг через панель + повторное «Завершить» двигает `progressIndex` дальше `steps.length` (`completeCurrentStep` считает от `progressIndex`, а не от `viewIndex`). Краевой баг навигации, поправить в волне 2-IV/отдельно.
+**Заметки техдолга:**
+- **Индекс для final-запроса**: `getLessonStepSummaries` фильтрует `exercises` по `course_id` + `lesson_id` + `segment_type` (3 equality, limit 1). Покрывается автоиндексом (проверено: Home открывается без ошибки индекса).

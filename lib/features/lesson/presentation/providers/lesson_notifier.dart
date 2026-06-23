@@ -137,6 +137,7 @@ class LessonNotifier extends _$LessonNotifier {
             langId: langId,
             data: current.data,
             progressIndex: current.progressIndex,
+            viewIndex: current.viewIndex,
             currentStep: current.currentStep,
             exerciseResults: List.of(_currentStepResults),
           );

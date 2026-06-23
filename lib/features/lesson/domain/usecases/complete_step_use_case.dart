@@ -48,11 +48,18 @@ class CompleteStepUseCase {
     required String langId,
     required LessonData data,
     required int progressIndex,
+    required int viewIndex,
     required LessonStep? currentStep,
     required List<ExerciseResult> exerciseResults,
   }) async {
-    final newProgress = progressIndex + 1;
     final lessonLId = data.lesson.lId;
+
+    // Переигровка пройденного шага (viewIndex < progressIndex): обновляем
+    // результаты и достижения, но прогресс урока не двигаем — иначе он уйдёт
+    // за пределы steps.length.
+    final isReplay = viewIndex < progressIndex;
+    final newProgress =
+        isReplay ? progressIndex : (viewIndex + 1).clamp(0, data.steps.length);
 
     // Для VerbsLessonStep stepKey == null: результаты глаголов уже сохранены
     // пер-глагольно через saveSubStepResult, здесь только двигаем прогресс.
@@ -109,18 +116,21 @@ class CompleteStepUseCase {
       }
     }
 
-    // Продвижение прогресса урока.
-    if (newProgress >= data.steps.length) {
-      final next = data.nextLesson;
-      if (next != null) {
-        await progressRepository.updateProgress(userId, langId, next.id, 0);
+    // Продвижение прогресса урока — только при обычном прохождении.
+    // При переигровке прогресс уже учтён, перезаписывать не нужно.
+    if (!isReplay) {
+      if (newProgress >= data.steps.length) {
+        final next = data.nextLesson;
+        if (next != null) {
+          await progressRepository.updateProgress(userId, langId, next.id, 0);
+        } else {
+          await progressRepository.updateProgress(
+              userId, langId, data.lesson.id, newProgress);
+        }
       } else {
         await progressRepository.updateProgress(
             userId, langId, data.lesson.id, newProgress);
       }
-    } else {
-      await progressRepository.updateProgress(
-          userId, langId, data.lesson.id, newProgress);
     }
 
     return CompleteStepOutcome(

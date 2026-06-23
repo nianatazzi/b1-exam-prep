@@ -22,4 +22,5 @@ const _$LessonStepTypeEnumMap = {
   LessonStepType.theory: 'theory',
   LessonStepType.lexical: 'lexical',
   LessonStepType.verbs: 'verbs',
+  LessonStepType.finalStep: 'final',
 };

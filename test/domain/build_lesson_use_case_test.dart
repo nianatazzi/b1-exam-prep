@@ -31,7 +31,7 @@ class _FakeLessonRepo implements ILessonRepository {
       ];
   @override
   Future<List<LessonStepSummary>> getLessonStepSummaries(
-          String langId, String lessonId) async =>
+          String langId, String lessonId, int lessonLId) async =>
       const [];
 }
 
