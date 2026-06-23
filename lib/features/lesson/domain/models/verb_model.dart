@@ -10,10 +10,10 @@ abstract class VerbModel with _$VerbModel {
     @JsonKey(includeToJson: false) required String id,
     @JsonKey(name: 'v_id') required int vId,
     required String title,
-    required String type,
-    required Map<String, dynamic> conjugation,
-    required Map<String, dynamic> translation,
-    required Map<String, dynamic> transcription,
+    @Default('') String type,
+    @Default(<String, dynamic>{}) Map<String, dynamic> conjugation,
+    @Default(<String, dynamic>{}) Map<String, dynamic> translation,
+    @Default(<String, dynamic>{}) Map<String, dynamic> transcription,
   }) = _VerbModel;
 
   factory VerbModel.fromJson(Map<String, dynamic> json) =>

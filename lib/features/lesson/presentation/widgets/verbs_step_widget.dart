@@ -11,13 +11,16 @@ import 'package:linguobyte/l10n/app_localizations.dart';
 /// Вызывает [onComplete] только после последнего упражнения последнего глагола.
 class VerbsStepWidget extends StatefulWidget {
   final VerbsLessonStep step;
-  final VoidCallback onComplete;
+
+  /// Завершение одного глагола: (vId, isLastVerb).
+  /// Сохраняет субпарт глагола; на последнем — двигает прогресс всего шага.
+  final Future<void> Function(int vId, bool isLastVerb) onSubStepComplete;
   final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const VerbsStepWidget({
     super.key,
     required this.step,
-    required this.onComplete,
+    required this.onSubStepComplete,
     this.onExerciseResult,
   });
 
@@ -37,10 +40,13 @@ class _VerbsStepWidgetState extends State<VerbsStepWidget> {
 
   void _onNextExercise() => setState(() => _exerciseIndex++);
 
-  void _onSubStepComplete() {
-    if (_isLastVerb) {
-      widget.onComplete();
-    } else {
+  Future<void> _onSubStepComplete() async {
+    final vId = _current.verb.vId;
+    final isLast = _isLastVerb;
+    await widget.onSubStepComplete(vId, isLast);
+    // На последнем глаголе экран перестроится сам (прогресс продвинут);
+    // для остальных — переходим к следующему глаголу.
+    if (!isLast && mounted) {
       setState(() {
         _verbIndex++;
         _isExercisePhase = false;

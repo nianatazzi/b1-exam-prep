@@ -216,7 +216,7 @@ return $default(_that.id,_that.thId,_that.topic,_that.title,_that.text,_that.vid
 @JsonSerializable()
 
 class _TheoryModel implements TheoryModel {
-  const _TheoryModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'th_id') required this.thId, required this.topic, required this.title, required this.text, this.video, required this.duration, required this.reward});
+  const _TheoryModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'th_id') required this.thId, required this.topic, required this.title, required this.text, this.video, this.duration = 0, this.reward = 0});
   factory _TheoryModel.fromJson(Map<String, dynamic> json) => _$TheoryModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -225,8 +225,8 @@ class _TheoryModel implements TheoryModel {
 @override final  String title;
 @override final  String text;
 @override final  String? video;
-@override final  int duration;
-@override final  int reward;
+@override@JsonKey() final  int duration;
+@override@JsonKey() final  int reward;
 
 /// Create a copy of TheoryModel
 /// with the given fields replaced by the non-null parameter values.

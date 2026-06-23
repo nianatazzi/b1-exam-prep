@@ -10,10 +10,14 @@ _VerbModel _$VerbModelFromJson(Map<String, dynamic> json) => _VerbModel(
   id: json['id'] as String,
   vId: (json['v_id'] as num).toInt(),
   title: json['title'] as String,
-  type: json['type'] as String,
-  conjugation: json['conjugation'] as Map<String, dynamic>,
-  translation: json['translation'] as Map<String, dynamic>,
-  transcription: json['transcription'] as Map<String, dynamic>,
+  type: json['type'] as String? ?? '',
+  conjugation:
+      json['conjugation'] as Map<String, dynamic>? ?? const <String, dynamic>{},
+  translation:
+      json['translation'] as Map<String, dynamic>? ?? const <String, dynamic>{},
+  transcription:
+      json['transcription'] as Map<String, dynamic>? ??
+      const <String, dynamic>{},
 );
 
 Map<String, dynamic> _$VerbModelToJson(_VerbModel instance) =>

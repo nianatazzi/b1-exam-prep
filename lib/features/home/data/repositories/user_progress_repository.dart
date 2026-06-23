@@ -84,12 +84,16 @@ class UserProgressRepository implements IUserProgressRepository {
       final converted = <String, dynamic>{};
       for (final entry in achievements.entries) {
         if (entry.value is Map) {
+          final key = entry.key as String;
           final ach = Map<String, dynamic>.from(entry.value as Map);
+          // Обратная совместимость: документы, записанные до добавления type,
+          // не содержат его — подставляем из ключа map (= JsonValue достижения).
+          ach.putIfAbsent('type', () => key);
           final updatedAt = ach['updatedAt'];
           if (updatedAt is Timestamp) {
             ach['updatedAt'] = updatedAt.toDate().toIso8601String();
           }
-          converted[entry.key as String] = ach;
+          converted[key] = ach;
         }
       }
       result['achievements'] = converted;

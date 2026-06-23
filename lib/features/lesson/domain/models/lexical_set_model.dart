@@ -10,10 +10,10 @@ abstract class LexicalSetModel with _$LexicalSetModel {
     @JsonKey(includeToJson: false) required String id,
     @JsonKey(name: 'voc_id') required int vocId,
     required String title,
-    required String translation,
-    required String transcription,
-    @JsonKey(name: 'set_title') required String setTitle,
-    required int reward,
+    @Default('') String translation,
+    @Default('') String transcription,
+    @JsonKey(name: 'set_title') @Default('') String setTitle,
+    @Default(0) int reward,
   }) = _LexicalSetModel;
 
   factory LexicalSetModel.fromJson(Map<String, dynamic> json) =>

@@ -29,6 +29,9 @@ class AchievementRepository implements IAchievementRepository {
           .doc(FirestorePaths.userLanguage(userId, langId))
           .update({
         'achievements.$key': {
+          // type хранится внутри документа, чтобы AchievementModel.fromJson
+          // мог восстановить enum (иначе $enumDecode падает на null).
+          'type': key,
           'level': newLevel,
           'updatedAt': FieldValue.serverTimestamp(),
         },

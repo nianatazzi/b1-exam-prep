@@ -117,52 +117,75 @@ class LessonNotifier extends _$LessonNotifier {
     };
   }
 
-  /// stepKey для verb-субшага (вызывается отдельно из VerbsStepWidget).
+  /// stepKey для verb-субшага.
   String buildVerbStepKey(int lessonLId, int vId) =>
       '${lessonLId}_verb_$vId';
 
+  /// Сохраняет результаты текущего субпарта (stepResult + stats) под [stepKey].
+  /// Не трогает прогресс урока, стрик и достижения.
+  Future<void> _persistCurrentResults(String stepKey) async {
+    if (_currentStepResults.isEmpty) return;
+
+    final correctCount = _currentStepResults.where((r) => r.isCorrect).length;
+    final allCorrectFirstAttempt = _currentStepResults.every((r) => r.isCorrect);
+    final incorrectIds = _currentStepResults
+        .where((r) => !r.isCorrect)
+        .map((r) => r.exerciseId)
+        .toList();
+
+    final stepResult = StepResultModel(
+      correct: correctCount,
+      total: _currentStepResults.length,
+      firstAttempt: allCorrectFirstAttempt,
+      incorrectExerciseIds: incorrectIds,
+    );
+
+    await ref.read(exerciseResultRepositoryProvider).saveStepResult(
+      userId: _userId,
+      langId: langId,
+      stepKey: stepKey,
+      result: stepResult,
+      exerciseResults: _currentStepResults,
+    );
+  }
+
+  /// Сохраняет результаты одного глагола под ключом `{lId}_verb_{vId}`.
+  /// Вызывается из VerbsStepWidget после каждого глагола. Прогресс урока
+  /// не двигает — весь шаг verbs остаётся одним элементом последовательности
+  /// и завершается через [completeCurrentStep] на последнем глаголе.
+  Future<void> recordVerbSubStep(int vId) async {
+    final current = state.asData?.value;
+    if (current == null) return;
+    final lessonLId = current.data.lesson.lId;
+    try {
+      await _persistCurrentResults(buildVerbStepKey(lessonLId, vId));
+    } on AppError catch (e, st) {
+      AppLogger.e('recordVerbSubStep failed', error: e, stackTrace: st);
+    } catch (e, st) {
+      AppLogger.e('recordVerbSubStep unexpected error', error: e, stackTrace: st);
+    } finally {
+      _currentStepResults.clear();
+    }
+  }
+
   /// Пользователь завершил текущий шаг: сохраняет результаты, инкрементирует прогресс.
-  Future<void> completeCurrentStep({
-    String? overrideStepKey,
-    String? overrideSegmentType,
-  }) async {
+  Future<void> completeCurrentStep() async {
     final current = state.requireValue;
     final newProgress = current.progressIndex + 1;
     final lessonLId = current.data.lesson.lId;
 
     try {
-      // Определяем ключ и тип сегмента
+      // Определяем ключ и тип сегмента.
+      // Для VerbsLessonStep stepKey == null: результаты глаголов уже сохранены
+      // пер-глагольно через recordVerbSubStep, здесь только двигаем прогресс.
       final currentStep = current.currentStep;
-      final stepKey = overrideStepKey ??
-          (currentStep != null ? _buildStepKey(currentStep, lessonLId) : null);
-      final segmentType = overrideSegmentType ??
-          _segmentTypeFromStep(currentStep);
+      final stepKey =
+          currentStep != null ? _buildStepKey(currentStep, lessonLId) : null;
+      final segmentType = _segmentTypeFromStep(currentStep);
 
-      // Сохраняем результаты упражнений (если есть)
-      if (stepKey != null && _currentStepResults.isNotEmpty) {
-        final correctCount =
-            _currentStepResults.where((r) => r.isCorrect).length;
-        final allCorrectFirstAttempt =
-            _currentStepResults.every((r) => r.isCorrect);
-        final incorrectIds = _currentStepResults
-            .where((r) => !r.isCorrect)
-            .map((r) => r.exerciseId)
-            .toList();
-
-        final stepResult = StepResultModel(
-          correct: correctCount,
-          total: _currentStepResults.length,
-          firstAttempt: allCorrectFirstAttempt,
-          incorrectExerciseIds: incorrectIds,
-        );
-
-        await ref.read(exerciseResultRepositoryProvider).saveStepResult(
-          userId: _userId,
-          langId: langId,
-          stepKey: stepKey,
-          result: stepResult,
-          exerciseResults: _currentStepResults,
-        );
+      // Сохраняем результаты упражнений (если шаг сохраняется по своему ключу)
+      if (stepKey != null) {
+        await _persistCurrentResults(stepKey);
       }
 
       // Обновляем стрик

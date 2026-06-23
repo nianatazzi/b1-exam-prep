@@ -153,7 +153,7 @@ lib/
 
 1. **theory** — блоки сортируются по полю `th_id`. Каждый блок образует отдельный `TheoryLessonStep` со своими упражнениями (`segment_type = "theory"`, `linked_item_id = th_id`).
 2. **lexical_set** — один `LexicalLessonStep`: все блоки подряд (сортировка по `voc_id`), затем все упражнения (`segment_type = "vocab"`).
-3. **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (по одному на документ, сортировка по `v_id`). Каждый суб-шаг: таблица спряжения глагола → упражнения именно на него (`segment_type = "verb"`, `linked_item_id = v_id`). Суб-навигация — локальный стейт `VerbsStepWidget`; для `HomeScreen` и `progressIndex` вся пара остаётся одним шагом.
+3. **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (по одному на документ, сортировка по `v_id`). Каждый суб-шаг: таблица спряжения глагола → упражнения именно на него (`segment_type = "verb"`, `linked_item_id = v_id`). Суб-навигация — локальный стейт `VerbsStepWidget`; для `HomeScreen` и `progressIndex` вся пара остаётся одним шагом. Результаты каждого глагола сохраняются отдельно через `LessonNotifier.recordVerbSubStep(vId)` (ключ `{lId}_verb_{vId}`), а `progressIndex` всего шага двигается один раз через `completeCurrentStep` на последнем глаголе.
 4. **additional** — не входит в `List<LessonStep>`, хранится отдельно в `LessonState.additional`. Доступен всегда через навигационную панель, не блокирует завершение урока.
 
 Порядок фиксирован: theory[] → lexical? → verbs?. Блоки lexical/verbs добавляются только если их коллекции непусты.
@@ -404,3 +404,17 @@ abstract class FirestorePaths {
 - **`UserRepository` без интерфейса**: единственный репозиторий без `IUserRepository` в `domain/repositories/`. Используется из нескольких фич. Пост-MVP: добавить интерфейс и вынести в `shared/`.
 - **`ExerciseResult` не freezed**: используется только in-memory во время прохождения субпарта, не сериализуется. Допустимо для MVP.
 - **`StreakRepository` и таймзоны**: `DateTime.now()` использует локальное время — при смене таймзоны стрик может ошибочно пропустить или удвоить день. Допустимо для MVP.
+
+### Рефакторинг (ветка `refactor/lesson-progress`)
+
+Полный аудит логики урока/прогресса/статистики. План из 4 волн, тесты в `test/domain/`.
+
+**Волна 0 — страховочные тесты (готово):** сериализация моделей, `CheckAchievementUseCase`, стрик/проценты, сборка шагов урока.
+
+**Волна 1 — критические баги (готово):**
+- **Достижения (краш):** `AchievementRepository.updateAchievement` теперь пишет `type` внутрь документа; `_preprocessProgressData` подставляет `type` из ключа для старых записей. Раньше `AchievementModel.fromJson` падал на `$enumDecode(null)` → `getUserLanguageProgress` отдавал `UnknownError` → Home/Profile/Lesson в error (и старый `[homeProvider] ParallelWaitError`).
+- **Прогресс глаголов:** восстановлено пер-глагольное сохранение через `recordVerbSubStep` (мёртвые `overrideStepKey`/`overrideSegmentType` удалены, `completeCurrentStep` разделён на `_persistCurrentResults` + продвижение прогресса).
+- **Хрупкие модели:** некритичные поля `TheoryModel`/`LexicalSetModel`/`VerbModel`/`PrivateUserModel` стали терпимыми (`@Default`/`unknownEnumValue`); `LessonContentRepository._parseDocs` пропускает битый документ с логом (частично закрывает TD-2), не роняя урок.
+- **Порядок уроков:** `getLessons` теперь с `orderBy('l_id')`.
+
+**Волны 2–4 (план):** единый `ProgressRepository` + `CompleteStepUseCase` + одна модель шага (слить `LessonStep`/`LessonStepSummary`); единый `ExercisePhaseWidget` (+ `onResult` для `voice_translate` → speaking); чистка дублей маппинга `AchievementType`, `setUiLanguage`, мёртвого `_resultDotColor` в `lesson_card`, решение по `points`/`reward`.

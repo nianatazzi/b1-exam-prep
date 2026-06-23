@@ -224,19 +224,27 @@ private_user_info/                      # коллекция
             incorrectExerciseIds: array<string>  # id упражнений с ошибками (для повторения)
 
         achievements: map               # достижения пользователя по языку
+          # Ключ map = тип достижения. Внутри обязательно дублируется поле type
+          # (= ключ): AchievementModel.fromJson десериализует enum через type,
+          # иначе $enumDecode падает на null и роняет загрузку всего прогресса.
           master_conjugator: map
+            type: string                # = ключ ("master_conjugator")
             level: number               # 0 = не получено, I=1, II=2...
             updatedAt: timestamp
           first_step: map
+            type: string
             level: number
             updatedAt: timestamp
           focused_learner: map
+            type: string
             level: number
             updatedAt: timestamp
           interested_learner: map
+            type: string
             level: number
             updatedAt: timestamp
           vocabulary_master: map
+            type: string
             level: number
             updatedAt: timestamp
 

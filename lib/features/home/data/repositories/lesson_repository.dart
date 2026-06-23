@@ -20,8 +20,10 @@ class LessonRepository implements ILessonRepository {
   @override
   Future<List<LessonModel>> getLessons(String langId) async {
     try {
-      final snapshot =
-          await _firestore.collection(FirestorePaths.lessons(langId)).get();
+      final snapshot = await _firestore
+          .collection(FirestorePaths.lessons(langId))
+          .orderBy('l_id')
+          .get();
       return snapshot.docs
           .map((doc) => LessonModel.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
