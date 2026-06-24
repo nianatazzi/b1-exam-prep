@@ -1,15 +1,10 @@
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/core/logger/app_logger.dart';
 import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/home/data/repositories/user_progress_repository.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/domain/usecases/build_lesson_use_case.dart';
-import 'package:linguobyte/features/profile/data/achievement_repository.dart';
-import 'package:linguobyte/features/profile/data/exercise_result_repository.dart';
-import 'package:linguobyte/features/profile/data/streak_repository.dart';
-import 'package:linguobyte/features/profile/domain/achievement_model.dart';
-import 'package:linguobyte/features/profile/domain/step_result_model.dart';
+import 'package:linguobyte/features/lesson/domain/usecases/complete_step_use_case.dart';
 import 'package:linguobyte/features/profile/domain/usecases/check_achievement_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -104,136 +99,56 @@ class LessonNotifier extends _$LessonNotifier {
     _lastAchievementUpdates = null;
   }
 
-  /// Формирует stepKey для текущего шага.
-  String? _buildStepKey(LessonStep step, int lessonLId) {
-    return switch (step) {
-      TheoryLessonStep(:final theory) =>
-        '${lessonLId}_theory_${theory.thId}',
-      LexicalLessonStep() =>
-        '${lessonLId}_vocab_0',
-      VerbsLessonStep() => null,
-      FinalLessonStep() =>
-        '${lessonLId}_final_0',
-    };
-  }
-
-  /// stepKey для verb-субшага (вызывается отдельно из VerbsStepWidget).
+  /// stepKey для verb-субшага.
   String buildVerbStepKey(int lessonLId, int vId) =>
       '${lessonLId}_verb_$vId';
 
-  /// Пользователь завершил текущий шаг: сохраняет результаты, инкрементирует прогресс.
-  Future<void> completeCurrentStep({
-    String? overrideStepKey,
-    String? overrideSegmentType,
-  }) async {
-    final current = state.requireValue;
-    final newProgress = current.progressIndex + 1;
+  /// Сохраняет результаты одного глагола под ключом `{lId}_verb_{vId}`.
+  /// Вызывается из VerbsStepWidget после каждого глагола. Прогресс урока
+  /// не двигает — весь шаг verbs остаётся одним элементом последовательности
+  /// и завершается через [completeCurrentStep] на последнем глаголе.
+  Future<void> recordVerbSubStep(int vId) async {
+    final current = state.asData?.value;
+    if (current == null) return;
     final lessonLId = current.data.lesson.lId;
-
     try {
-      // Определяем ключ и тип сегмента
-      final currentStep = current.currentStep;
-      final stepKey = overrideStepKey ??
-          (currentStep != null ? _buildStepKey(currentStep, lessonLId) : null);
-      final segmentType = overrideSegmentType ??
-          _segmentTypeFromStep(currentStep);
+      await ref.read(completeStepUseCaseProvider).saveSubStepResult(
+            userId: _userId,
+            langId: langId,
+            stepKey: buildVerbStepKey(lessonLId, vId),
+            exerciseResults: List.of(_currentStepResults),
+            // глагол без упражнений всё равно отмечается пройденным
+            persistEmpty: true,
+          );
+    } catch (e, st) {
+      AppLogger.e('recordVerbSubStep failed', error: e, stackTrace: st);
+    } finally {
+      _currentStepResults.clear();
+    }
+  }
 
-      // Сохраняем результаты упражнений (если есть)
-      if (stepKey != null && _currentStepResults.isNotEmpty) {
-        final correctCount =
-            _currentStepResults.where((r) => r.isCorrect).length;
-        final allCorrectFirstAttempt =
-            _currentStepResults.every((r) => r.isCorrect);
-        final incorrectIds = _currentStepResults
-            .where((r) => !r.isCorrect)
-            .map((r) => r.exerciseId)
-            .toList();
-
-        final stepResult = StepResultModel(
-          correct: correctCount,
-          total: _currentStepResults.length,
-          firstAttempt: allCorrectFirstAttempt,
-          incorrectExerciseIds: incorrectIds,
-        );
-
-        await ref.read(exerciseResultRepositoryProvider).saveStepResult(
-          userId: _userId,
-          langId: langId,
-          stepKey: stepKey,
-          result: stepResult,
-          exerciseResults: _currentStepResults,
-        );
-      }
-
-      // Обновляем стрик
-      int currentStreak = 0;
-      try {
-        currentStreak = await ref
-            .read(streakRepositoryProvider)
-            .updateStreak(_userId);
-      } catch (e) {
-        AppLogger.e('Streak update failed', error: e);
-      }
-
-      // Проверяем достижения
-      if (segmentType != null) {
-        try {
-          final progressData = await ref
-              .read(userProgressRepositoryProvider)
-              .getUserLanguageProgress(_userId, langId);
-
-          final isLessonComplete =
-              newProgress >= current.data.steps.length;
-
-          final updates = CheckAchievementUseCase().check(
-            segmentType: segmentType,
-            lessonLId: lessonLId,
-            exerciseResults: _currentStepResults,
-            allStepResults: progressData?.stepResults ?? {},
-            currentAchievements: _toAchievementMap(
-                progressData?.achievements ?? {}),
-            lessonSteps: current.data.steps,
-            isLessonComplete: isLessonComplete,
-            currentStreak: currentStreak,
+  /// Пользователь завершил текущий шаг: делегирует оркестрацию в UseCase,
+  /// обновляет локальный прогресс/просмотр.
+  Future<void> completeCurrentStep() async {
+    final current = state.requireValue;
+    try {
+      final outcome = await ref.read(completeStepUseCaseProvider).execute(
+            userId: _userId,
+            langId: langId,
+            data: current.data,
+            progressIndex: current.progressIndex,
+            viewIndex: current.viewIndex,
+            currentStep: current.currentStep,
+            exerciseResults: List.of(_currentStepResults),
           );
 
-          for (final update in updates) {
-            await ref.read(achievementRepositoryProvider).updateAchievement(
-              userId: _userId,
-              langId: langId,
-              type: update.type,
-              newLevel: update.newLevel,
-            );
-          }
-
-          _lastAchievementUpdates =
-              updates.isNotEmpty ? updates : null;
-        } catch (e) {
-          AppLogger.e('Achievement check failed', error: e);
-        }
-      }
-
-      // Обновляем прогресс урока
-      if (newProgress >= current.data.steps.length) {
-        final next = current.data.nextLesson;
-        if (next != null) {
-          await ref.read(userProgressRepositoryProvider).updateProgress(
-            _userId, langId, next.id, 0,
-          );
-        } else {
-          await ref.read(userProgressRepositoryProvider).updateProgress(
-            _userId, langId, current.data.lesson.id, newProgress,
-          );
-        }
-      } else {
-        await ref.read(userProgressRepositoryProvider).updateProgress(
-          _userId, langId, current.data.lesson.id, newProgress,
-        );
-      }
-
+      _lastAchievementUpdates = outcome.achievementUpdates.isNotEmpty
+          ? outcome.achievementUpdates
+          : null;
       _currentStepResults.clear();
 
       final stepCount = current.data.steps.length;
+      final newProgress = outcome.newProgressIndex;
       state = AsyncData(current.copyWith(
         progressIndex: newProgress,
         viewIndex: newProgress >= stepCount
@@ -244,7 +159,8 @@ class LessonNotifier extends _$LessonNotifier {
       AppLogger.e('completeCurrentStep failed', error: e, stackTrace: st);
       state = AsyncData(current);
     } catch (e, st) {
-      AppLogger.e('completeCurrentStep unexpected error', error: e, stackTrace: st);
+      AppLogger.e('completeCurrentStep unexpected error',
+          error: e, stackTrace: st);
       state = AsyncData(current);
     }
   }
@@ -256,16 +172,4 @@ class LessonNotifier extends _$LessonNotifier {
     if (stepIndex < 0 || stepIndex > current.progressIndex) return;
     state = AsyncData(current.copyWith(viewIndex: stepIndex));
   }
-
-  String? _segmentTypeFromStep(LessonStep? step) => switch (step) {
-        TheoryLessonStep() => 'theory',
-        LexicalLessonStep() => 'vocab',
-        VerbsLessonStep() => 'verb',
-        FinalLessonStep() => 'final',
-        null => null,
-      };
-
-  Map<String, AchievementModel> _toAchievementMap(
-    Map<String, AchievementModel> raw,
-  ) => raw;
 }

@@ -11,10 +11,10 @@ _LexicalSetModel _$LexicalSetModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       vocId: (json['voc_id'] as num).toInt(),
       title: json['title'] as String,
-      translation: json['translation'] as String,
-      transcription: json['transcription'] as String,
-      setTitle: json['set_title'] as String,
-      reward: (json['reward'] as num).toInt(),
+      translation: json['translation'] as String? ?? '',
+      transcription: json['transcription'] as String? ?? '',
+      setTitle: json['set_title'] as String? ?? '',
+      reward: (json['reward'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$LexicalSetModelToJson(_LexicalSetModel instance) =>

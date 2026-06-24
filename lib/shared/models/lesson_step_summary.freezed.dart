@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$LessonStepSummary {
 
  LessonStepType get type;// topic для theory, set_title для lexical, '' для verbs (виджет подставит ARB)
- String get title;
+ String get title;// th_id для theory — точное сопоставление stepResults (цвет точки); иначе 0
+ int get ref;
 /// Create a copy of LessonStepSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $LessonStepSummaryCopyWith<LessonStepSummary> get copyWith => _$LessonStepSummar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonStepSummary&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonStepSummary&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.ref, ref) || other.ref == ref));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,title);
+int get hashCode => Object.hash(runtimeType,type,title,ref);
 
 @override
 String toString() {
-  return 'LessonStepSummary(type: $type, title: $title)';
+  return 'LessonStepSummary(type: $type, title: $title, ref: $ref)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $LessonStepSummaryCopyWith<$Res>  {
   factory $LessonStepSummaryCopyWith(LessonStepSummary value, $Res Function(LessonStepSummary) _then) = _$LessonStepSummaryCopyWithImpl;
 @useResult
 $Res call({
- LessonStepType type, String title
+ LessonStepType type, String title, int ref
 });
 
 
@@ -66,11 +67,12 @@ class _$LessonStepSummaryCopyWithImpl<$Res>
 
 /// Create a copy of LessonStepSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? title = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? title = null,Object? ref = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as LessonStepType,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,
+as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LessonStepType type,  String title)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LessonStepType type,  String title,  int ref)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LessonStepSummary() when $default != null:
-return $default(_that.type,_that.title);case _:
+return $default(_that.type,_that.title,_that.ref);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.type,_that.title);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LessonStepType type,  String title)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LessonStepType type,  String title,  int ref)  $default,) {final _that = this;
 switch (_that) {
 case _LessonStepSummary():
-return $default(_that.type,_that.title);case _:
+return $default(_that.type,_that.title,_that.ref);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.type,_that.title);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LessonStepType type,  String title)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LessonStepType type,  String title,  int ref)?  $default,) {final _that = this;
 switch (_that) {
 case _LessonStepSummary() when $default != null:
-return $default(_that.type,_that.title);case _:
+return $default(_that.type,_that.title,_that.ref);case _:
   return null;
 
 }
@@ -211,12 +213,14 @@ return $default(_that.type,_that.title);case _:
 @JsonSerializable()
 
 class _LessonStepSummary implements LessonStepSummary {
-  const _LessonStepSummary({required this.type, required this.title});
+  const _LessonStepSummary({required this.type, required this.title, this.ref = 0});
   factory _LessonStepSummary.fromJson(Map<String, dynamic> json) => _$LessonStepSummaryFromJson(json);
 
 @override final  LessonStepType type;
 // topic для theory, set_title для lexical, '' для verbs (виджет подставит ARB)
 @override final  String title;
+// th_id для theory — точное сопоставление stepResults (цвет точки); иначе 0
+@override@JsonKey() final  int ref;
 
 /// Create a copy of LessonStepSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonStepSummary&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonStepSummary&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.ref, ref) || other.ref == ref));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,title);
+int get hashCode => Object.hash(runtimeType,type,title,ref);
 
 @override
 String toString() {
-  return 'LessonStepSummary(type: $type, title: $title)';
+  return 'LessonStepSummary(type: $type, title: $title, ref: $ref)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$LessonStepSummaryCopyWith<$Res> implements $LessonStepSum
   factory _$LessonStepSummaryCopyWith(_LessonStepSummary value, $Res Function(_LessonStepSummary) _then) = __$LessonStepSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- LessonStepType type, String title
+ LessonStepType type, String title, int ref
 });
 
 
@@ -268,11 +272,12 @@ class __$LessonStepSummaryCopyWithImpl<$Res>
 
 /// Create a copy of LessonStepSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? title = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? title = null,Object? ref = null,}) {
   return _then(_LessonStepSummary(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as LessonStepType,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,
+as String,ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

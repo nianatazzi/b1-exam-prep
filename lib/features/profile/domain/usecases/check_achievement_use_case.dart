@@ -79,7 +79,7 @@ class CheckAchievementUseCase {
 
     if (!allVerbsDone) return null;
 
-    final current = currentAchievements['master_conjugator'];
+    final current = currentAchievements[AchievementType.masterConjugator.key];
     final currentLevel = current?.level ?? 0;
     return AchievementUpdate(
       type: AchievementType.masterConjugator,
@@ -95,7 +95,7 @@ class CheckAchievementUseCase {
   }) {
     if (lessonLId != 1 || !isLessonComplete) return null;
 
-    final current = currentAchievements['first_step'];
+    final current = currentAchievements[AchievementType.firstStep.key];
     if (current != null && current.level >= 1) return null;
 
     return const AchievementUpdate(
@@ -112,7 +112,7 @@ class CheckAchievementUseCase {
     if (currentStreak < 7) return null;
 
     final expectedLevel = currentStreak ~/ 7;
-    final current = currentAchievements['focused_learner'];
+    final current = currentAchievements[AchievementType.focusedLearner.key];
     final currentLevel = current?.level ?? 0;
 
     if (expectedLevel <= currentLevel) return null;
@@ -137,7 +137,7 @@ class CheckAchievementUseCase {
     final allCorrect = exerciseResults.every((r) => r.isCorrect);
     if (!allCorrect) return null;
 
-    final current = currentAchievements['vocabulary_master'];
+    final current = currentAchievements[AchievementType.vocabularyMaster.key];
     final currentLevel = current?.level ?? 0;
     return AchievementUpdate(
       type: AchievementType.vocabularyMaster,

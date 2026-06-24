@@ -81,8 +81,8 @@ class GetHomeDataUseCase {
     // Параллельно загружаем сводку шагов для каждого урока
     final stepsList = await Future.wait(
       lessons.map(
-        (lesson) =>
-            lessonRepository.getLessonStepSummaries(langId, lesson.id),
+        (lesson) => lessonRepository.getLessonStepSummaries(
+            langId, lesson.id, lesson.lId),
       ),
     );
 

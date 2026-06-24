@@ -8,7 +8,13 @@ part of 'private_user_model.dart';
 
 _SubscriptionModel _$SubscriptionModelFromJson(Map<String, dynamic> json) =>
     _SubscriptionModel(
-      plan: $enumDecode(_$SubscriptionPlanEnumMap, json['plan']),
+      plan:
+          $enumDecodeNullable(
+            _$SubscriptionPlanEnumMap,
+            json['plan'],
+            unknownValue: SubscriptionPlan.free,
+          ) ??
+          SubscriptionPlan.free,
       expiresAt: json['expiresAt'] == null
           ? null
           : DateTime.parse(json['expiresAt'] as String),
@@ -28,12 +34,14 @@ const _$SubscriptionPlanEnumMap = {
 _PrivateUserModel _$PrivateUserModelFromJson(Map<String, dynamic> json) =>
     _PrivateUserModel(
       id: json['id'] as String,
-      deviceId: json['deviceId'] as String,
-      email: json['email'] as String,
-      phone: json['phone'] as String,
-      subscription: SubscriptionModel.fromJson(
-        json['subscription'] as Map<String, dynamic>,
-      ),
+      deviceId: json['deviceId'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      subscription: json['subscription'] == null
+          ? const SubscriptionModel()
+          : SubscriptionModel.fromJson(
+              json['subscription'] as Map<String, dynamic>,
+            ),
       lastActiveDate: json['lastActiveDate'] == null
           ? null
           : DateTime.parse(json['lastActiveDate'] as String),

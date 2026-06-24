@@ -17,6 +17,12 @@ enum AchievementType {
   vocabularyMaster,
 }
 
+extension AchievementTypeKey on AchievementType {
+  /// Строковый ключ достижения (= JsonValue). Единственный источник —
+  /// сгенерированная `_$AchievementTypeEnumMap`, без ручных switch-копий.
+  String get key => _$AchievementTypeEnumMap[this]!;
+}
+
 @freezed
 abstract class AchievementModel with _$AchievementModel {
   const factory AchievementModel({

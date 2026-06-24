@@ -13,8 +13,8 @@ abstract class TheoryModel with _$TheoryModel {
     required String title,
     required String text,
     String? video,
-    required int duration,
-    required int reward,
+    @Default(0) int duration,
+    @Default(0) int reward,
   }) = _TheoryModel;
 
   factory TheoryModel.fromJson(Map<String, dynamic> json) =>

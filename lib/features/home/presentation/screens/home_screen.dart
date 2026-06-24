@@ -10,6 +10,7 @@ import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.
 import 'package:linguobyte/features/home/presentation/providers/home_notifier.dart';
 import 'package:linguobyte/features/home/presentation/widgets/lesson_card.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:linguobyte/shared/widgets/error_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -116,7 +117,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Expanded(
               child: homeAsync.when(
                 loading: () => const _HomeShimmer(),
-                error: (_, _) => _ErrorView(
+                error: (_, _) => ErrorView(
                   message: l10n.errorGeneric,
                   onRetry: () => ref.invalidate(homeProvider),
                 ),
@@ -355,42 +356,6 @@ class _HomeShimmer extends StatelessWidget {
               }),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Экран ошибки ─────────────────────────────────────────────────────────────
-
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              message,
-              style: theme.textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: Text(l10n.retry),
-            ),
-          ],
         ),
       ),
     );

@@ -20,8 +20,10 @@ class LessonRepository implements ILessonRepository {
   @override
   Future<List<LessonModel>> getLessons(String langId) async {
     try {
-      final snapshot =
-          await _firestore.collection(FirestorePaths.lessons(langId)).get();
+      final snapshot = await _firestore
+          .collection(FirestorePaths.lessons(langId))
+          .orderBy('l_id')
+          .get();
       return snapshot.docs
           .map((doc) => LessonModel.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
@@ -36,10 +38,13 @@ class LessonRepository implements ILessonRepository {
   Future<List<LessonStepSummary>> getLessonStepSummaries(
     String langId,
     String lessonId,
+    int lessonLId,
   ) async {
     try {
-      // Параллельная загрузка: theory (полный список) + lexical limit(1) + verbs limit(1)
-      final (theorySnap, lexicalSnap, verbsSnap) = await (
+      // Параллельно: theory (полный список) + lexical limit(1) + verbs limit(1)
+      // + проверка наличия final-упражнений (limit 1). Порядок шагов совпадает
+      // с BuildLessonUseCase: theory[] → lexical? → verbs? → final?
+      final (theorySnap, lexicalSnap, verbsSnap, finalSnap) = await (
         _firestore
             .collection(FirestorePaths.theory(langId, lessonId))
             .orderBy('th_id')
@@ -52,6 +57,13 @@ class LessonRepository implements ILessonRepository {
             .collection(FirestorePaths.verbs(langId, lessonId))
             .limit(1)
             .get(),
+        _firestore
+            .collection(FirestorePaths.exercises)
+            .where('course_id', isEqualTo: 'basic_$langId')
+            .where('lesson_id', isEqualTo: lessonLId)
+            .where('segment_type', isEqualTo: 'final')
+            .limit(1)
+            .get(),
       ).wait;
 
       final summaries = <LessonStepSummary>[];
@@ -60,6 +72,7 @@ class LessonRepository implements ILessonRepository {
         summaries.add(LessonStepSummary(
           type: LessonStepType.theory,
           title: doc.data()['topic'] as String? ?? '',
+          ref: (doc.data()['th_id'] as num?)?.toInt() ?? 0,
         ));
       }
 
@@ -74,6 +87,12 @@ class LessonRepository implements ILessonRepository {
       if (verbsSnap.docs.isNotEmpty) {
         summaries.add(
           const LessonStepSummary(type: LessonStepType.verbs, title: ''),
+        );
+      }
+
+      if (finalSnap.docs.isNotEmpty) {
+        summaries.add(
+          const LessonStepSummary(type: LessonStepType.finalStep, title: ''),
         );
       }
 

@@ -215,16 +215,16 @@ return $default(_that.id,_that.vocId,_that.title,_that.translation,_that.transcr
 @JsonSerializable()
 
 class _LexicalSetModel implements LexicalSetModel {
-  const _LexicalSetModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'voc_id') required this.vocId, required this.title, required this.translation, required this.transcription, @JsonKey(name: 'set_title') required this.setTitle, required this.reward});
+  const _LexicalSetModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'voc_id') required this.vocId, required this.title, this.translation = '', this.transcription = '', @JsonKey(name: 'set_title') this.setTitle = '', this.reward = 0});
   factory _LexicalSetModel.fromJson(Map<String, dynamic> json) => _$LexicalSetModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override@JsonKey(name: 'voc_id') final  int vocId;
 @override final  String title;
-@override final  String translation;
-@override final  String transcription;
+@override@JsonKey() final  String translation;
+@override@JsonKey() final  String transcription;
 @override@JsonKey(name: 'set_title') final  String setTitle;
-@override final  int reward;
+@override@JsonKey() final  int reward;
 
 /// Create a copy of LexicalSetModel
 /// with the given fields replaced by the non-null parameter values.

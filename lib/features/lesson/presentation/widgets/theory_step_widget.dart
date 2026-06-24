@@ -4,7 +4,7 @@ import 'package:linguobyte/core/constants/app_spacing.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
-import 'package:linguobyte/features/lesson/presentation/widgets/exercise_widget.dart';
+import 'package:linguobyte/features/lesson/presentation/widgets/exercise_phase_widget.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
 
 class TheoryStepWidget extends StatelessWidget {
@@ -29,13 +29,16 @@ class TheoryStepWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return isExercisePhase
-        ? _ExercisePhase(
-            step: step,
+        ? ExercisePhaseWidget(
+            exercises: step.exercises,
             exerciseIndex: exerciseIndex,
             onNext: onNextExercise,
             onComplete: onComplete,
-            onExerciseResult: onExerciseResult,
+            onResult: onExerciseResult,
+            nextButtonLabel: l10n.nextButton,
+            completeButtonLabel: l10n.completeStepButton,
           )
         : _ContentPhase(
             step: step,
@@ -352,77 +355,3 @@ class _ExampleDash extends StatelessWidget {
   }
 }
 
-class _ExercisePhase extends StatefulWidget {
-  final TheoryLessonStep step;
-  final int exerciseIndex;
-  final VoidCallback onNext;
-  final VoidCallback onComplete;
-  final ValueChanged<ExerciseResult>? onExerciseResult;
-
-  const _ExercisePhase({
-    required this.step,
-    required this.exerciseIndex,
-    required this.onNext,
-    required this.onComplete,
-    this.onExerciseResult,
-  });
-
-  @override
-  State<_ExercisePhase> createState() => _ExercisePhaseState();
-}
-
-class _ExercisePhaseState extends State<_ExercisePhase> {
-  bool _isReady = false;
-
-  @override
-  void didUpdateWidget(_ExercisePhase oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.exerciseIndex != widget.exerciseIndex) {
-      setState(() => _isReady = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final isLast = widget.exerciseIndex >= widget.step.exercises.length - 1;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${widget.exerciseIndex + 1} / ${widget.step.exercises.length}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.5),
-              ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Expanded(
-          child: ExerciseWidget(
-            exercise: widget.step.exercises[widget.exerciseIndex],
-            onReady: () => setState(() => _isReady = true),
-            onResult: widget.onExerciseResult,
-            onSkip: isLast ? widget.onComplete : widget.onNext,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Visibility(
-          visible: _isReady,
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isReady ? (isLast ? widget.onComplete : widget.onNext) : null,
-              child: Text(isLast ? l10n.completeStepButton : l10n.nextButton),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

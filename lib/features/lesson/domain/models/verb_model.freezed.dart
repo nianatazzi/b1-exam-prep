@@ -215,29 +215,29 @@ return $default(_that.id,_that.vId,_that.title,_that.type,_that.conjugation,_tha
 @JsonSerializable()
 
 class _VerbModel implements VerbModel {
-  const _VerbModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'v_id') required this.vId, required this.title, required this.type, required final  Map<String, dynamic> conjugation, required final  Map<String, dynamic> translation, required final  Map<String, dynamic> transcription}): _conjugation = conjugation,_translation = translation,_transcription = transcription;
+  const _VerbModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 'v_id') required this.vId, required this.title, this.type = '', final  Map<String, dynamic> conjugation = const <String, dynamic>{}, final  Map<String, dynamic> translation = const <String, dynamic>{}, final  Map<String, dynamic> transcription = const <String, dynamic>{}}): _conjugation = conjugation,_translation = translation,_transcription = transcription;
   factory _VerbModel.fromJson(Map<String, dynamic> json) => _$VerbModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override@JsonKey(name: 'v_id') final  int vId;
 @override final  String title;
-@override final  String type;
+@override@JsonKey() final  String type;
  final  Map<String, dynamic> _conjugation;
-@override Map<String, dynamic> get conjugation {
+@override@JsonKey() Map<String, dynamic> get conjugation {
   if (_conjugation is EqualUnmodifiableMapView) return _conjugation;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_conjugation);
 }
 
  final  Map<String, dynamic> _translation;
-@override Map<String, dynamic> get translation {
+@override@JsonKey() Map<String, dynamic> get translation {
   if (_translation is EqualUnmodifiableMapView) return _translation;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_translation);
 }
 
  final  Map<String, dynamic> _transcription;
-@override Map<String, dynamic> get transcription {
+@override@JsonKey() Map<String, dynamic> get transcription {
   if (_transcription is EqualUnmodifiableMapView) return _transcription;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_transcription);

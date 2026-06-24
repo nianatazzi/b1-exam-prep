@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/core/locale/locale_provider.dart';
+import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
 import 'package:linguobyte/features/home/data/repositories/language_repository.dart';
 import 'package:linguobyte/features/home/domain/models/language_model.dart';
 import 'package:linguobyte/features/home/domain/usecases/get_home_data_use_case.dart';
@@ -26,7 +26,10 @@ class HomeState {
 
 @riverpod
 class HomeNotifier extends _$HomeNotifier {
-  String get _userId => FirebaseAuth.instance.currentUser!.uid;
+  // Единый источник userId — через authProvider (как в Lesson/Profile),
+  // а не FirebaseAuth напрямую. Пользователь гарантированно авторизован
+  // (GoRouter обеспечивает редирект).
+  String get _userId => ref.read(authProvider).requireValue!.id;
 
   @override
   Future<HomeState> build() async {

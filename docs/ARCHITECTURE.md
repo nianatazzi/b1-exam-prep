@@ -149,28 +149,23 @@ lib/
 
 ## 6.1 Логика прохождения урока (LessonScreen)
 
-Урок строится как детерминированная последовательность шагов (`List<LessonStep>`), собираемая из данных Firestore при открытии экрана через `BuildLessonUseCase`:
+Урок — детерминированная последовательность `List<LessonStep>`, собираемая `BuildLessonUseCase` при открытии. Порядок фиксирован: **theory[] → lexical? → verbs? → final?** (lexical/verbs/final добавляются только если их данные непусты).
 
-1. **theory** — блоки сортируются по полю `th_id`. Каждый блок образует отдельный `TheoryLessonStep` со своими упражнениями (`segment_type = "theory"`, `linked_item_id = th_id`).
-2. **lexical_set** — один `LexicalLessonStep`: все блоки подряд (сортировка по `voc_id`), затем все упражнения (`segment_type = "vocab"`).
-3. **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (по одному на документ, сортировка по `v_id`). Каждый суб-шаг: таблица спряжения глагола → упражнения именно на него (`segment_type = "verb"`, `linked_item_id = v_id`). Суб-навигация — локальный стейт `VerbsStepWidget`; для `HomeScreen` и `progressIndex` вся пара остаётся одним шагом.
-4. **additional** — не входит в `List<LessonStep>`, хранится отдельно в `LessonState.additional`. Доступен всегда через навигационную панель, не блокирует завершение урока.
+- **theory** — каждый блок (сортировка `th_id`) → `TheoryLessonStep` + его упражнения (`segment_type="theory"`, `linked_item_id=th_id`).
+- **lexical_set** — один `LexicalLessonStep`: все блоки (`voc_id`) + упражнения (`segment_type="vocab"`).
+- **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (`v_id`). Каждый глагол: таблица спряжения → его упражнения (`segment_type="verb"`). Суб-навигация — локальный стейт `VerbsStepWidget`; для прогресса вся пара — один шаг. Результат каждого глагола сохраняется отдельно (`recordVerbSubStep`, ключ `{lId}_verb_{vId}`, в т.ч. пустой при отсутствии упражнений — глагол считается пройденным); `progressIndex` двигается раз на последнем глаголе.
+- **final** — `FinalLessonStep` с упражнениями `segment_type="final"`.
+- **additional** — вне `List<LessonStep>`, в `LessonState.additional`; доступен через панель, не блокирует завершение.
 
-Порядок фиксирован: theory[] → lexical? → verbs?. Блоки lexical/verbs добавляются только если их коллекции непусты.
+Все упражнения урока грузятся одним запросом (`course_id="basic_{langId}"`, `lesson_id=lId`) и группируются в памяти.
 
-Все упражнения урока загружаются одним запросом (`course_id = "basic_{langId}"`, `lesson_id = lId`) и группируются в памяти.
+**Два индекса в `LessonNotifier`:** `progressIndex` = `lastParagraph` (Firestore, завершённые шаги); `viewIndex` — просматриваемый шаг (навигация назад/через панель, без записи).
 
-**`lastParagraph`** = количество завершённых шагов = индекс СЛЕДУЮЩЕГО шага к прохождению. Соответствует позиции в `List<LessonStep>`. Тот же индекс используется в `LessonCard` на HomeScreen.
+**Завершение шага** делегируется `CompleteStepUseCase` (domain): сохранить результаты субпарта (+stats), обновить стрик, проверить достижения, продвинуть прогресс. Переигровка пройденного шага (`viewIndex < progressIndex`) обновляет результаты/достижения, но прогресс не двигает.
 
-**Два индекса в `LessonNotifier`:**
-- `progressIndex` = `lastParagraph` — персистентный, пишется в Firestore при каждом завершении шага
-- `viewIndex` — локальный, меняется при навигации назад/через панель без записи в Firestore
+**Поток внутри шага:** контент → упражнения по одному (общий `ExercisePhaseWidget`) → «Завершить». Завершение урока (`progressIndex >= steps.length`): `lastLesson=nextLesson.id`, `lastParagraph=0`, заглушка, возврат на Home.
 
-**Поток внутри шага:** content-фаза → упражнения по одному → кнопка "Завершить" (последнее упражнение или контент если упражнений нет). Фаза и индекс упражнения — локальный стейт `ConsumerStatefulWidget`.
-
-**Завершение урока:** `progressIndex >= steps.length` → обновить Firestore (`lastLesson = nextLesson.id`, `lastParagraph = 0`), показать заглушку, вернуться на HomeScreen.
-
-**Навигационная панель:** постоянно видимый прогресс-бар в AppBar (показывает `progressIndex / steps.length`). Тап → BottomSheet со всеми шагами. Завершённые и текущий шаг — тапабельны (меняют `viewIndex`). Залоченные — нет.
+**Навигационная панель:** прогресс-бар в AppBar (`progressIndex / steps.length`); тап → BottomSheet шагов. Завершённые и текущий тапабельны, залоченные — нет.
 
 ---
 
@@ -203,22 +198,8 @@ lib/
 
 - Все модели — `freezed` + `json_serializable`
 - Обязательно: `fromJson`, `toJson`, `copyWith`
-- `AppError` — `sealed class`:
-
-```dart
-sealed class AppError {
-  const AppError();
-}
-class NetworkError extends AppError {}
-class AuthError extends AppError {}
-class NotFoundError extends AppError {}
-class UnknownError extends AppError {
-  final String message;
-  const UnknownError(this.message);
-}
-```
-
-- Исключения Firestore маппятся в `AppError` на уровне `data`-слоя. До `domain` исключения не доходят.
+- `AppError` — `sealed class` (`core/errors/`): `NetworkError`, `AuthError`, `NotFoundError`, `UnknownError(message)`.
+- Исключения Firestore маппятся в `AppError` на уровне `data`-слоя (`mapFirebaseException`). До `domain` исключения не доходят.
 - `catch` без маппинга в `AppError` запрещён.
 
 ---
@@ -291,19 +272,9 @@ class UnknownError extends AppError {
 | `AppRoutes` | Все маршруты GoRouter |
 | `AppSpacing` | Отступы |
 | `AppSizes` | Размеры UI-элементов |
+| `AppConstants` | Бизнес-пороги (например `passThresholdPercent` = 78%) |
 
 Цвета и типографика — не константы, только `ThemeData`.
-
-Пример `FirestorePaths`:
-```dart
-abstract class FirestorePaths {
-  static const String basic = 'basic';
-  static const String privateUserInfo = 'private_user_info';
-  static const String publicUserInfo = 'public_user_info';
-  static String lessons(String langId) => '$basic/$langId/lessons';
-  static const String exercises = 'exercises'; // корневая коллекция, не вложена в basic/
-}
-```
 
 ---
 
@@ -334,7 +305,7 @@ abstract class FirestorePaths {
 ## 19. Открытые пункты
 
 - Видеоплеер и видеохостинг — решается после выбора хранилища
-- Тестирование и CI/CD — после реализации MVP
+- Тестирование: страховочные unit-тесты (`test/domain/`) добавлены; widget/integration-тесты и CI/CD — после MVP
 - Детальная обработка ошибок с разными сообщениями — после MVP
 - Офлайн-предзагрузка медиа — после MVP
 
@@ -356,51 +327,34 @@ abstract class FirestorePaths {
 ### Фаза 3 (HomeScreen)
 
 - **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
-- ~~**Exercise dots**~~ **ЗАМЕНЕНО на stepResults**: цвета кругов субпартов (красный/жёлтый/зелёный) реализуются через `stepResults` map в `languages/{langId}`. Порог зелёный/жёлтый: 78% правильных ответов.
-- **Новый пользователь**: при `lastLesson = null` первый урок (минимальный `id`) разблокируется автоматически в коде. Сохранение прогресса нового пользователя реализовано: `updateProgress` создаёт документ `languages/{langId}` через `set(merge:true)`, а `stats`/`stepResults`/`achievements` имеют `@Default({})` — частичный документ читается корректно. Полная инициализация документа (`updateLearningLanguage` со всеми полями) пока не вызывается — это часть будущего онбординга, для MVP не требуется.
-- **`activeIndex == -1`**: если `lastLesson` установлен, но урок не найден в списке — все карточки locked без возможности восстановления. Пост-MVP: добавить кнопку сброса прогресса по языку в `ProfileScreen`.
-- **`UserRepository` cross-feature**: `UserRepository` из `features/profile/` используется в `HomeNotifier` (`features/home/`) — зависимость между фичами. Допустимо для MVP. Пост-MVP: вынести общие методы в `shared/` или `core/`.
-- **`getLessonStepSummaries` — 3·N чтений Firestore на каждое открытие HomeScreen**: для N уроков выполняется `1` (уроки) + `1` (прогресс) + `3·N` (theory + lexical limit(1) + verbs limit(1)). На MVP допустимо: офлайн-кэш Firestore отдаёт повторные открытия, уроков немного. Долгосрочное решение: денормализовать `steps_summary` (массив `{type, title}` по каждому шагу) в документ урока — админ-панель пишет это поле при редактировании контента + бэкафилл существующих уроков; клиент читает сводку вместе со списком уроков, убирая все `3·N`. Админ-панель готова → задача разблокирована, выполнять **отдельной веткой** (схема FIRESTORE.md + клиент + миграция данных), не в рамках lesson-screen.
+- **Новый пользователь**: полная инициализация документа (`updateLearningLanguage`) не вызывается — часть будущего онбординга. Для MVP не нужно: документ создаётся частично через `set(merge:true)`, модели терпимы к пропускам (`@Default`).
+- **`activeIndex == -1`**: если `lastLesson` есть, но урок не найден — все карточки locked. Пост-MVP: кнопка сброса прогресса в `ProfileScreen`.
+- **`getLessonStepSummaries` — 4·N чтений**: для N уроков `1` (уроки) + `1` (прогресс) + `4·N` (theory + lexical + verbs + final, по limit 1). Для MVP приемлемо (офлайн-кэш, ≤30 уроков). Денормализация `steps_summary` рассмотрена и **отклонена** (риск устаревания данных + правка админки).
 
-### Фаза 4 (LessonScreen) — реализована
+### Lesson (Фаза 4)
 
-- **Виджеты упражнений**: все 8 типов реализованы в `features/lesson/presentation/widgets/exercises/`:
-  - `wordcard` — карточка слова: слово, транскрипция, аудио, изображение, переводы
-  - `flashcard` — флэш-карточка с анимацией флипа: лицо (подсказка + поле ввода), обратная (слово + аудио + пример)
-  - `multiple_choice` — вставить слово из банка в пропуски предложения
-  - `fill_blank` — вписать слово в пропуск вручную
-  - `mosaic` — собрать предложение из чипов
-  - `translate_sentence` — перевести предложение текстом
-  - `listen_pick` — выбрать вариант после прослушивания аудио
-  - `voice_translate` — произнести перевод голосом (STT через `speech_to_text`) с текстовым fallback
-  - Роутер: `ExerciseWidget` делегирует по `exercise.type`. Все виджеты получают `key: ValueKey(exercise.exId)` для гарантированного сброса состояния между упражнениями.
-  - Общие виджеты: `ExerciseFeedbackBanner` (баннер правильно/неправильно + правильный ответ), `AudioPlayButton` (`shared/widgets/`) — воспроизведение через `just_audio`, disabled при `audioUrl == null`.
-- **Экран завершения урока**: `_LessonCompleteStub` — заглушка (иконка + текст + кнопка). Статистика, баллы, проблемные моменты — после MVP.
-- **Additional / подписка**: additional доступен через панель навигации (заглушка-диалог). Гейтинг по `subscription.plan` — после MVP.
-- **`IUserProgressRepository` cross-feature**: `LessonNotifier` зависит от репозитория из `features/home/`. Допустимо для MVP (аналогично `UserRepository`). Пост-MVP: вынести в `shared/` или `core/`.
-- **`BuildLessonUseCase` cross-feature**: UseCase в `features/lesson/domain/` использует `ILessonRepository` и `IUserProgressRepository` из `features/home/`. Долгосрочное решение: вынести общие интерфейсы в `shared/` или `core/`.
-- **`LessonStepSummary` в `LessonCard`**: `progressPercent` теперь учитывает все шаги (theory + lexical + verbs). Если последний урок завершён (нет nextLesson), `lastLesson` остаётся на нём — карточка показывается как active с 100%. Пост-MVP: добавить явное поле `isFullyCompleted` в прогресс.
-- **Генератор провайдера**: Riverpod 3.x для `@riverpod class LessonNotifier` генерирует `lessonProvider` (не `lessonNotifierProvider`) — суффикс `Notifier` убирается автоматически. Аналогично для других нотификаторов.
+- **`_LessonCompleteStub`**: экран завершения — заглушка. Баллы/проблемные моменты — после MVP.
+- **Additional / подписка**: additional через панель (заглушка-диалог); гейтинг по `subscription.plan` — после MVP.
+- **`isFullyCompleted`**: последний урок курса остаётся `active` с 100% (нет `nextLesson`, `lastLesson` не сдвигается). Пост-MVP: явное поле завершённости в прогрессе.
+- **Переигровка шага — побочки stats/достижений**: при возврате на пройденный шаг через панель и повторном «Завершить» `CompleteStepUseCase` (при `isReplay`) прогресс урока корректно не двигает, но всё равно инкрементит `stats` (`FieldValue.increment` → инфляция счётчиков радара), выдаёт инкрементальные достижения (`vocabulary_master`/`master_conjugator` накручиваются) и сбрасывает `viewIndex` на `progressIndex` (выбрасывает на текущий шаг/stub). Требует продуктового решения по UX и поведению stats/достижений при переигровке — обсудить с командой, затем изолировать `isReplay` в `execute` (обновлять только `stepResults`).
 
-### Технический долг — виджеты упражнений (feature/exercise-widgets)
+- **[TD-1] Debug Skip-кнопка** (`exercise_widget.dart`): debug-блок (`if (!kDebugMode)` + `Stack`) — убрать перед релизом.
+- **[TD-2] Молчаливый пропуск битых упражнений** (`exercise_repository.dart`): `fromJson` падает → упражнение пропадает без лога в release. Заменить `kDebugMode`-print на `AppLogger.w` (как уже сделано в `LessonContentRepository._parseDocs`).
+- **[TD-3] Пустой `form` в fill_blank**: показать заглушку вместо поля ввода без контекста.
+- **[TD-4] Ключ виджета по `exId`**: `ValueKey(exercise.exId)` — при дублях `ex_id` State переиспользуется. Сменить на `ValueKey(exercise.id)` (DocumentSnapshot.id).
 
-- **[TD-1] Debug Skip-кнопка (exercise_widget.dart)**: `ExerciseWidget` в debug-режиме оборачивает дочерний виджет в `Stack`, что ограничивает bounded height. `Spacer()` в виджетах упражнений заменён на `SizedBox` — краши устранены. Skip-кнопка теперь принимает `onSkip: VoidCallback?` и корректно выполняет переход; `onReady` больше не смешивается с навигацией. **Действие: убрать весь debug-блок (`if (!kDebugMode) return child` + `Stack`) перед релизом.**
+### Profile / Settings (Фаза 5)
 
-- **[TD-2] Молчаливый пропуск сломанных документов Firestore (exercise_repository.dart)**: Если `fromJson` падает на документе с отсутствующим обязательным полем, в release-сборке исключение поглощается без логирования — упражнение пропадает из урока без ошибки в UI. **Действие: заменить `kDebugMode`-print на `logger.warning(...)` чтобы проблема видела в release-логах тоже.**
+- **[TD-6] Инвалидация `stepResults` при смене контента**: при замене содержимого блока старый результат остаётся «зелёным». Пост-MVP: `contentVersion` в уроке.
+- **Light theme**: `AppTheme.light` — заглушка, полная проработка после MVP.
+- **`UserRepository` без интерфейса**: единственный без `I...` в `domain/repositories/`. Пост-MVP: интерфейс + вынести в `shared/`.
+- **`ExerciseResult` не freezed**: in-memory во время субпарта, не сериализуется. Допустимо для MVP.
+- **`StreakRepository` и таймзоны**: `DateTime.now()` локальное — при смене таймзоны стрик может сбоить.
+- **`PreferenceModel`**: `preference` — нетипизированная Map. Типизация (чтение) — низкий приоритет, запись остаётся dot-notation.
+- **`points`/`reward`**: XP не начисляется (`reward` парсится, не используется; `points` всегда 0). Начисление — отдельная фича.
 
-- **[TD-3] Пустое поле `form` в fill_blank (fill_blank_exercise_widget.dart)**: Если поле `form` в Firestore отсутствует или пустое, пользователь видит поле ввода без контекста предложения. **Действие: добавить guard — если `form` пустой, показывать заглушку или error-state вместо бессмысленного ввода.**
+### Кросс-фичевые зависимости (допустимо для MVP)
 
-- **[TD-4] Уникальность ключа виджетов по `exId` (exercise_widget.dart)**: `key: ValueKey(exercise.exId)` — если два упражнения в уроке имеют одинаковый `ex_id` (ошибка данных в Firestore), Flutter переиспользует State и второе упражнение открывается уже заполненным. Надёжнее использовать `ValueKey(exercise.id)` (DocumentSnapshot.id, гарантированно уникальный). **Действие: сменить ключ на `ValueKey(exercise.id)` — требует убедиться что `id` всегда непустой во всех сценариях загрузки.**
+- `UserRepository` (profile) используется в `HomeNotifier`.
+- `UserProgressRepository` / `BuildLessonUseCase` / `CompleteStepUseCase` используют интерфейсы из `home` (`ILessonRepository`, `IUserProgressRepository`). Пост-MVP: вынести общие интерфейсы/репозитории в `shared/` или `core/`.
 
-- ~~**[TD-5]**~~ **ИСПРАВЛЕНО**: При ошибке сети `completeCurrentStep` теперь логирует через `AppLogger.e` и возвращает `state = AsyncData(current)` — экран урока остаётся, пользователь может нажать «Далее» ещё раз. Остаток: показывать SnackBar с ошибкой из UI (требует UI-callback или отдельного error-поля в `LessonState`).
-
-### Фаза 5 (ProfileScreen + Settings + Achievements)
-
-- **[TD-6] Инвалидация stepResults при изменении контента**: если админ заменяет содержимое theory-блока (th_id=2), старый результат `"1_theory_2"` в `stepResults` остаётся от предыдущего контента и показывается как зелёный. **Действие (пост-MVP):** добавить `contentVersion` в документы уроков; при изменении контента — инвалидировать соответствующие результаты в `stepResults`.
-- **Миграция `oral_progress` / `grammar_progress` / `lexicon_progress` → `stats` map**: старые поля заменены на `stats` map с сырыми счётчиками correct/total по 4 навыкам. Существующие документы обновляются вручную. Код модели должен толерантно обрабатывать документы без `stats` (`@Default`).
-- **`fl_chart` для radar-диаграммы**: пакет добавлен для ProfileScreen. Используется только в `_ProficiencyChart` виджете.
-- **Light theme**: реализована как заглушка (`AppTheme.light`). Полная проработка цветов и контрастов — после MVP.
-- **`speechSpeed` preference**: хранится в `public_user_info.preference.speechSpeed`. Используется в `just_audio` playback rate для `listen_pick` и `voice_translate` упражнений.
-- **`UserRepository` без интерфейса**: единственный репозиторий без `IUserRepository` в `domain/repositories/`. Используется из нескольких фич. Пост-MVP: добавить интерфейс и вынести в `shared/`.
-- **`ExerciseResult` не freezed**: используется только in-memory во время прохождения субпарта, не сериализуется. Допустимо для MVP.
-- **`StreakRepository` и таймзоны**: `DateTime.now()` использует локальное время — при смене таймзоны стрик может ошибочно пропустить или удвоить день. Допустимо для MVP.

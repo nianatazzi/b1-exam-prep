@@ -4,7 +4,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'lesson_step_summary.freezed.dart';
 part 'lesson_step_summary.g.dart';
 
-enum LessonStepType { theory, lexical, verbs }
+enum LessonStepType {
+  @JsonValue('theory')
+  theory,
+  @JsonValue('lexical')
+  lexical,
+  @JsonValue('verbs')
+  verbs,
+  // final — зарезервированное слово, поэтому finalStep с JsonValue 'final'
+  @JsonValue('final')
+  finalStep,
+}
 
 @freezed
 abstract class LessonStepSummary with _$LessonStepSummary {
@@ -12,6 +22,8 @@ abstract class LessonStepSummary with _$LessonStepSummary {
     required LessonStepType type,
     // topic для theory, set_title для lexical, '' для verbs (виджет подставит ARB)
     required String title,
+    // th_id для theory — точное сопоставление stepResults (цвет точки); иначе 0
+    @Default(0) int ref,
   }) = _LessonStepSummary;
 
   factory LessonStepSummary.fromJson(Map<String, dynamic> json) =>

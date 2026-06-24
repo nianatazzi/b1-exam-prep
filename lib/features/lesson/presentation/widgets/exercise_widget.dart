@@ -85,6 +85,7 @@ class ExerciseWidget extends StatelessWidget {
           key: ValueKey(exercise.exId),
           exercise: exercise,
           onReady: onReady,
+          onResult: onResult,
           onAutoAdvance: onAutoAdvance,
         ),
       _ => _UnknownExerciseStub(exercise: exercise, onReady: onReady),

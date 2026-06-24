@@ -14,6 +14,7 @@ import 'package:linguobyte/features/lesson/presentation/widgets/lexical_step_wid
 import 'package:linguobyte/features/lesson/presentation/widgets/theory_step_widget.dart';
 import 'package:linguobyte/features/lesson/presentation/widgets/verbs_step_widget.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:linguobyte/shared/widgets/error_view.dart';
 
 class LessonScreen extends ConsumerStatefulWidget {
   final String langId;
@@ -74,6 +75,22 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     }
   }
 
+  /// Завершение одного глагола внутри шага verbs: сохраняем его субпарт,
+  /// а на последнем глаголе — двигаем прогресс всего шага.
+  Future<void> _onVerbSubStepComplete(int vId, bool isLastVerb) async {
+    final notifier = ref.read(
+        lessonProvider(widget.langId, widget.lessonId).notifier);
+    final results = List<ExerciseResult>.of(notifier.currentStepResults);
+    await notifier.recordVerbSubStep(vId);
+    if (isLastVerb) {
+      await notifier.completeCurrentStep();
+      _resetStepPhase();
+    }
+    if (results.isNotEmpty && mounted) {
+      await context.push(AppRoutes.result, extra: results);
+    }
+  }
+
   void _onNavigateToStep(int index) {
     ref
         .read(lessonProvider(widget.langId, widget.lessonId).notifier)
@@ -100,19 +117,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         body: Center(child: CircularProgressIndicator()),
       ),
       error: (_, _) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(l10n.errorGeneric),
-              const SizedBox(height: AppSpacing.lg),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(
-                  lessonProvider(widget.langId, widget.lessonId),
-                ),
-                child: Text(l10n.retry),
-              ),
-            ],
+        body: ErrorView(
+          message: l10n.errorGeneric,
+          onRetry: () => ref.invalidate(
+            lessonProvider(widget.langId, widget.lessonId),
           ),
         ),
       ),
@@ -154,6 +162,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                   onToExercises: _onToExercises,
                   onNextExercise: _onNextExercise,
                   onComplete: _onComplete,
+                  onVerbSubStepComplete: _onVerbSubStepComplete,
                   onExerciseResult: _onExerciseResult,
                 ),
         );
@@ -243,6 +252,7 @@ class _StepBody extends StatelessWidget {
   final VoidCallback onToExercises;
   final VoidCallback onNextExercise;
   final VoidCallback onComplete;
+  final Future<void> Function(int vId, bool isLastVerb) onVerbSubStepComplete;
   final ValueChanged<ExerciseResult>? onExerciseResult;
 
   const _StepBody({
@@ -253,6 +263,7 @@ class _StepBody extends StatelessWidget {
     required this.onToExercises,
     required this.onNextExercise,
     required this.onComplete,
+    required this.onVerbSubStepComplete,
     this.onExerciseResult,
   });
 
@@ -281,7 +292,7 @@ class _StepBody extends StatelessWidget {
           ),
         VerbsLessonStep s => VerbsStepWidget(
             step: s,
-            onComplete: onComplete,
+            onSubStepComplete: onVerbSubStepComplete,
             onExerciseResult: onExerciseResult,
           ),
         FinalLessonStep s => FinalStepWidget(

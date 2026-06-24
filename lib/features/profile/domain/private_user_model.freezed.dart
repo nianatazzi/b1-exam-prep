@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionModel {
 
- SubscriptionPlan get plan;// null для плана free
+// Неизвестное/отсутствующее значение плана трактуется как free,
+// чтобы частичный документ не ронял загрузку профиля.
+@JsonKey(unknownEnumValue: SubscriptionPlan.free) SubscriptionPlan get plan;// null для плана free
  DateTime? get expiresAt;
 /// Create a copy of SubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
@@ -49,7 +51,7 @@ abstract mixin class $SubscriptionModelCopyWith<$Res>  {
   factory $SubscriptionModelCopyWith(SubscriptionModel value, $Res Function(SubscriptionModel) _then) = _$SubscriptionModelCopyWithImpl;
 @useResult
 $Res call({
- SubscriptionPlan plan, DateTime? expiresAt
+@JsonKey(unknownEnumValue: SubscriptionPlan.free) SubscriptionPlan plan, DateTime? expiresAt
 });
 
 
@@ -155,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: SubscriptionPlan.free)  SubscriptionPlan plan,  DateTime? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubscriptionModel() when $default != null:
 return $default(_that.plan,_that.expiresAt);case _:
@@ -176,7 +178,7 @@ return $default(_that.plan,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SubscriptionPlan plan,  DateTime? expiresAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: SubscriptionPlan.free)  SubscriptionPlan plan,  DateTime? expiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionModel():
 return $default(_that.plan,_that.expiresAt);case _:
@@ -196,7 +198,7 @@ return $default(_that.plan,_that.expiresAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SubscriptionPlan plan,  DateTime? expiresAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: SubscriptionPlan.free)  SubscriptionPlan plan,  DateTime? expiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionModel() when $default != null:
 return $default(_that.plan,_that.expiresAt);case _:
@@ -211,10 +213,12 @@ return $default(_that.plan,_that.expiresAt);case _:
 @JsonSerializable()
 
 class _SubscriptionModel implements SubscriptionModel {
-  const _SubscriptionModel({required this.plan, this.expiresAt});
+  const _SubscriptionModel({@JsonKey(unknownEnumValue: SubscriptionPlan.free) this.plan = SubscriptionPlan.free, this.expiresAt});
   factory _SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
 
-@override final  SubscriptionPlan plan;
+// Неизвестное/отсутствующее значение плана трактуется как free,
+// чтобы частичный документ не ронял загрузку профиля.
+@override@JsonKey(unknownEnumValue: SubscriptionPlan.free) final  SubscriptionPlan plan;
 // null для плана free
 @override final  DateTime? expiresAt;
 
@@ -251,7 +255,7 @@ abstract mixin class _$SubscriptionModelCopyWith<$Res> implements $SubscriptionM
   factory _$SubscriptionModelCopyWith(_SubscriptionModel value, $Res Function(_SubscriptionModel) _then) = __$SubscriptionModelCopyWithImpl;
 @override @useResult
 $Res call({
- SubscriptionPlan plan, DateTime? expiresAt
+@JsonKey(unknownEnumValue: SubscriptionPlan.free) SubscriptionPlan plan, DateTime? expiresAt
 });
 
 
@@ -493,14 +497,14 @@ return $default(_that.id,_that.deviceId,_that.email,_that.phone,_that.subscripti
 @JsonSerializable()
 
 class _PrivateUserModel implements PrivateUserModel {
-  const _PrivateUserModel({@JsonKey(includeToJson: false) required this.id, required this.deviceId, required this.email, required this.phone, required this.subscription, this.lastActiveDate, this.currentStreak = 0, this.bestStreak = 0});
+  const _PrivateUserModel({@JsonKey(includeToJson: false) required this.id, this.deviceId = '', this.email = '', this.phone = '', this.subscription = const SubscriptionModel(), this.lastActiveDate, this.currentStreak = 0, this.bestStreak = 0});
   factory _PrivateUserModel.fromJson(Map<String, dynamic> json) => _$PrivateUserModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
-@override final  String deviceId;
-@override final  String email;
-@override final  String phone;
-@override final  SubscriptionModel subscription;
+@override@JsonKey() final  String deviceId;
+@override@JsonKey() final  String email;
+@override@JsonKey() final  String phone;
+@override@JsonKey() final  SubscriptionModel subscription;
 @override final  DateTime? lastActiveDate;
 @override@JsonKey() final  int currentStreak;
 @override@JsonKey() final  int bestStreak;
