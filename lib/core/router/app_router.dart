@@ -4,11 +4,11 @@ import 'package:linguobyte/core/constants/app_routes.dart';
 import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
 import 'package:linguobyte/features/auth/presentation/authorization_screen.dart';
 import 'package:linguobyte/features/home/presentation/screens/home_screen.dart';
-import 'package:linguobyte/features/home/presentation/splash_screen.dart';
+import 'package:linguobyte/core/router/splash_screen.dart';
 import 'package:linguobyte/features/lesson/presentation/screens/lesson_screen.dart';
 import 'package:linguobyte/features/profile/presentation/profile_screen.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
-import 'package:linguobyte/features/profile/presentation/result_screen.dart';
+import 'package:linguobyte/features/lesson/presentation/screens/result_screen.dart';
 import 'package:linguobyte/features/profile/presentation/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

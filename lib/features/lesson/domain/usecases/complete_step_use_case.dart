@@ -4,7 +4,7 @@ import 'package:linguobyte/features/home/domain/repositories/i_user_progress_rep
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/domain/models/lesson_step.dart';
 import 'package:linguobyte/features/lesson/domain/usecases/build_lesson_use_case.dart';
-import 'package:linguobyte/features/profile/data/streak_repository.dart';
+import 'package:linguobyte/features/profile/data/user_repository.dart';
 import 'package:linguobyte/features/profile/domain/repositories/i_streak_repository.dart';
 import 'package:linguobyte/features/profile/domain/step_result_model.dart';
 import 'package:linguobyte/features/profile/domain/usecases/check_achievement_use_case.dart';
@@ -15,7 +15,7 @@ part 'complete_step_use_case.g.dart';
 @riverpod
 CompleteStepUseCase completeStepUseCase(Ref ref) => CompleteStepUseCase(
       progressRepository: ref.read(userProgressRepositoryProvider),
-      streakRepository: ref.read(streakRepositoryProvider),
+      streakRepository: ref.read(userRepositoryProvider),
     );
 
 /// Результат завершения шага: новый индекс прогресса и разблокированные достижения.

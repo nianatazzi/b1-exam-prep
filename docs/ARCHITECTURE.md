@@ -347,14 +347,14 @@ lib/
 
 - **[TD-6] Инвалидация `stepResults` при смене контента**: при замене содержимого блока старый результат остаётся «зелёным». Пост-MVP: `contentVersion` в уроке.
 - **Light theme**: `AppTheme.light` — заглушка, полная проработка после MVP.
-- **`UserRepository` без интерфейса**: единственный без `I...` в `domain/repositories/`. Пост-MVP: интерфейс + вынести в `shared/`.
+- **`UserRepository` без полного интерфейса**: реализует только узкий `IStreakRepository` (для развязки `CompleteStepUseCase`); для профиль-методов интерфейса нет. Пост-MVP: добавить `IUserRepository` + вынести в `shared/`.
 - **`ExerciseResult` не freezed**: in-memory во время субпарта, не сериализуется. Допустимо для MVP.
-- **`StreakRepository` и таймзоны**: `DateTime.now()` локальное — при смене таймзоны стрик может сбоить.
+- **Стрик и таймзоны**: `UserRepository.updateStreak` использует локальное `DateTime.now()` — при смене таймзоны стрик может сбоить.
 - **`PreferenceModel`**: `preference` — нетипизированная Map. Типизация (чтение) — низкий приоритет, запись остаётся dot-notation.
 - **`points`/`reward`**: XP не начисляется (`reward` парсится, не используется; `points` всегда 0). Начисление — отдельная фича.
 
 ### Кросс-фичевые зависимости (допустимо для MVP)
 
 - `UserRepository` (profile) используется в `HomeNotifier`.
-- `UserProgressRepository` / `BuildLessonUseCase` / `CompleteStepUseCase` используют интерфейсы из `home` (`ILessonRepository`, `IUserProgressRepository`). Пост-MVP: вынести общие интерфейсы/репозитории в `shared/` или `core/`.
+- `BuildLessonUseCase` / `CompleteStepUseCase` (lesson/domain) зависят от интерфейсов других фич: `ILessonRepository`/`IUserProgressRepository` (home), `IStreakRepository` (profile). Пост-MVP: вынести общие интерфейсы в `shared/` или `core/`.
 

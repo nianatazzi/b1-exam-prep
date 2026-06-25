@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linguobyte — карта кодовой базы</title>
+<style>
+  :root {
+    --bg: #0f1419; --panel: #1a2230; --panel2: #222d3d; --border: #2c3a4f;
+    --text: #e3e8ef; --muted: #8a97a8; --accent: #5b9dff;
+    --data: #ff8a5b; --domain: #7ee0a0; --present: #c08aff; --core: #ffd166; --shared: #5bd6d6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.5; }
+  header { position: sticky; top: 0; z-index: 10; background: var(--panel);
+    border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  h1 { margin: 0 0 4px; font-size: 18px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .controls { margin-top: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  #search { flex: 1; min-width: 200px; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 14px; }
+  #search:focus { outline: none; border-color: var(--accent); }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .lz { display: inline-flex; align-items: center; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  main { padding: 16px 24px 60px; max-width: 1100px; margin: 0 auto; }
+  .feature { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .feature > h2 { margin: 0; padding: 12px 16px; font-size: 15px; background: var(--panel);
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .feature > h2 .count { color: var(--muted); font-weight: normal; font-size: 12px; }
+  .feature.collapsed .files { display: none; }
+  .files { padding: 6px; }
+  .file { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 9px 10px;
+    border-radius: 8px; align-items: start; }
+  .file:hover { background: var(--panel2); }
+  .badge { width: 22px; height: 22px; border-radius: 6px; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; color: #0f1419; margin-top: 1px; }
+  .b-data { background: var(--data); } .b-domain { background: var(--domain); }
+  .b-present { background: var(--present); } .b-core { background: var(--core); }
+  .b-shared { background: var(--shared); }
+  .fpath { font-family: "JetBrains Mono", Consolas, monospace; font-size: 12.5px; color: var(--text); }
+  .ftype { font-size: 11px; color: var(--muted); margin-left: 8px; padding: 1px 6px;
+    border: 1px solid var(--border); border-radius: 4px; }
+  .fdesc { color: var(--muted); margin-top: 3px; font-size: 13px; }
+  .fdesc b { color: var(--text); font-weight: 600; }
+  .fdesc code { font-family: "JetBrains Mono", Consolas, monospace; font-size: 12px;
+    background: var(--bg); padding: 1px 4px; border-radius: 3px; color: var(--accent); }
+  .hidden { display: none !important; }
+  .empty { color: var(--muted); text-align: center; padding: 40px; }
+  mark { background: #4a6a2f; color: #fff; border-radius: 2px; }
+  .note { color: var(--muted); font-size: 12px; margin: 0 0 16px; padding: 10px 14px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ Linguobyte — карта кодовой базы</h1>
+  <div class="sub">Что делает каждый файл, его слой и связи. Дополняет ARCHITECTURE.md (правила) и FIRESTORE.md (данные).</div>
+  <div class="controls">
+    <input id="search" placeholder="Поиск по файлу или описанию… (например: прогресс, достижения, урок)">
+    <div class="legend">
+      <span class="lz"><span class="dot b-core"></span>core</span>
+      <span class="lz"><span class="dot b-data"></span>data</span>
+      <span class="lz"><span class="dot b-domain"></span>domain</span>
+      <span class="lz"><span class="dot b-present"></span>presentation</span>
+      <span class="lz"><span class="dot b-shared"></span>shared</span>
+    </div>
+  </div>
+</header>
+<main>
+  <p class="note">⚠️ Карта поддерживается вручную — обновляйте при добавлении/переименовании файлов. Слой data = работа с Firestore, domain = бизнес-логика (без Flutter/Firebase), presentation = UI и провайдеры.</p>
+  <div id="list"></div>
+  <div id="empty" class="empty hidden">Ничего не найдено</div>
+</main>
+
+<script>
+// layer: core | data | domain | present | shared
+const FILES = [
+  // ── ENTRY / CORE ──
+  {feat:"Точка входа", layer:"core", type:"entry", path:"lib/main.dart",
+   desc:"Старт приложения: инициализация Firebase/Crashlytics, <code>ProviderScope</code>, <code>MaterialApp.router</code> с роутером и локалью из провайдеров."},
+  {feat:"Core / инфраструктура", layer:"core", type:"router", path:"core/router/app_router.dart",
+   desc:"<b>GoRouter</b>. <code>redirect</code> по состоянию авторизации (splash → auth / home / profile). Слушает <code>authProvider</code> через refreshListenable."},
+  {feat:"Core / инфраструктура", layer:"core", type:"const", path:"core/constants/firestore_paths.dart",
+   desc:"Все пути Firestore (статические + методы). Хардкод путей в коде запрещён — только отсюда."},
+  {feat:"Core / инфраструктура", layer:"core", type:"const", path:"core/constants/app_routes.dart",
+   desc:"Константы маршрутов GoRouter (<code>lessonPath(langId, lessonId)</code> и т.д.)."},
+  {feat:"Core / инфраструктура", layer:"core", type:"const", path:"core/constants/app_spacing.dart",
+   desc:"Отступы (xs/sm/md/lg/xl). Хардкод отступов запрещён."},
+  {feat:"Core / инфраструктура", layer:"core", type:"const", path:"core/constants/app_sizes.dart",
+   desc:"Размеры UI-элементов (высота карточки урока, иконки, dot'ы тайтмлайна и т.д.)."},
+  {feat:"Core / инфраструктура", layer:"core", type:"const", path:"core/constants/app_constants.dart",
+   desc:"Бизнес-пороги. Сейчас <code>passThresholdPercent</code> = 78% (зелёный/красный результат)."},
+  {feat:"Core / инфраструктура", layer:"core", type:"errors", path:"core/errors/app_error.dart",
+   desc:"<b>sealed AppError</b> (Network/Auth/NotFound/Unknown) + <code>mapFirebaseException</code>. Исключения Firestore маппятся здесь, в domain не доходят."},
+  {feat:"Core / инфраструктура", layer:"core", type:"provider", path:"core/locale/locale_provider.dart",
+   desc:"<code>AppLocaleNotifier</code> (keepAlive) — выбранный язык интерфейса. <code>MaterialApp.locale</code> берёт значение отсюда."},
+  {feat:"Core / инфраструктура", layer:"core", type:"logger", path:"core/logger/app_logger.dart",
+   desc:"Абстракция над <code>logger</code> (d/i/w/e). В release отключён (<code>Level.off</code>)."},
+  {feat:"Core / инфраструктура", layer:"core", type:"logger", path:"core/logger/provider_observer.dart",
+   desc:"Печатает ошибки любых провайдеров в консоль (только debug)."},
+  {feat:"Core / инфраструктура", layer:"core", type:"theme", path:"core/theme/app_theme.dart",
+   desc:"<code>ThemeData</code> (dark + заглушка light). Цвета и типографика — только здесь."},
+  {feat:"Core / инфраструктура", layer:"core", type:"theme", path:"core/theme/app_colors.dart",
+   desc:"<code>ThemeExtension</code> с доп. цветами (success, surfaceOverlay, textMuted…), которых нет в ColorScheme."},
+  {feat:"Core / инфраструктура", layer:"core", type:"util", path:"core/utils/string_utils.dart",
+   desc:"Нормализация ответов (<code>normalizeAnswer</code>, <code>stripDiacritics</code>) для проверки упражнений."},
+
+  // ── AUTH ──
+  {feat:"Auth", layer:"data", type:"repository", path:"features/auth/data/auth_repository.dart",
+   desc:"Firebase Auth: вход/регистрация/сброс. <code>authStateChanges()</code> стрим. При регистрации создаёт документы профиля (техдолг — вынести в Cloud Function)."},
+  {feat:"Auth", layer:"domain", type:"model", path:"features/auth/domain/user_model.dart",
+   desc:"Модель авторизованного пользователя (id, email, displayName)."},
+  {feat:"Auth", layer:"present", type:"notifier", path:"features/auth/presentation/auth_notifier.dart",
+   desc:"<b>Глобальное состояние авторизации</b> (keepAlive). Слушается роутером. Флаг <code>_isNewUser</code> (in-memory, техдолг)."},
+  {feat:"Auth", layer:"present", type:"screen", path:"features/auth/presentation/authorization_screen.dart",
+   desc:"Экран входа/регистрации/восстановления пароля."},
+
+  // ── HOME ──
+  {feat:"Home", layer:"data", type:"repository", path:"features/home/data/repositories/language_repository.dart",
+   desc:"Список языков обучения из <code>basic/</code>."},
+  {feat:"Home", layer:"data", type:"repository", path:"features/home/data/repositories/lesson_repository.dart",
+   desc:"Уроки языка (<code>getLessons</code>, orderBy l_id) и <b>сводка шагов</b> урока (<code>getLessonStepSummaries</code>: theory + lexical + verbs + final, по limit 1)."},
+  {feat:"Home", layer:"data", type:"repository", path:"features/home/data/repositories/user_progress_repository.dart",
+   desc:"<b>Единый репозиторий прогресса</b> — весь документ <code>languages/{langId}</code>: чтение прогресса, запись <code>stepResults</code>+<code>stats</code>, достижения, инициализация документа. Используется Home/Lesson/Profile."},
+  {feat:"Home", layer:"domain", type:"model", path:"features/home/domain/models/language_model.dart",
+   desc:"Язык обучения (id, flag, name)."},
+  {feat:"Home", layer:"domain", type:"model", path:"features/home/domain/models/lesson_model.dart",
+   desc:"Урок (id, l_id, theme). Порядок уроков — по <code>l_id</code>."},
+  {feat:"Home", layer:"domain", type:"model", path:"features/home/domain/models/user_language_progress_model.dart",
+   desc:"<b>Прогресс по языку</b>: lastLesson, lastParagraph, stats, stepResults, achievements. Центральная модель прогресса."},
+  {feat:"Home", layer:"domain", type:"interface", path:"features/home/domain/repositories/i_lesson_repository.dart",
+   desc:"Интерфейс уроков (для развязки слоёв)."},
+  {feat:"Home", layer:"domain", type:"interface", path:"features/home/domain/repositories/i_user_progress_repository.dart",
+   desc:"Интерфейс прогресса: get/updateProgress, saveStepResult, updateAchievement."},
+  {feat:"Home", layer:"domain", type:"usecase", path:"features/home/domain/usecases/get_home_data_use_case.dart",
+   desc:"<b>Собирает карточки уроков</b>: уроки + прогресс + сводки шагов → вычисляет состояние каждой (done/active/locked) и <code>progressPercent</code>."},
+  {feat:"Home", layer:"present", type:"notifier", path:"features/home/presentation/providers/home_notifier.dart",
+   desc:"Состояние HomeScreen: языки, выбранный язык, данные экрана. <code>selectLanguage</code> переключает язык. userId через <code>authProvider</code>."},
+  {feat:"Home", layer:"present", type:"screen", path:"features/home/presentation/screens/home_screen.dart",
+   desc:"Главный экран: чип языка, горизонтальный список карточек уроков, переход в профиль."},
+  {feat:"Core / инфраструктура", layer:"core", type:"screen", path:"core/router/splash_screen.dart",
+   desc:"Заставка (только spinner). Навигацию делает redirect роутера — поэтому лежит рядом с роутером в core/."},
+  {feat:"Home", layer:"present", type:"widget", path:"features/home/presentation/widgets/lesson_card.dart",
+   desc:"<b>Карточка урока</b>: номер, тема, прогресс-бар, тайтмлайн шагов с цветными точками (зелёный/красный по результату), статус-бейдж. Тап → LessonScreen."},
+
+  // ── LESSON ──
+  {feat:"Lesson", layer:"data", type:"repository", path:"features/lesson/data/repositories/lesson_content_repository.dart",
+   desc:"Контент урока: theory / lexical_set / verbs / additional. <code>_parseDocs</code> пропускает битый документ с логом (не роняет урок)."},
+  {feat:"Lesson", layer:"data", type:"repository", path:"features/lesson/data/repositories/exercise_repository.dart",
+   desc:"Упражнения урока одним запросом (<code>course_id</code> + <code>lesson_id</code>), сортировка по ex_id. Битые документы пропускаются."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/lesson_step.dart",
+   desc:"<b>sealed LessonStep</b>: Theory / Lexical / Verbs(+VerbSubStep) / Final. Один шаг = контент + его упражнения. Центральная модель прохождения."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/exercise_model.dart",
+   desc:"Упражнение: type, segment_type, linked_item_id, type_data (специфика типа), grammar_types (=навыки для stats)."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/exercise_result.dart",
+   desc:"Результат одного упражнения (in-memory во время субпарта): isCorrect, grammarTypes, ответы. Не сериализуется."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/theory_model.dart",
+   desc:"Блок теории (th_id, topic, title, text). reward/duration терпимы к пропуску."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/lexical_set_model.dart",
+   desc:"Слово лексического набора (voc_id, title, translation, transcription, set_title)."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/verb_model.dart",
+   desc:"Глагол (v_id, title, conjugation/translation/transcription как map). Поля терпимы к пропуску."},
+  {feat:"Lesson", layer:"domain", type:"model", path:"features/lesson/domain/models/additional_model.dart",
+   desc:"Доп. материал урока (type, title, content). Доступен через панель, не блокирует завершение."},
+  {feat:"Lesson", layer:"domain", type:"interface", path:"features/lesson/domain/repositories/i_lesson_content_repository.dart",
+   desc:"Интерфейс контента урока."},
+  {feat:"Lesson", layer:"domain", type:"interface", path:"features/lesson/domain/repositories/i_exercise_repository.dart",
+   desc:"Интерфейс упражнений урока."},
+  {feat:"Lesson", layer:"domain", type:"usecase", path:"features/lesson/domain/usecases/build_lesson_use_case.dart",
+   desc:"<b>Собирает последовательность урока</b> <code>List&lt;LessonStep&gt;</code>: theory[] → lexical? → verbs? → final?, группирует упражнения по сегментам. Возвращает LessonData."},
+  {feat:"Lesson", layer:"domain", type:"usecase", path:"features/lesson/domain/usecases/complete_step_use_case.dart",
+   desc:"<b>Оркестрация завершения шага</b>: сохранить результаты субпарта (+stats), стрик, проверить достижения, продвинуть прогресс. Обрабатывает переигровку (isReplay)."},
+  {feat:"Lesson", layer:"present", type:"notifier", path:"features/lesson/presentation/providers/lesson_notifier.dart",
+   desc:"<b>Состояние LessonScreen</b>: <code>progressIndex</code> (Firestore) и <code>viewIndex</code> (навигация); in-memory результаты упражнений. Завершение делегирует в CompleteStepUseCase."},
+  {feat:"Lesson", layer:"present", type:"screen", path:"features/lesson/presentation/screens/lesson_screen.dart",
+   desc:"<b>Экран урока</b>: AppBar с прогресс-баром, тело шага (по типу), панель навигации. Управляет фазой контент/упражнения и переходами."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/exercise_widget.dart",
+   desc:"<b>Роутер упражнений</b>: по <code>exercise.type</code> делегирует в нужный виджет (8 типов). Debug Skip-кнопка."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/exercise_phase_widget.dart",
+   desc:"<b>Единая фаза упражнений</b>: счётчик N/M + упражнение + кнопка Далее/Завершить (разблокируется после ответа). Один на все типы шагов."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/theory_step_widget.dart",
+   desc:"Шаг теории: парсит текст (примеры, подсказки) → контент → ExercisePhaseWidget."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/lexical_step_widget.dart",
+   desc:"Шаг лексики: карточки слов → ExercisePhaseWidget."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/verbs_step_widget.dart",
+   desc:"Шаг глаголов: суб-навигация по глаголам (таблица спряжения → упражнения). Каждый глагол сохраняется отдельно (recordVerbSubStep)."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/final_step_widget.dart",
+   desc:"Финальные упражнения урока (segment_type=final). Тонкая обёртка над ExercisePhaseWidget."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/verb_conjugation_table.dart",
+   desc:"Таблица спряжения глагола (из map conjugation)."},
+  {feat:"Lesson", layer:"present", type:"widget", path:"features/lesson/presentation/widgets/lesson_nav_panel.dart",
+   desc:"BottomSheet навигации по шагам урока: завершённые/текущий тапабельны, залоченные нет. + диалог additional."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/wordcard_exercise_widget.dart",
+   desc:"Карточка слова: слово, транскрипция, аудио, картинка, переводы."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/flashcard_exercise_widget.dart",
+   desc:"Флэш-карточка с флипом: подсказка ↔ слово + пример."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/multiple_choice_exercise_widget.dart",
+   desc:"Вставить слова из банка в пропуски предложения."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/fill_blank_exercise_widget.dart",
+   desc:"Вписать слово в пропуск вручную (с проверкой по accepted)."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/mosaic_exercise_widget.dart",
+   desc:"Собрать предложение из чипов."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/translate_sentence_exercise_widget.dart",
+   desc:"Перевести предложение текстом (проверка по correct_answer / regex)."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/listen_pick_exercise_widget.dart",
+   desc:"Выбрать вариант после прослушивания аудио."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/voice_translate_exercise_widget.dart",
+   desc:"Произнести перевод голосом (STT) с текстовым fallback. Передаёт <code>onResult</code> → stats.speaking."},
+  {feat:"Lesson / упражнения", layer:"present", type:"widget", path:"widgets/exercises/exercise_feedback_banner.dart",
+   desc:"Общий баннер правильно/неправильно + правильный ответ."},
+
+  // ── PROFILE ──
+  {feat:"Profile", layer:"data", type:"repository", path:"features/profile/data/user_repository.dart",
+   desc:"Профиль (<code>public_user_info</code> / <code>private_user_info</code>), preference, выбранный язык <b>и стрик</b> (<code>updateStreak</code> — стрик в том же документе private_user_info). Реализует <code>IStreakRepository</code>."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/public_user_model.dart",
+   desc:"Публичный профиль: name, surname, avatar, points, preference (Map — техдолг типизировать)."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/private_user_model.dart",
+   desc:"Приватный профиль: subscription, стрик-поля, контакты. Поля терпимы к пропуску."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/achievement_model.dart",
+   desc:"<b>Достижение</b>: AchievementType (5 типов) + level. Extension <code>.key</code> — единый маппинг тип↔строка."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/exercise_stats_model.dart",
+   desc:"Статистика навыков для радара: grammar/vocabulary/listening/speaking (каждый — StatEntryModel)."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/stat_entry_model.dart",
+   desc:"Счётчик навыка: correct/total + <code>percent</code>."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/step_result_model.dart",
+   desc:"Результат субпарта (correct, total, firstAttempt, incorrectExerciseIds). Хранится в stepResults."},
+  {feat:"Profile", layer:"domain", type:"model", path:"features/profile/domain/streak_model.dart",
+   desc:"Стрик + <code>weekDays()</code> — какие дни недели активны (для UI-полоски)."},
+  {feat:"Profile", layer:"domain", type:"interface", path:"features/profile/domain/repositories/i_streak_repository.dart",
+   desc:"Узкий интерфейс стрика (<code>updateStreak</code>). Реализуется UserRepository — развязка для CompleteStepUseCase."},
+  {feat:"Profile", layer:"domain", type:"usecase", path:"features/profile/domain/usecases/check_achievement_use_case.dart",
+   desc:"<b>Чистая логика достижений</b>: проверяет 5 типов после субпарта (first_step, master_conjugator, vocabulary_master, focused_learner). Без зависимостей от Firebase."},
+  {feat:"Profile", layer:"present", type:"notifier", path:"features/profile/presentation/profile_notifier.dart",
+   desc:"Данные ProfileScreen: публичный/приватный профиль, стрик, stats, список достижений. Редактирование имени."},
+  {feat:"Profile", layer:"present", type:"notifier", path:"features/profile/presentation/settings_notifier.dart",
+   desc:"Настройки: тема, скорость речи, язык интерфейса. Пишет в preference + инвалидирует профиль."},
+  {feat:"Profile", layer:"present", type:"screen", path:"features/profile/presentation/profile_screen.dart",
+   desc:"<b>Профиль</b>: аватар, очки, стрик-карточка, радар-диаграмма навыков, список достижений."},
+  {feat:"Profile", layer:"present", type:"screen", path:"features/profile/presentation/settings_screen.dart",
+   desc:"Настройки (тема / язык интерфейса / скорость речи). Открывается из профиля."},
+  {feat:"Lesson", layer:"present", type:"screen", path:"features/lesson/presentation/screens/result_screen.dart",
+   desc:"<b>Результат субпарта</b>: correct/total, фидбэк по порогу, список ошибок. Пушится из lesson_screen после завершения шага."},
+
+  // ── SHARED ──
+  {feat:"Shared", layer:"shared", type:"model", path:"shared/models/lesson_step_summary.dart",
+   desc:"Лёгкая сводка шага для карточки (type + title + ref=th_id). Строится из контента, не хранится в Firestore."},
+  {feat:"Shared", layer:"shared", type:"widget", path:"shared/widgets/error_view.dart",
+   desc:"Универсальный экран ошибки (сообщение + Повторить). Используется Home/Profile/Lesson."},
+  {feat:"Shared", layer:"shared", type:"widget", path:"shared/widgets/audio_play_button.dart",
+   desc:"Кнопка воспроизведения аудио (just_audio), disabled при отсутствии url."},
+
+  // ── ОСТАЛЬНОЕ ──
+  {feat:"Прочее", layer:"core", type:"l10n", path:"lib/l10n/app_localizations*.dart",
+   desc:"Локализация (EN/RU/FR/ES) — генерируется из ARB-файлов. Все строки интерфейса только отсюда."},
+  {feat:"Прочее", layer:"core", type:"gen", path:"*.g.dart / *.freezed.dart",
+   desc:"Сгенерированный код (freezed/json/riverpod). Не редактировать — пересоздаётся <code>dart run build_runner build</code>."},
+];
+
+const layerName = {core:"core", data:"data", domain:"domain", present:"presentation", shared:"shared"};
+const list = document.getElementById('list');
+
+function render(filter) {
+  const f = (filter || "").trim().toLowerCase();
+  const groups = {};
+  let total = 0;
+  for (const file of FILES) {
+    const hay = (file.path + " " + file.desc + " " + file.feat).toLowerCase();
+    if (f && !hay.includes(f)) continue;
+    (groups[file.feat] = groups[file.feat] || []).push(file);
+    total++;
+  }
+  list.innerHTML = "";
+  document.getElementById('empty').classList.toggle('hidden', total > 0);
+  for (const feat of Object.keys(groups)) {
+    const sec = document.createElement('section');
+    sec.className = 'feature';
+    const h = document.createElement('h2');
+    h.innerHTML = `<span>${feat}</span><span class="count">${groups[feat].length} файл(ов)</span>`;
+    h.onclick = () => sec.classList.toggle('collapsed');
+    sec.appendChild(h);
+    const wrap = document.createElement('div');
+    wrap.className = 'files';
+    for (const file of groups[feat]) {
+      const div = document.createElement('div');
+      div.className = 'file';
+      const b = file.layer === 'present' ? 'P' : file.layer[0].toUpperCase();
+      div.innerHTML =
+        `<div class="badge b-${file.layer}">${b}</div>` +
+        `<div><span class="fpath">${hl(file.path, f)}</span>` +
+        `<span class="ftype">${layerName[file.layer]} · ${file.type}</span>` +
+        `<div class="fdesc">${file.desc}</div></div>`;
+      wrap.appendChild(div);
+    }
+    sec.appendChild(wrap);
+    list.appendChild(sec);
+  }
+}
+function hl(text, f) {
+  if (!f) return text;
+  const i = text.toLowerCase().indexOf(f);
+  if (i < 0) return text;
+  return text.slice(0,i) + "<mark>" + text.slice(i, i+f.length) + "</mark>" + text.slice(i+f.length);
+}
+document.getElementById('search').addEventListener('input', e => render(e.target.value));
+render("");
+</script>
+</body>
+</html>
