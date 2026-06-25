@@ -3,6 +3,7 @@ import 'package:linguobyte/core/constants/firestore_paths.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/profile/domain/private_user_model.dart';
 import 'package:linguobyte/features/profile/domain/public_user_model.dart';
+import 'package:linguobyte/features/profile/domain/repositories/i_streak_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_repository.g.dart';
@@ -12,7 +13,11 @@ UserRepository userRepository(Ref ref) {
   return UserRepository(FirebaseFirestore.instance);
 }
 
-class UserRepository {
+/// Профиль пользователя (public/private_user_info) + стрик.
+/// Стрик живёт в том же документе private_user_info — поэтому здесь же,
+/// а не отдельным репозиторием. Реализует [IStreakRepository] для развязки
+/// (CompleteStepUseCase зависит от узкого интерфейса, а не от этого класса).
+class UserRepository implements IStreakRepository {
   final FirebaseFirestore _firestore;
 
   const UserRepository(this._firestore);
@@ -190,5 +195,54 @@ class UserRepository {
       result['lastActiveDate'] = lastActive.toDate().toIso8601String();
     }
     return result;
+  }
+
+  /// Обновляет стрик (дни подряд) в корне private_user_info. Возвращает новый
+  /// текущий стрик. Идемпотентен в рамках одного дня.
+  @override
+  Future<int> updateStreak(String userId) async {
+    try {
+      final docRef = _firestore.doc(FirestorePaths.privateUser(userId));
+      final doc = await docRef.get();
+      final data = doc.data() ?? {};
+
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      final lastActiveRaw = data['lastActiveDate'];
+      DateTime? lastActive;
+      if (lastActiveRaw is Timestamp) {
+        lastActive = lastActiveRaw.toDate();
+      }
+      final lastActiveDay = lastActive != null
+          ? DateTime(lastActive.year, lastActive.month, lastActive.day)
+          : null;
+
+      // Уже отмечен сегодня — ничего не делаем.
+      if (lastActiveDay != null && lastActiveDay == today) {
+        return (data['currentStreak'] as int?) ?? 1;
+      }
+
+      final yesterday = today.subtract(const Duration(days: 1));
+      final currentStreak = (data['currentStreak'] as int?) ?? 0;
+      final bestStreak = (data['bestStreak'] as int?) ?? 0;
+
+      final newStreak = lastActiveDay == yesterday ? currentStreak + 1 : 1;
+      final newBest = newStreak > bestStreak ? newStreak : bestStreak;
+
+      await docRef.set(
+        {
+          'lastActiveDate': Timestamp.fromDate(today),
+          'currentStreak': newStreak,
+          'bestStreak': newBest,
+        },
+        SetOptions(merge: true),
+      );
+      return newStreak;
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
   }
 }
