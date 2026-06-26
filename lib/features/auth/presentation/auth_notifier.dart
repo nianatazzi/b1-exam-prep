@@ -78,6 +78,22 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  Future<void> signInWithGoogle() async {
+    state = const AsyncLoading();
+    try {
+      final user = await ref.read(authRepositoryProvider).signInWithGoogle();
+      if (user == null) {
+        // Пользователь закрыл диалог Google — сбрасываем loading без ошибки
+        state = const AsyncData(null);
+      }
+      // Успех: authStateChanges обновит state через stream-подписку.
+      // _isNewUser остаётся false — auth stream может сработать внутри
+      // repo-await до того как мы получим результат (см. ARCHITECTURE.md техдолг).
+    } on AppError catch (e, st) {
+      state = AsyncError(e, st);
+    }
+  }
+
   Future<void> signOut() async {
     state = const AsyncLoading();
     _isNewUser = false;
@@ -91,6 +107,10 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// После успеха возвращаем state в AsyncData(null):
   /// пользователь остался неавторизован, stream не emit-ит.
+  void clearError() {
+    if (state.hasError) state = const AsyncData(null);
+  }
+
   Future<void> resetPassword({required String email}) async {
     state = const AsyncLoading();
     try {

@@ -378,4 +378,43 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get accentWarning =>
       'Votre réponse est comprise, mais les accents manquent.';
+
+  @override
+  String get confirmPassword => 'Confirmer le mot de passe';
+
+  @override
+  String get validationEmailInvalid =>
+      'Veuillez saisir une adresse e-mail valide';
+
+  @override
+  String get validationPasswordTooShort =>
+      'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get validationPasswordMismatch =>
+      'Les mots de passe ne correspondent pas';
+
+  @override
+  String get errorWrongPassword => 'E-mail ou mot de passe incorrect';
+
+  @override
+  String get errorUserNotFound => 'Aucun compte trouvé avec cet e-mail';
+
+  @override
+  String get errorEmailAlreadyInUse =>
+      'Cet e-mail est déjà enregistré. Connectez-vous.';
+
+  @override
+  String get errorWeakPassword =>
+      'Mot de passe trop faible. Utilisez au moins 6 caractères.';
+
+  @override
+  String get errorRequiresRecentLogin =>
+      'Pour des raisons de sécurité, déconnectez-vous puis reconnectez-vous.';
+
+  @override
+  String get orLabel => 'ou';
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
 }

@@ -375,4 +375,41 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accentWarning =>
       'Your answer is understood, but accents are missing.';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get validationEmailInvalid => 'Enter a valid email address';
+
+  @override
+  String get validationPasswordTooShort =>
+      'Password must be at least 6 characters';
+
+  @override
+  String get validationPasswordMismatch => 'Passwords do not match';
+
+  @override
+  String get errorWrongPassword => 'Wrong email or password';
+
+  @override
+  String get errorUserNotFound => 'No account found with this email';
+
+  @override
+  String get errorEmailAlreadyInUse =>
+      'This email is already registered. Sign in instead.';
+
+  @override
+  String get errorWeakPassword =>
+      'Password is too weak. Use at least 6 characters.';
+
+  @override
+  String get errorRequiresRecentLogin =>
+      'For security, please sign out and sign in again.';
+
+  @override
+  String get orLabel => 'or';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
 }

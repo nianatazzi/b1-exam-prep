@@ -317,12 +317,11 @@ lib/
 
 ### Фазы 1–2 (Auth + Profile)
 
-- **`mapFirebaseException`**: добавить Auth-специфичные коды (`wrong-password`, `user-not-found`, `email-already-in-use`, `weak-password`) → маппить в `AuthError`, сейчас падают в `UnknownError`
-- **Валидация форм** (`AuthorizationScreen`): добавить проверку формата email и минимальной длины пароля
-- **`UserModel.fromDocument`**: перенести из `domain` в `data`-слой (репозиторий) для соблюдения чистоты слоёв — domain не должен зависеть от `cloud_firestore`
-- **`AuthRepository.signUp`**: создаёт документы в Firestore (`public_user_info`, `private_user_info`) — нарушает единственную ответственность. Перенести в отдельный UseCase (`CreateUserProfileUseCase`) или заменить Cloud Function триггером `onCreate`.
-- **`AuthNotifier._isNewUser`**: флаг новой регистрации хранится in-memory — не переживает перезапуск приложения. Если пользователь закрыл приложение до заполнения профиля, при следующем входе попадёт на HomeScreen. Пост-MVP: заменить на поле `onboardingComplete: bool` в `private_user_info` Firestore.
-- **Запоминание входа** (`AuthorizationScreen`): чтобы не приходилось постоянно заново вводить пароль и логин
+- **`AuthRepository.signUp` создаёт Firestore-документы** (`data/auth_repository.dart`): регистрация делает сразу два дела — создаёт Firebase Auth аккаунт и пишет профиль в Firestore. Если Firebase Auth прошёл, а Firestore упал — сейчас делаем откат (удаляем Auth аккаунт), но это ненадёжно: удаление тоже может упасть. _Когда закрывать_: при подключении Cloud Functions. Триггер `onCreate` на стороне сервера создаёт документы атомарно и надёжнее любого клиентского отката.
+
+- **`AuthNotifier._isNewUser` — in-memory флаг** (`presentation/auth_notifier.dart`): флаг живёт только в RAM. Если пользователь зарегистрировался, закрыл приложение до заполнения профиля и открыл снова — попадёт на HomeScreen с пустым профилем. Та же проблема для Google Sign-In: auth stream успевает сработать раньше чем нотификатор узнаёт что пользователь новый, поэтому `_isNewUser` не выставляется и новый Google-пользователь тоже идёт на Home. _Когда закрывать_: вместе с фичей онбординга — добавить поле `onboardingComplete: bool` в `public_user_info/{userId}` в Firestore. GoRouter проверяет его вместо флага — тогда онбординг работает корректно при любом сценарии входа и после перезапуска.
+
+- **Запоминание входа** (`AuthorizationScreen`): поля email/пароль не сохраняются между сессиями. _Когда закрывать_: пост-MVP, при работе над UX онбординга.
 
 ### Фаза 3 (HomeScreen)
 

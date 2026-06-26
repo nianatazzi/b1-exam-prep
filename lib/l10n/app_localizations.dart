@@ -827,6 +827,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your answer is understood, but accents are missing.'**
   String get accentWarning;
+
+  /// Label for the confirm-password field on sign-up
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// Shown when email format is incorrect
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get validationEmailInvalid;
+
+  /// Shown when password is shorter than 6 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get validationPasswordTooShort;
+
+  /// Shown when confirm-password doesn't match password
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get validationPasswordMismatch;
+
+  /// Firebase: wrong-password / invalid-credential
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong email or password'**
+  String get errorWrongPassword;
+
+  /// Firebase: user-not-found
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email'**
+  String get errorUserNotFound;
+
+  /// Firebase: email-already-in-use
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered. Sign in instead.'**
+  String get errorEmailAlreadyInUse;
+
+  /// Firebase: weak-password
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Use at least 6 characters.'**
+  String get errorWeakPassword;
+
+  /// Firebase: requires-recent-login
+  ///
+  /// In en, this message translates to:
+  /// **'For security, please sign out and sign in again.'**
+  String get errorRequiresRecentLogin;
+
+  /// Divider between email and Google sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orLabel;
+
+  /// Google Sign-In button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
 }
 
 class _AppLocalizationsDelegate

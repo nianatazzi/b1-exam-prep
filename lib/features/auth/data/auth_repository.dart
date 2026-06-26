@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:linguobyte/core/constants/firestore_paths.dart';
 import 'package:linguobyte/core/errors/app_error.dart';
 import 'package:linguobyte/features/auth/domain/user_model.dart';
@@ -135,10 +138,103 @@ class AuthRepository {
 
   Future<void> signOut() async {
     try {
+      // Сбрасываем кэш Google-сессии, иначе следующий вход через Google
+      // молча использует тот же аккаунт без диалога выбора.
+      // Ошибку самого Google-выхода глушим — критичен только выход из Firebase.
+      try {
+        await GoogleSignIn.instance.signOut();
+      } catch (_) {}
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
       throw mapFirebaseException(e);
     }
+  }
+
+  /// Возвращает null если пользователь закрыл диалог Google без выбора аккаунта.
+  Future<UserModel?> signInWithGoogle() async {
+    try {
+      final account = await _pickGoogleAccount();
+      if (account == null) return null;
+
+      final googleAuth = account.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken == null) {
+        // idToken отсутствует: скорее всего не передан serverClientId
+        throw const UnknownError(
+          'Google idToken is null — убедитесь что GOOGLE_SERVER_CLIENT_ID передан через --dart-define',
+        );
+      }
+
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      final userCredential = await _auth.signInWithCredential(credential);
+
+      final isNew = userCredential.additionalUserInfo?.isNewUser ?? false;
+      if (isNew) {
+        await _createUserDocuments(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email ?? '',
+        );
+      }
+
+      return _userFromFirebase(userCredential.user!);
+    } on FirebaseAuthException catch (e) {
+      throw mapFirebaseException(e);
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } on AppError {
+      rethrow;
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
+  }
+
+  /// Показывает диалог выбора Google-аккаунта.
+  /// Возвращает null если пользователь отменил.
+  Future<GoogleSignInAccount?> _pickGoogleAccount() async {
+    final googleSignIn = GoogleSignIn.instance;
+
+    if (!googleSignIn.supportsAuthenticate()) {
+      throw const UnknownError('Google Sign-In не поддерживается на этой платформе');
+    }
+
+    final completer = Completer<GoogleSignInAccount?>();
+    late StreamSubscription<GoogleSignInAuthenticationEvent> sub;
+
+    sub = googleSignIn.authenticationEvents.listen(
+      (event) {
+        if (completer.isCompleted) return;
+        switch (event) {
+          case GoogleSignInAuthenticationEventSignIn(:final user):
+            completer.complete(user);
+          case GoogleSignInAuthenticationEventSignOut():
+            completer.complete(null);
+        }
+        sub.cancel();
+      },
+      onError: (Object e, StackTrace st) {
+        if (!completer.isCompleted) completer.completeError(e, st);
+        sub.cancel();
+      },
+    );
+
+    try {
+      await googleSignIn.authenticate();
+    } catch (_) {
+      // Пользователь отменил picker или произошла ошибка на уровне Google Sign-In
+      sub.cancel();
+      if (!completer.isCompleted) completer.complete(null);
+      return null;
+    }
+
+    // На Android событие приходит ПОСЛЕ возврата authenticate() — ждём его.
+    // Таймаут на случай если событие не придёт вовсе.
+    return completer.future.timeout(
+      const Duration(seconds: 15),
+      onTimeout: () {
+        sub.cancel();
+        return null;
+      },
+    );
   }
 
   Future<void> resetPassword({required String email}) async {
