@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$PublicUserModel {
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
-@JsonKey(includeToJson: false) String get id; String get name; String get surname; String? get avatar; int get points; Map<String, dynamic> get preference;
+@JsonKey(includeToJson: false) String get id; String get name; String get surname; String? get avatar; int get points; Map<String, dynamic> get preference; bool get onboardingComplete;
 /// Create a copy of PublicUserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $PublicUserModelCopyWith<PublicUserModel> get copyWith => _$PublicUserModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.points, points) || other.points == points)&&const DeepCollectionEquality().equals(other.preference, preference));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.points, points) || other.points == points)&&const DeepCollectionEquality().equals(other.preference, preference)&&(identical(other.onboardingComplete, onboardingComplete) || other.onboardingComplete == onboardingComplete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,surname,avatar,points,const DeepCollectionEquality().hash(preference));
+int get hashCode => Object.hash(runtimeType,id,name,surname,avatar,points,const DeepCollectionEquality().hash(preference),onboardingComplete);
 
 @override
 String toString() {
-  return 'PublicUserModel(id: $id, name: $name, surname: $surname, avatar: $avatar, points: $points, preference: $preference)';
+  return 'PublicUserModel(id: $id, name: $name, surname: $surname, avatar: $avatar, points: $points, preference: $preference, onboardingComplete: $onboardingComplete)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $PublicUserModelCopyWith<$Res>  {
   factory $PublicUserModelCopyWith(PublicUserModel value, $Res Function(PublicUserModel) _then) = _$PublicUserModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String name, String surname, String? avatar, int points, Map<String, dynamic> preference
+@JsonKey(includeToJson: false) String id, String name, String surname, String? avatar, int points, Map<String, dynamic> preference, bool onboardingComplete
 });
 
 
@@ -66,7 +66,7 @@ class _$PublicUserModelCopyWithImpl<$Res>
 
 /// Create a copy of PublicUserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? surname = null,Object? avatar = freezed,Object? points = null,Object? preference = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? surname = null,Object? avatar = freezed,Object? points = null,Object? preference = null,Object? onboardingComplete = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as String,surname: null == surname ? _self.surname : surname // ignore: cast_nul
 as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
 as int,preference: null == preference ? _self.preference : preference // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
+as Map<String, dynamic>,onboardingComplete: null == onboardingComplete ? _self.onboardingComplete : onboardingComplete // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference,  bool onboardingComplete)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PublicUserModel() when $default != null:
-return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference);case _:
+return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference,_that.onboardingComplete);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference,  bool onboardingComplete)  $default,) {final _that = this;
 switch (_that) {
 case _PublicUserModel():
-return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference);case _:
+return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference,_that.onboardingComplete);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String name,  String surname,  String? avatar,  int points,  Map<String, dynamic> preference,  bool onboardingComplete)?  $default,) {final _that = this;
 switch (_that) {
 case _PublicUserModel() when $default != null:
-return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference);case _:
+return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_that.preference,_that.onboardingComplete);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.id,_that.name,_that.surname,_that.avatar,_that.points,_tha
 @JsonSerializable()
 
 class _PublicUserModel implements PublicUserModel {
-  const _PublicUserModel({@JsonKey(includeToJson: false) required this.id, required this.name, required this.surname, this.avatar, required this.points, final  Map<String, dynamic> preference = const <String, dynamic>{}}): _preference = preference;
+  const _PublicUserModel({@JsonKey(includeToJson: false) required this.id, required this.name, required this.surname, this.avatar, required this.points, final  Map<String, dynamic> preference = const <String, dynamic>{}, this.onboardingComplete = false}): _preference = preference;
   factory _PublicUserModel.fromJson(Map<String, dynamic> json) => _$PublicUserModelFromJson(json);
 
 // id берётся из DocumentSnapshot.id — не хранится в теле документа
@@ -231,6 +232,7 @@ class _PublicUserModel implements PublicUserModel {
   return EqualUnmodifiableMapView(_preference);
 }
 
+@override@JsonKey() final  bool onboardingComplete;
 
 /// Create a copy of PublicUserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.points, points) || other.points == points)&&const DeepCollectionEquality().equals(other._preference, _preference));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.points, points) || other.points == points)&&const DeepCollectionEquality().equals(other._preference, _preference)&&(identical(other.onboardingComplete, onboardingComplete) || other.onboardingComplete == onboardingComplete));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,surname,avatar,points,const DeepCollectionEquality().hash(_preference));
+int get hashCode => Object.hash(runtimeType,id,name,surname,avatar,points,const DeepCollectionEquality().hash(_preference),onboardingComplete);
 
 @override
 String toString() {
-  return 'PublicUserModel(id: $id, name: $name, surname: $surname, avatar: $avatar, points: $points, preference: $preference)';
+  return 'PublicUserModel(id: $id, name: $name, surname: $surname, avatar: $avatar, points: $points, preference: $preference, onboardingComplete: $onboardingComplete)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$PublicUserModelCopyWith<$Res> implements $PublicUserModel
   factory _$PublicUserModelCopyWith(_PublicUserModel value, $Res Function(_PublicUserModel) _then) = __$PublicUserModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String name, String surname, String? avatar, int points, Map<String, dynamic> preference
+@JsonKey(includeToJson: false) String id, String name, String surname, String? avatar, int points, Map<String, dynamic> preference, bool onboardingComplete
 });
 
 
@@ -282,7 +284,7 @@ class __$PublicUserModelCopyWithImpl<$Res>
 
 /// Create a copy of PublicUserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? surname = null,Object? avatar = freezed,Object? points = null,Object? preference = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? surname = null,Object? avatar = freezed,Object? points = null,Object? preference = null,Object? onboardingComplete = null,}) {
   return _then(_PublicUserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -290,7 +292,8 @@ as String,surname: null == surname ? _self.surname : surname // ignore: cast_nul
 as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
 as int,preference: null == preference ? _self._preference : preference // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
+as Map<String, dynamic>,onboardingComplete: null == onboardingComplete ? _self.onboardingComplete : onboardingComplete // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

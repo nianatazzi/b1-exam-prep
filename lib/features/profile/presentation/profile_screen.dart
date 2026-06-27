@@ -6,12 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:linguobyte/core/constants/app_routes.dart';
 import 'package:linguobyte/core/constants/app_sizes.dart';
 import 'package:linguobyte/core/constants/app_spacing.dart';
+import 'package:linguobyte/core/constants/avatar_presets.dart';
 import 'package:linguobyte/core/theme/app_colors.dart';
 import 'package:linguobyte/features/profile/domain/achievement_model.dart';
 import 'package:linguobyte/features/profile/domain/exercise_stats_model.dart';
+import 'package:linguobyte/features/profile/domain/public_user_model.dart';
 import 'package:linguobyte/features/profile/domain/streak_model.dart';
 import 'package:linguobyte/features/profile/presentation/profile_notifier.dart';
 import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:linguobyte/shared/widgets/avatar_picker_grid.dart';
 import 'package:linguobyte/shared/widgets/error_view.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -62,54 +65,25 @@ class ProfileScreen extends ConsumerWidget {
 // Контент профиля
 // ---------------------------------------------------------------------------
 
-class _ProfileContent extends ConsumerStatefulWidget {
+class _ProfileContent extends StatelessWidget {
   final ProfileData data;
   const _ProfileContent({required this.data});
 
-  @override
-  ConsumerState<_ProfileContent> createState() => _ProfileContentState();
-}
-
-class _ProfileContentState extends ConsumerState<_ProfileContent> {
-  late final TextEditingController _nameController;
-  late final TextEditingController _surnameController;
-  bool _isEditing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(
-      text: widget.data.publicProfile.name,
+  void _openEditSheet(BuildContext context, PublicUserModel pub) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (_) => _EditProfileSheet(profile: pub),
     );
-    _surnameController = TextEditingController(
-      text: widget.data.publicProfile.surname,
-    );
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _surnameController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _save() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final savedMessage = AppLocalizations.of(context)!.profileSaved;
-
-    setState(() => _isEditing = false);
-    await ref.read(profileProvider.notifier).updateProfile({
-      'name': _nameController.text.trim(),
-      'surname': _surnameController.text.trim(),
-    });
-    messenger.showSnackBar(SnackBar(content: Text(savedMessage)));
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final pub = widget.data.publicProfile;
+    final pub = data.publicProfile;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
@@ -119,8 +93,11 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _Avatar(avatar: pub.avatar, name: pub.name, surname: pub.surname),
-          const SizedBox(height: AppSpacing.sm),
+          _EditableAvatar(
+            profile: pub,
+            onTap: () => _openEditSheet(context, pub),
+          ),
+          const SizedBox(height: AppSpacing.md),
           Text(
             '${pub.name} ${pub.surname}'.trim(),
             style: theme.textTheme.titleLarge,
@@ -133,44 +110,216 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
             ),
           ),
 
-          // Редактирование имени
-          if (_isEditing) ...[
-            const SizedBox(height: AppSpacing.lg),
-            TextField(
-              controller: _nameController,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(labelText: l10n.firstName),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TextField(
-              controller: _surnameController,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(labelText: l10n.surname),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SizedBox(
-              width: double.infinity,
-              height: AppSizes.buttonHeight,
-              child: ElevatedButton(
-                onPressed: _save,
-                child: Text(l10n.save),
+          const SizedBox(height: AppSpacing.xl),
+          _StreakCard(streak: data.streak),
+          const SizedBox(height: AppSpacing.xl),
+          _ProficiencySection(stats: data.stats),
+          const SizedBox(height: AppSpacing.xl),
+          _AchievementsSection(achievements: data.achievements),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Аватар с кнопкой-карандашом + лист редактирования
+// ---------------------------------------------------------------------------
+
+/// Аватар с круглым значком-карандашом в углу. Тап по всей области → onTap.
+class _EditableAvatar extends StatelessWidget {
+  final PublicUserModel profile;
+  final VoidCallback onTap;
+
+  const _EditableAvatar({required this.profile, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: [
+          _Avatar(
+            avatar: profile.avatar,
+            name: profile.name,
+            surname: profile.surname,
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.all(AppSpacing.xs),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: cs.primary,
+                // Обводка цветом фона — значок «вырезан» из аватара
+                border: Border.all(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  width: 2,
+                ),
+              ),
+              child: Icon(
+                Icons.edit,
+                size: AppSizes.iconSm,
+                color: cs.onPrimary,
               ),
             ),
-          ] else ...[
-            const SizedBox(height: AppSpacing.sm),
-            TextButton(
-              onPressed: () => setState(() => _isEditing = true),
-              child: Text(l10n.editLabel),
-            ),
-          ],
-
-          const SizedBox(height: AppSpacing.xl),
-          _StreakCard(streak: widget.data.streak),
-          const SizedBox(height: AppSpacing.xl),
-          _ProficiencySection(stats: widget.data.stats),
-          const SizedBox(height: AppSpacing.xl),
-          _AchievementsSection(achievements: widget.data.achievements),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+/// Лист редактирования профиля: сетка аватаров + имя/фамилия + сохранение.
+class _EditProfileSheet extends ConsumerStatefulWidget {
+  final PublicUserModel profile;
+  const _EditProfileSheet({required this.profile});
+
+  @override
+  ConsumerState<_EditProfileSheet> createState() => _EditProfileSheetState();
+}
+
+class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
+  late final TextEditingController _nameCtrl;
+  late final TextEditingController _surnameCtrl;
+  late String _avatar;
+  bool _isSaving = false;
+  String? _saveError;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameCtrl = TextEditingController(text: widget.profile.name);
+    _surnameCtrl = TextEditingController(text: widget.profile.surname);
+    final current = widget.profile.avatar;
+    _avatar =
+        (current != null && current.isNotEmpty) ? current : AvatarPresets.defaultId;
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _surnameCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    setState(() {
+      _isSaving = true;
+      _saveError = null;
+    });
+    final ok = await ref.read(profileProvider.notifier).updateProfile({
+      'name': _nameCtrl.text.trim(),
+      'surname': _surnameCtrl.text.trim(),
+      'avatar': _avatar,
+    });
+    if (!mounted) return;
+    if (ok) {
+      navigator.pop();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.profileSaved)));
+    } else {
+      // Ошибку показываем инлайн в листе (snackbar мог бы оказаться под ним).
+      setState(() {
+        _isSaving = false;
+        _saveError = l10n.errorGeneric;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colors = theme.extension<AppColors>()!;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.xl,
+        right: AppSpacing.xl,
+        top: AppSpacing.sm,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xl,
+      ),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.editProfileTitle,
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AvatarPickerGrid(
+                selectedId: _avatar,
+                onSelect: (id) => setState(() => _avatar = id),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              TextFormField(
+                controller: _nameCtrl,
+                textCapitalization: TextCapitalization.words,
+                enabled: !_isSaving,
+                decoration: InputDecoration(labelText: '${l10n.firstName} *'),
+                validator: (v) => (v?.trim().isEmpty ?? true)
+                    ? l10n.validationFieldRequired
+                    : null,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _surnameCtrl,
+                textCapitalization: TextCapitalization.words,
+                enabled: !_isSaving,
+                decoration: InputDecoration(labelText: l10n.surname),
+              ),
+              if (_saveError != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.md,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.errorSub,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                  ),
+                  child: Text(
+                    _saveError!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.lg),
+              SizedBox(
+                height: AppSizes.buttonHeight,
+                child: FilledButton(
+                  onPressed: _isSaving ? null : _save,
+                  child: _isSaving
+                      ? SizedBox.square(
+                          dimension: AppSizes.iconMd,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        )
+                      : Text(l10n.save),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -193,9 +342,17 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const radius = AppSizes.avatarXl / 2;
+    const radius = AppSizes.avatarXxl / 2;
 
     if (avatar != null && avatar!.isNotEmpty) {
+      // Локальный пресет — id вида 'avatar_01'
+      if (AvatarPresets.ids.contains(avatar)) {
+        return CircleAvatar(
+          radius: radius,
+          backgroundImage: AssetImage(AvatarPresets.pathOf(avatar!)),
+        );
+      }
+      // Сетевой URL (Firebase Storage, будущее расширение)
       return CachedNetworkImage(
         imageUrl: avatar!,
         imageBuilder: (_, imageProvider) => CircleAvatar(
@@ -617,7 +774,7 @@ class _ProfileShimmer extends StatelessWidget {
         child: Column(
           children: [
             const CircleAvatar(
-              radius: AppSizes.avatarXl / 2,
+              radius: AppSizes.avatarXxl / 2,
               backgroundColor: Colors.white,
             ),
             const SizedBox(height: AppSpacing.sm),

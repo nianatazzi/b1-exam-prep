@@ -120,6 +120,7 @@ class AuthRepository {
         'avatar': null,
         'points': 0,
         'preference': <String, dynamic>{},
+        'onboardingComplete': false,
       },
     );
 

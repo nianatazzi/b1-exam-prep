@@ -413,4 +413,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Войти через Google';
+
+  @override
+  String get onboardingTitle => 'Настройте профиль';
+
+  @override
+  String get onboardingSubtitle => 'Расскажите немного о себе';
+
+  @override
+  String get onboardingChooseAvatar => 'Выберите аватар';
+
+  @override
+  String get validationFieldRequired => 'Обязательное поле';
+
+  @override
+  String get onboardingChooseLanguage => 'Выберите язык обучения';
+
+  @override
+  String get editProfileTitle => 'Редактировать профиль';
 }

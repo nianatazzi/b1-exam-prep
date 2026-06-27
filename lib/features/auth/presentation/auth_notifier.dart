@@ -11,13 +11,6 @@ part 'auth_notifier.g.dart';
 /// keepAlive — живёт всё время работы приложения, GoRouter зависит от него.
 @Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {
-  /// Флаг новой регистрации — in-memory, не переживает перезапуск приложения.
-  /// true → GoRouter ведёт на ProfileScreen для заполнения данных.
-  /// Сбрасывается при signIn и signOut.
-  /// Технический долг: заменить на onboardingComplete в Firestore (см. ARCHITECTURE.md).
-  bool _isNewUser = false;
-  bool get isNewUser => _isNewUser;
-
   @override
   Future<UserModel?> build() {
     final repo = ref.read(authRepositoryProvider);
@@ -54,8 +47,6 @@ class AuthNotifier extends _$AuthNotifier {
             email: email,
             password: password,
           );
-      // Возвращающийся пользователь — профиль уже заполнен
-      _isNewUser = false;
       // Успех: authStateChanges обновит state через stream-подписку
     } on AppError catch (e, st) {
       state = AsyncError(e, st);
@@ -64,16 +55,12 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> signUp({required String email, required String password}) async {
     state = const AsyncLoading();
-    // Устанавливаем ДО await: Firebase Auth stream может сработать внутри
-    // вызова и GoRouter вычислит redirect раньше чем мы вернёмся сюда.
-    _isNewUser = true;
     try {
       await ref.read(authRepositoryProvider).signUp(
             email: email,
             password: password,
           );
     } on AppError catch (e, st) {
-      _isNewUser = false;
       state = AsyncError(e, st);
     }
   }
@@ -86,9 +73,7 @@ class AuthNotifier extends _$AuthNotifier {
         // Пользователь закрыл диалог Google — сбрасываем loading без ошибки
         state = const AsyncData(null);
       }
-      // Успех: authStateChanges обновит state через stream-подписку.
-      // _isNewUser остаётся false — auth stream может сработать внутри
-      // repo-await до того как мы получим результат (см. ARCHITECTURE.md техдолг).
+      // Успех: authStateChanges обновит state через stream-подписку
     } on AppError catch (e, st) {
       state = AsyncError(e, st);
     }
@@ -96,7 +81,6 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> signOut() async {
     state = const AsyncLoading();
-    _isNewUser = false;
     try {
       await ref.read(authRepositoryProvider).signOut();
       // Stream emit null → state = AsyncData(null) автоматически

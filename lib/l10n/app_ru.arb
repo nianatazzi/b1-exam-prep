@@ -140,5 +140,23 @@
   "errorWeakPassword": "Пароль слишком простой. Используйте не менее 6 символов.",
   "errorRequiresRecentLogin": "По соображениям безопасности выйдите и войдите снова.",
   "orLabel": "или",
-  "continueWithGoogle": "Войти через Google"
+  "continueWithGoogle": "Войти через Google",
+
+  "onboardingTitle": "Настройте профиль",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Расскажите немного о себе",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Выберите аватар",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "Обязательное поле",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Выберите язык обучения",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Редактировать профиль",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

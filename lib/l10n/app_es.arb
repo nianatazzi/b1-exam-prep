@@ -140,5 +140,23 @@
   "errorWeakPassword": "Contraseña demasiado débil. Usa al menos 6 caracteres.",
   "errorRequiresRecentLogin": "Por seguridad, cierra sesión y vuelve a iniciarla.",
   "orLabel": "o",
-  "continueWithGoogle": "Continuar con Google"
+  "continueWithGoogle": "Continuar con Google",
+
+  "onboardingTitle": "Configura tu perfil",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Cuéntanos un poco sobre ti",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Elige tu avatar",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "Este campo es obligatorio",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Elige tu idioma de aprendizaje",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Editar perfil",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

@@ -396,5 +396,23 @@
   "@orLabel": { "description": "Divider between email and Google sign-in" },
 
   "continueWithGoogle": "Continue with Google",
-  "@continueWithGoogle": { "description": "Google Sign-In button label" }
+  "@continueWithGoogle": { "description": "Google Sign-In button label" },
+
+  "onboardingTitle": "Set up your profile",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Tell us a bit about yourself",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Choose your avatar",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "This field is required",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Choose your learning language",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Edit profile",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

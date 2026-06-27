@@ -137,11 +137,12 @@ lib/
 ## 6. Навигация (GoRouter)
 
 - Все маршруты декларативные, пути — константы в `AppRoutes`
-- **`SplashScreen`** — только UI (spinner). Навигацию целиком берёт на себя `redirect` в GoRouter: пока auth загружается — остаётся на splash; когда auth определился — уходит на `/auth` или `/home`/`/profile`.
-- **Авторизация:** `refreshListenable` + `redirect`. `AuthNotifier` в Riverpod слушается GoRouter:
+- **`SplashScreen`** — только UI (spinner). Навигацию целиком берёт на себя `redirect` в GoRouter: пока auth загружается — остаётся на splash; когда auth определился — уходит на `/auth`, `/onboarding` или `/home`.
+- **Авторизация и онбординг:** `refreshListenable` + `redirect`. GoRouter слушает два провайдера — `authProvider` и `onboardingStatusProvider`:
   - Не авторизован → `/auth`
-  - Авторизован, новый пользователь (`_isNewUser = true`) → `/profile`
-  - Авторизован, вернувшийся пользователь → `/home`
+  - Авторизован, онбординг не пройден → `/onboarding`
+  - Авторизован, онбординг пройден → `/home`
+- **`onboardingStatusProvider`** (`auth/presentation/`) читает `public_user_info/{userId}.onboardingComplete` из Firestore (legacy-юзеры без поля определяются по непустому `name`). Кэшируется Riverpod; `OnboardingNotifier` инвалидирует его после сохранения профиля — роутер уводит на `/home`. Признак «онбординг нужен» хранится в Firestore, а не в RAM, поэтому работает при любом сценарии входа (email/Google) и переживает перезапуск.
 - **LessonScreen** — один экран без вложенных маршрутов GoRouter. Внутри себя управляет последовательностью шагов урока через локальное состояние нотификатора. См. раздел 6.1.
 - Маршрут: `AppRoutes.lessonPath(langId, lessonId)` — `langId` передаётся явно, чтобы LessonScreen не зависел от `HomeNotifier` для определения языка обучения.
 
@@ -173,6 +174,7 @@ lib/
 
 - `SplashScreen`
 - `AuthorizationScreen` (вход, регистрация, восстановление пароля)
+- `OnboardingScreen` — первичная настройка профиля (аватар, имя, фамилия, язык обучения) сразу после регистрации. Маршрут по флагу `onboardingComplete` из Firestore. Лежит в `features/auth/presentation/` (часть auth-потока, проходится один раз).
 - `HomeScreen`
 - `ProfileScreen`
 - `SettingsScreen` — настройки (тема, язык интерфейса, скорость речи). Открывается из `ProfileScreen`.
@@ -230,9 +232,9 @@ lib/
 - Языки интерфейса MVP: EN, RU, FR, ES
 - **Язык интерфейса** и **язык обучения** — разные сущности, не смешивать:
   - **Язык интерфейса** — выбирается пользователем в `ProfileScreen`. Хранится в `public_user_info/{userId}.preference.uiLanguage`. Управляется через `AppLocaleNotifier` (`core/locale/`). `MaterialApp.locale` берёт значение из этого провайдера.
-  - **Язык обучения** — выбирается на `HomeScreen`. Управляется через `HomeNotifier` (`features/home/presentation/providers/`).
+  - **Язык обучения** — первично выбирается в `OnboardingScreen`, далее переключается на `HomeScreen`. Управляется через `HomeNotifier` (`features/home/presentation/providers/`).
     - Прогресс по каждому языку хранится в `private_user_info/{userId}/languages/{langId}`.
-    - Последний выбранный язык (UI-предпочтение) хранится в `public_user_info/{userId}/preference.selectedLanguage` — восстанавливается при следующем открытии экрана.
+    - Последний выбранный язык (UI-предпочтение) хранится в `public_user_info/{userId}/preference.selectedLanguage` — записывается онбордингом при первом выборе, восстанавливается при следующем открытии экрана.
 - Все строки интерфейса — только через ARB. Хардкод строк запрещён.
 
 ---
@@ -319,8 +321,6 @@ lib/
 
 - **`AuthRepository.signUp` создаёт Firestore-документы** (`data/auth_repository.dart`): регистрация делает сразу два дела — создаёт Firebase Auth аккаунт и пишет профиль в Firestore. Если Firebase Auth прошёл, а Firestore упал — сейчас делаем откат (удаляем Auth аккаунт), но это ненадёжно: удаление тоже может упасть. _Когда закрывать_: при подключении Cloud Functions. Триггер `onCreate` на стороне сервера создаёт документы атомарно и надёжнее любого клиентского отката.
 
-- **`AuthNotifier._isNewUser` — in-memory флаг** (`presentation/auth_notifier.dart`): флаг живёт только в RAM. Если пользователь зарегистрировался, закрыл приложение до заполнения профиля и открыл снова — попадёт на HomeScreen с пустым профилем. Та же проблема для Google Sign-In: auth stream успевает сработать раньше чем нотификатор узнаёт что пользователь новый, поэтому `_isNewUser` не выставляется и новый Google-пользователь тоже идёт на Home. _Когда закрывать_: вместе с фичей онбординга — добавить поле `onboardingComplete: bool` в `public_user_info/{userId}` в Firestore. GoRouter проверяет его вместо флага — тогда онбординг работает корректно при любом сценарии входа и после перезапуска.
-
 - **Запоминание входа** (`AuthorizationScreen`): поля email/пароль не сохраняются между сессиями. _Когда закрывать_: пост-MVP, при работе над UX онбординга.
 
 ### Фаза 3 (HomeScreen)
@@ -354,6 +354,7 @@ lib/
 
 ### Кросс-фичевые зависимости (допустимо для MVP)
 
-- `UserRepository` (profile) используется в `HomeNotifier`.
+- `UserRepository` (profile) используется в `HomeNotifier` и в онбординге (`auth`).
+- `LanguageRepository` / `LanguageModel` (home) используются онбордингом (`auth`) для пикера языка обучения. Пост-MVP: если язык понадобится третьей фиче — вынести в `shared/` или `core/`.
 - `BuildLessonUseCase` / `CompleteStepUseCase` (lesson/domain) зависят от интерфейсов других фич: `ILessonRepository`/`IUserProgressRepository` (home), `IStreakRepository` (profile). Пост-MVP: вынести общие интерфейсы в `shared/` или `core/`.
 

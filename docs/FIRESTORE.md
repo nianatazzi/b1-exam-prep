@@ -270,8 +270,9 @@ public_user_info/                       # коллекция
   {userId}/                             # документ
     name: string
     surname: string
-    avatar: string                      # url
+    avatar: string                      # id пресета ("avatar_01") ИЛИ url (Firebase Storage, будущее)
     points: number
+    onboardingComplete: boolean         # пройден ли онбординг (имя/аватар/язык). Роутер ведёт на /onboarding пока false
     preference: map
       uiLanguage: string              # язык интерфейса (en | ru | fr | es)
       selectedLanguage: string        # id языка обучения (en | es | fr | ru)

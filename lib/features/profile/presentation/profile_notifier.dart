@@ -82,19 +82,21 @@ class ProfileNotifier extends _$ProfileNotifier {
     );
   }
 
-  /// Обновляет поля публичного профиля.
-  Future<void> updateProfile(Map<String, dynamic> data) async {
+  /// Обновляет поля публичного профиля. Возвращает true при успехе.
+  /// При ошибке экран не роняется в AsyncError — текущие данные остаются,
+  /// ошибку показывает вызывающий лист редактирования.
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
     final user = ref.read(authProvider).asData?.value;
-    if (user == null) return;
+    if (user == null) return false;
 
-    state = const AsyncLoading();
     try {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, data);
       ref.invalidateSelf();
-    } on AppError catch (e, st) {
-      state = AsyncError(e, st);
+      return true;
+    } on AppError {
+      return false;
     }
   }
 

@@ -412,4 +412,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get onboardingTitle => 'Set up your profile';
+
+  @override
+  String get onboardingSubtitle => 'Tell us a bit about yourself';
+
+  @override
+  String get onboardingChooseAvatar => 'Choose your avatar';
+
+  @override
+  String get validationFieldRequired => 'This field is required';
+
+  @override
+  String get onboardingChooseLanguage => 'Choose your learning language';
+
+  @override
+  String get editProfileTitle => 'Edit profile';
 }

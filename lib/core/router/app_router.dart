@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:linguobyte/core/constants/app_routes.dart';
 import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
 import 'package:linguobyte/features/auth/presentation/authorization_screen.dart';
+import 'package:linguobyte/features/auth/presentation/onboarding_screen.dart';
+import 'package:linguobyte/features/auth/presentation/onboarding_status_provider.dart';
 import 'package:linguobyte/features/home/presentation/screens/home_screen.dart';
 import 'package:linguobyte/core/router/splash_screen.dart';
 import 'package:linguobyte/features/lesson/presentation/screens/lesson_screen.dart';
@@ -17,6 +19,7 @@ part 'app_router.g.dart';
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(Ref ref) {
     ref.listen(authProvider, (prev, next) => notifyListeners());
+    ref.listen(onboardingStatusProvider, (prev, next) => notifyListeners());
   }
 }
 
@@ -35,17 +38,31 @@ GoRouter router(Ref ref) {
       if (authState.isLoading) return null;
 
       final isLoggedIn = authState.asData?.value != null;
-      final isNewUser = ref.read(authProvider.notifier).isNewUser;
+
+      // Пока статус онбординга загружается из Firestore — не редиректим.
+      final onboardingState = ref.read(onboardingStatusProvider);
+      if (isLoggedIn && onboardingState.isLoading) return null;
+      final onboardingComplete = onboardingState.asData?.value ?? true;
 
       if (location == AppRoutes.splash) {
         if (!isLoggedIn) return AppRoutes.auth;
-        return isNewUser ? AppRoutes.profile : AppRoutes.home;
+        return onboardingComplete ? AppRoutes.home : AppRoutes.onboarding;
       }
 
       if (!isLoggedIn && location != AppRoutes.auth) return AppRoutes.auth;
 
       if (isLoggedIn && location == AppRoutes.auth) {
-        return isNewUser ? AppRoutes.profile : AppRoutes.home;
+        return onboardingComplete ? AppRoutes.home : AppRoutes.onboarding;
+      }
+
+      // После завершения онбординга — уходим с экрана онбординга на home.
+      if (isLoggedIn && onboardingComplete && location == AppRoutes.onboarding) {
+        return AppRoutes.home;
+      }
+
+      // Защита: пользователь без онбординга не попадёт на другие экраны.
+      if (isLoggedIn && !onboardingComplete && location != AppRoutes.onboarding) {
+        return AppRoutes.onboarding;
       }
 
       return null;
@@ -58,6 +75,10 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: AppRoutes.auth,
         builder: (context, state) => const AuthorizationScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: AppRoutes.home,

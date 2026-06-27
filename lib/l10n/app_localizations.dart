@@ -893,6 +893,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get continueWithGoogle;
+
+  /// Onboarding screen heading
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your profile'**
+  String get onboardingTitle;
+
+  /// Onboarding screen subheading
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a bit about yourself'**
+  String get onboardingSubtitle;
+
+  /// Avatar grid section label on onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your avatar'**
+  String get onboardingChooseAvatar;
+
+  /// Generic required-field validation message
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get validationFieldRequired;
+
+  /// Language picker section label on onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your learning language'**
+  String get onboardingChooseLanguage;
+
+  /// Title of the edit-profile bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfileTitle;
 }
 
 class _AppLocalizationsDelegate
