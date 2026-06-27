@@ -128,5 +128,35 @@
   "resultNeedsWork": "Продолжайте практиковать!",
   "firstName": "Имя",
   "surname": "Фамилия",
-  "accentWarning": "Ваш ответ понятен, но пропущены акценты."
+  "accentWarning": "Ваш ответ понятен, но пропущены акценты.",
+
+  "confirmPassword": "Подтвердите пароль",
+  "validationEmailInvalid": "Введите корректный адрес электронной почты",
+  "validationPasswordTooShort": "Пароль должен содержать не менее 6 символов",
+  "validationPasswordMismatch": "Пароли не совпадают",
+  "errorWrongPassword": "Неверный email или пароль",
+  "errorUserNotFound": "Аккаунт с таким email не найден",
+  "errorEmailAlreadyInUse": "Этот email уже зарегистрирован. Попробуйте войти.",
+  "errorWeakPassword": "Пароль слишком простой. Используйте не менее 6 символов.",
+  "errorRequiresRecentLogin": "По соображениям безопасности выйдите и войдите снова.",
+  "orLabel": "или",
+  "continueWithGoogle": "Войти через Google",
+
+  "onboardingTitle": "Настройте профиль",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Расскажите немного о себе",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Выберите аватар",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "Обязательное поле",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Выберите язык обучения",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Редактировать профиль",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

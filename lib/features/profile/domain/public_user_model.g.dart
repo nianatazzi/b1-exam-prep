@@ -16,6 +16,7 @@ _PublicUserModel _$PublicUserModelFromJson(Map<String, dynamic> json) =>
       preference:
           json['preference'] as Map<String, dynamic>? ??
           const <String, dynamic>{},
+      onboardingComplete: json['onboardingComplete'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$PublicUserModelToJson(_PublicUserModel instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$PublicUserModelToJson(_PublicUserModel instance) =>
       'avatar': instance.avatar,
       'points': instance.points,
       'preference': instance.preference,
+      'onboardingComplete': instance.onboardingComplete,
     };

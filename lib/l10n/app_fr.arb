@@ -128,5 +128,35 @@
   "resultNeedsWork": "Continuez à pratiquer !",
   "firstName": "Prénom",
   "surname": "Nom",
-  "accentWarning": "Votre réponse est comprise, mais les accents manquent."
+  "accentWarning": "Votre réponse est comprise, mais les accents manquent.",
+
+  "confirmPassword": "Confirmer le mot de passe",
+  "validationEmailInvalid": "Veuillez saisir une adresse e-mail valide",
+  "validationPasswordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+  "validationPasswordMismatch": "Les mots de passe ne correspondent pas",
+  "errorWrongPassword": "E-mail ou mot de passe incorrect",
+  "errorUserNotFound": "Aucun compte trouvé avec cet e-mail",
+  "errorEmailAlreadyInUse": "Cet e-mail est déjà enregistré. Connectez-vous.",
+  "errorWeakPassword": "Mot de passe trop faible. Utilisez au moins 6 caractères.",
+  "errorRequiresRecentLogin": "Pour des raisons de sécurité, déconnectez-vous puis reconnectez-vous.",
+  "orLabel": "ou",
+  "continueWithGoogle": "Continuer avec Google",
+
+  "onboardingTitle": "Configurez votre profil",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Parlez-nous un peu de vous",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Choisissez votre avatar",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "Ce champ est obligatoire",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Choisissez votre langue d'apprentissage",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Modifier le profil",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

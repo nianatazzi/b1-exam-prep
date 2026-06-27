@@ -15,6 +15,7 @@ abstract class AppSizes {
   static const double avatarMd = 40;
   static const double avatarLg = 52;
   static const double avatarXl = 80;
+  static const double avatarXxl = 120;
 
   static const double dividerThickness = 1;
 

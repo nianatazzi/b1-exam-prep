@@ -46,3 +46,10 @@ app.*.map.json
 
 # Переменные окружения (Firebase конфиг, ключи)
 .env
+
+# Firebase config (содержат конфигурацию проекта — не коммитим)
+android/app/google-services.json
+firebase.json
+
+# Android build артефакты (корневой /build/ выше не покрывает android/build/)
+android/build/

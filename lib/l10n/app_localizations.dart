@@ -827,6 +827,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your answer is understood, but accents are missing.'**
   String get accentWarning;
+
+  /// Label for the confirm-password field on sign-up
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// Shown when email format is incorrect
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get validationEmailInvalid;
+
+  /// Shown when password is shorter than 6 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get validationPasswordTooShort;
+
+  /// Shown when confirm-password doesn't match password
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get validationPasswordMismatch;
+
+  /// Firebase: wrong-password / invalid-credential
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong email or password'**
+  String get errorWrongPassword;
+
+  /// Firebase: user-not-found
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email'**
+  String get errorUserNotFound;
+
+  /// Firebase: email-already-in-use
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered. Sign in instead.'**
+  String get errorEmailAlreadyInUse;
+
+  /// Firebase: weak-password
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Use at least 6 characters.'**
+  String get errorWeakPassword;
+
+  /// Firebase: requires-recent-login
+  ///
+  /// In en, this message translates to:
+  /// **'For security, please sign out and sign in again.'**
+  String get errorRequiresRecentLogin;
+
+  /// Divider between email and Google sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orLabel;
+
+  /// Google Sign-In button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// Onboarding screen heading
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your profile'**
+  String get onboardingTitle;
+
+  /// Onboarding screen subheading
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a bit about yourself'**
+  String get onboardingSubtitle;
+
+  /// Avatar grid section label on onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your avatar'**
+  String get onboardingChooseAvatar;
+
+  /// Generic required-field validation message
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get validationFieldRequired;
+
+  /// Language picker section label on onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your learning language'**
+  String get onboardingChooseLanguage;
+
+  /// Title of the edit-profile bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfileTitle;
 }
 
 class _AppLocalizationsDelegate

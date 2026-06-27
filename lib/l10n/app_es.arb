@@ -128,5 +128,35 @@
   "resultNeedsWork": "¡Sigue practicando!",
   "firstName": "Nombre",
   "surname": "Apellido",
-  "accentWarning": "Tu respuesta se entiende, pero faltan los acentos."
+  "accentWarning": "Tu respuesta se entiende, pero faltan los acentos.",
+
+  "confirmPassword": "Confirmar contraseña",
+  "validationEmailInvalid": "Introduce una dirección de correo válida",
+  "validationPasswordTooShort": "La contraseña debe tener al menos 6 caracteres",
+  "validationPasswordMismatch": "Las contraseñas no coinciden",
+  "errorWrongPassword": "Correo electrónico o contraseña incorrectos",
+  "errorUserNotFound": "No se encontró ninguna cuenta con este correo",
+  "errorEmailAlreadyInUse": "Este correo ya está registrado. Inicia sesión.",
+  "errorWeakPassword": "Contraseña demasiado débil. Usa al menos 6 caracteres.",
+  "errorRequiresRecentLogin": "Por seguridad, cierra sesión y vuelve a iniciarla.",
+  "orLabel": "o",
+  "continueWithGoogle": "Continuar con Google",
+
+  "onboardingTitle": "Configura tu perfil",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Cuéntanos un poco sobre ti",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Elige tu avatar",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "Este campo es obligatorio",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Elige tu idioma de aprendizaje",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Editar perfil",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

@@ -23,13 +23,20 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
 
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
+  final _confirmPasswordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _confirmPasswordCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitGoogle() async {
+    ref.read(authProvider.notifier).clearError();
+    await ref.read(authProvider.notifier).signInWithGoogle();
   }
 
   Future<void> _submit() async {
@@ -50,7 +57,6 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
         await ref
             .read(authProvider.notifier)
             .resetPassword(email: email);
-        // Показываем баннер подтверждения, если ошибок нет
         if (mounted && !ref.read(authProvider).hasError) {
           setState(() => _resetEmailSent = true);
         }
@@ -58,9 +64,17 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
   }
 
   void _switchMode(_AuthMode mode) {
+    ref.read(authProvider.notifier).clearError();
     setState(() {
       _mode = mode;
       _resetEmailSent = false;
+      _emailCtrl.clear();
+      _passwordCtrl.clear();
+      _confirmPasswordCtrl.clear();
+    });
+    // Сброс ошибок валидации после ребилда, иначе reset() конфликтует с clear()
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _formKey.currentState?.reset();
     });
   }
 
@@ -70,11 +84,43 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
         _AuthMode.resetPassword => l10n.resetPassword,
       };
 
-  String _errorText(Object? error, AppLocalizations l10n) => switch (error) {
-        AuthError() => l10n.errorAuth,
-        NetworkError() => l10n.errorNetwork,
-        _ => l10n.errorGeneric,
+  String _errorText(Object? error, AppLocalizations l10n) {
+    if (error is AuthError) {
+      return switch (error.code) {
+        AuthErrorCode.wrongPassword => l10n.errorWrongPassword,
+        AuthErrorCode.userNotFound => l10n.errorUserNotFound,
+        AuthErrorCode.emailAlreadyInUse => l10n.errorEmailAlreadyInUse,
+        AuthErrorCode.weakPassword => l10n.errorWeakPassword,
+        AuthErrorCode.requiresRecentLogin => l10n.errorRequiresRecentLogin,
+        null => l10n.errorAuth,
       };
+    }
+    return switch (error) {
+      NetworkError() => l10n.errorNetwork,
+      _ => l10n.errorGeneric,
+    };
+  }
+
+  String? _validateEmail(String? v, AppLocalizations l10n) {
+    final value = v?.trim() ?? '';
+    if (value.isEmpty) return ' ';
+    // Базовая проверка email-формата: наличие @ и домена
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    if (!emailRegex.hasMatch(value)) return l10n.validationEmailInvalid;
+    return null;
+  }
+
+  String? _validatePassword(String? v, AppLocalizations l10n) {
+    final value = v ?? '';
+    if (value.isEmpty) return ' ';
+    if (value.length < 6) return l10n.validationPasswordTooShort;
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? v, AppLocalizations l10n) {
+    if ((v ?? '') != _passwordCtrl.text) return l10n.validationPasswordMismatch;
+    return null;
+  }
 
   List<Widget> _modeLinks(AppLocalizations l10n) => switch (_mode) {
         _AuthMode.signIn => [
@@ -123,7 +169,6 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
               children: [
                 const SizedBox(height: AppSpacing.x3l),
 
-                // Заголовок
                 Text(
                   l10n.authWelcomeTitle,
                   style: Theme.of(context).textTheme.displayLarge,
@@ -135,24 +180,37 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
                 ),
                 const SizedBox(height: AppSpacing.x2l),
 
-                // Поле email
+                // Email
                 _AuthTextField(
                   controller: _emailCtrl,
                   label: l10n.email,
                   keyboardType: TextInputType.emailAddress,
                   enabled: !isLoading,
                   colors: colors,
+                  validator: (v) => _validateEmail(v, l10n),
                 ),
 
-                // Поле пароля (скрыто в режиме восстановления)
+                // Пароль (скрыт в режиме восстановления)
                 if (_mode != _AuthMode.resetPassword) ...[
                   const SizedBox(height: AppSpacing.md),
-                  _AuthTextField(
+                  _PasswordTextField(
                     controller: _passwordCtrl,
                     label: l10n.password,
-                    obscureText: true,
                     enabled: !isLoading,
                     colors: colors,
+                    validator: (v) => _validatePassword(v, l10n),
+                  ),
+                ],
+
+                // Подтверждение пароля (только при регистрации)
+                if (_mode == _AuthMode.signUp) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  _PasswordTextField(
+                    controller: _confirmPasswordCtrl,
+                    label: l10n.confirmPassword,
+                    enabled: !isLoading,
+                    colors: colors,
+                    validator: (v) => _validateConfirmPassword(v, l10n),
                   ),
                 ],
 
@@ -178,7 +236,6 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
 
                 const SizedBox(height: AppSpacing.xl),
 
-                // Кнопка действия
                 _AuthButton(
                   isLoading: isLoading,
                   label: _buttonLabel(l10n),
@@ -187,8 +244,19 @@ class _AuthorizationScreenState extends ConsumerState<AuthorizationScreen> {
 
                 const SizedBox(height: AppSpacing.lg),
 
-                // Ссылки переключения режима
                 ..._modeLinks(l10n),
+
+                // Google Sign-In (только для входа и регистрации)
+                if (_mode != _AuthMode.resetPassword) ...[
+                  const SizedBox(height: AppSpacing.x2l),
+                  _OrDivider(label: l10n.orLabel),
+                  const SizedBox(height: AppSpacing.x2l),
+                  _GoogleButton(
+                    isLoading: isLoading,
+                    label: l10n.continueWithGoogle,
+                    onPressed: isLoading ? null : _submitGoogle,
+                  ),
+                ],
 
                 const SizedBox(height: AppSpacing.xl),
               ],
@@ -207,7 +275,7 @@ class _AuthTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     required this.colors,
-    this.obscureText = false,
+    required this.validator,
     this.keyboardType,
     this.enabled = true,
   });
@@ -215,7 +283,7 @@ class _AuthTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final AppColors colors;
-  final bool obscureText;
+  final FormFieldValidator<String> validator;
   final TextInputType? keyboardType;
   final bool enabled;
 
@@ -226,18 +294,104 @@ class _AuthTextField extends StatelessWidget {
 
     return TextFormField(
       controller: controller,
-      obscureText: obscureText,
       keyboardType: keyboardType,
       enabled: enabled,
       style: tt.bodyLarge?.copyWith(color: colors.textPrimary),
+      validator: validator,
+      decoration: _buildDecoration(context, cs, tt),
+    );
+  }
+
+  InputDecoration _buildDecoration(
+    BuildContext context,
+    ColorScheme cs,
+    TextTheme tt,
+  ) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: tt.bodyMedium,
+      filled: true,
+      fillColor: colors.surfaceRaised,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderSide: BorderSide(color: cs.primary, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderSide: BorderSide(color: cs.error),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderSide: BorderSide(color: cs.error, width: 1.5),
+      ),
+    );
+  }
+}
+
+/// Поле пароля с кнопкой показать/скрыть — локальное состояние в виджете.
+class _PasswordTextField extends StatefulWidget {
+  const _PasswordTextField({
+    required this.controller,
+    required this.label,
+    required this.colors,
+    required this.validator,
+    this.enabled = true,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final AppColors colors;
+  final FormFieldValidator<String> validator;
+  final bool enabled;
+
+  @override
+  State<_PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<_PasswordTextField> {
+  bool _obscure = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: _obscure,
+      enabled: widget.enabled,
+      style: tt.bodyLarge?.copyWith(color: widget.colors.textPrimary),
+      validator: widget.validator,
       decoration: InputDecoration(
-        labelText: label,
+        labelText: widget.label,
         labelStyle: tt.bodyMedium,
         filled: true,
-        fillColor: colors.surfaceRaised,
+        fillColor: widget.colors.surfaceRaised,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
           vertical: AppSpacing.md,
+        ),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            color: widget.colors.textSecondary,
+            size: AppSizes.iconMd,
+          ),
+          onPressed: widget.enabled
+              ? () => setState(() => _obscure = !_obscure)
+              : null,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
@@ -260,8 +414,6 @@ class _AuthTextField extends StatelessWidget {
           borderSide: BorderSide(color: cs.error, width: 1.5),
         ),
       ),
-      // Возвращаем пробел чтобы поле было невалидным без визуального шума
-      validator: (v) => (v == null || v.trim().isEmpty) ? ' ' : null,
     );
   }
 }
@@ -335,6 +487,88 @@ class _StatusBanner extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: textColor,
             ),
+      ),
+    );
+  }
+}
+
+class _OrDivider extends StatelessWidget {
+  const _OrDivider({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>()!;
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: colors.textMuted),
+          ),
+        ),
+        const Expanded(child: Divider()),
+      ],
+    );
+  }
+}
+
+class _GoogleButton extends StatelessWidget {
+  const _GoogleButton({
+    required this.isLoading,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final bool isLoading;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>()!;
+    return SizedBox(
+      height: AppSizes.buttonHeight,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          ),
+          side: BorderSide(color: colors.n400),
+        ),
+        child: isLoading
+            ? SizedBox.square(
+                dimension: AppSizes.iconMd,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Буква G в фирменных цветах Google
+                  const Text(
+                    'G',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4285F4),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: colors.textPrimary,
+                        ),
+                  ),
+                ],
+              ),
       ),
     );
   }

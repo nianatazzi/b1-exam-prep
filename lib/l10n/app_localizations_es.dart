@@ -378,4 +378,62 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get accentWarning =>
       'Tu respuesta se entiende, pero faltan los acentos.';
+
+  @override
+  String get confirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get validationEmailInvalid =>
+      'Introduce una dirección de correo válida';
+
+  @override
+  String get validationPasswordTooShort =>
+      'La contraseña debe tener al menos 6 caracteres';
+
+  @override
+  String get validationPasswordMismatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get errorWrongPassword =>
+      'Correo electrónico o contraseña incorrectos';
+
+  @override
+  String get errorUserNotFound =>
+      'No se encontró ninguna cuenta con este correo';
+
+  @override
+  String get errorEmailAlreadyInUse =>
+      'Este correo ya está registrado. Inicia sesión.';
+
+  @override
+  String get errorWeakPassword =>
+      'Contraseña demasiado débil. Usa al menos 6 caracteres.';
+
+  @override
+  String get errorRequiresRecentLogin =>
+      'Por seguridad, cierra sesión y vuelve a iniciarla.';
+
+  @override
+  String get orLabel => 'o';
+
+  @override
+  String get continueWithGoogle => 'Continuar con Google';
+
+  @override
+  String get onboardingTitle => 'Configura tu perfil';
+
+  @override
+  String get onboardingSubtitle => 'Cuéntanos un poco sobre ti';
+
+  @override
+  String get onboardingChooseAvatar => 'Elige tu avatar';
+
+  @override
+  String get validationFieldRequired => 'Este campo es obligatorio';
+
+  @override
+  String get onboardingChooseLanguage => 'Elige tu idioma de aprendizaje';
+
+  @override
+  String get editProfileTitle => 'Editar perfil';
 }

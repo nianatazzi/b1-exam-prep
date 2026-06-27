@@ -363,5 +363,56 @@
   "@surname": { "description": "Surname label on profile" },
 
   "accentWarning": "Your answer is understood, but accents are missing.",
-  "@accentWarning": { "description": "Shown when the user's answer matches only after stripping diacritics" }
+  "@accentWarning": { "description": "Shown when the user's answer matches only after stripping diacritics" },
+
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": { "description": "Label for the confirm-password field on sign-up" },
+
+  "validationEmailInvalid": "Enter a valid email address",
+  "@validationEmailInvalid": { "description": "Shown when email format is incorrect" },
+
+  "validationPasswordTooShort": "Password must be at least 6 characters",
+  "@validationPasswordTooShort": { "description": "Shown when password is shorter than 6 characters" },
+
+  "validationPasswordMismatch": "Passwords do not match",
+  "@validationPasswordMismatch": { "description": "Shown when confirm-password doesn't match password" },
+
+  "errorWrongPassword": "Wrong email or password",
+  "@errorWrongPassword": { "description": "Firebase: wrong-password / invalid-credential" },
+
+  "errorUserNotFound": "No account found with this email",
+  "@errorUserNotFound": { "description": "Firebase: user-not-found" },
+
+  "errorEmailAlreadyInUse": "This email is already registered. Sign in instead.",
+  "@errorEmailAlreadyInUse": { "description": "Firebase: email-already-in-use" },
+
+  "errorWeakPassword": "Password is too weak. Use at least 6 characters.",
+  "@errorWeakPassword": { "description": "Firebase: weak-password" },
+
+  "errorRequiresRecentLogin": "For security, please sign out and sign in again.",
+  "@errorRequiresRecentLogin": { "description": "Firebase: requires-recent-login" },
+
+  "orLabel": "or",
+  "@orLabel": { "description": "Divider between email and Google sign-in" },
+
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": { "description": "Google Sign-In button label" },
+
+  "onboardingTitle": "Set up your profile",
+  "@onboardingTitle": { "description": "Onboarding screen heading" },
+
+  "onboardingSubtitle": "Tell us a bit about yourself",
+  "@onboardingSubtitle": { "description": "Onboarding screen subheading" },
+
+  "onboardingChooseAvatar": "Choose your avatar",
+  "@onboardingChooseAvatar": { "description": "Avatar grid section label on onboarding screen" },
+
+  "validationFieldRequired": "This field is required",
+  "@validationFieldRequired": { "description": "Generic required-field validation message" },
+
+  "onboardingChooseLanguage": "Choose your learning language",
+  "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
+
+  "editProfileTitle": "Edit profile",
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
 }

@@ -14,6 +14,7 @@ abstract class PublicUserModel with _$PublicUserModel {
     String? avatar,
     required int points,
     @Default(<String, dynamic>{}) Map<String, dynamic> preference,
+    @Default(false) bool onboardingComplete,
   }) = _PublicUserModel;
 
   factory PublicUserModel.fromJson(Map<String, dynamic> json) =>

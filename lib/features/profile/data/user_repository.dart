@@ -122,6 +122,7 @@ class UserRepository implements IStreakRepository {
           'avatar': null,
           'points': 0,
           'preference': <String, dynamic>{},
+          'onboardingComplete': false,
         });
         await ref.update(data);
       } else {

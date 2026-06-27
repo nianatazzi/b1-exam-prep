@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
-// id берётся из DocumentSnapshot.id, поэтому в toJson() не включается
+// id задаётся извне (uid из Firebase Auth / doc.id), в toJson() не включается
 @JsonKey(includeToJson: false) String get id; String get email; String? get displayName;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -215,7 +215,7 @@ class _UserModel implements UserModel {
   const _UserModel({@JsonKey(includeToJson: false) required this.id, required this.email, this.displayName});
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
-// id берётся из DocumentSnapshot.id, поэтому в toJson() не включается
+// id задаётся извне (uid из Firebase Auth / doc.id), в toJson() не включается
 @override@JsonKey(includeToJson: false) final  String id;
 @override final  String email;
 @override final  String? displayName;

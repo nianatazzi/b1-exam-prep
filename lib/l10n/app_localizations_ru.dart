@@ -375,4 +375,60 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get accentWarning => 'Ваш ответ понятен, но пропущены акценты.';
+
+  @override
+  String get confirmPassword => 'Подтвердите пароль';
+
+  @override
+  String get validationEmailInvalid =>
+      'Введите корректный адрес электронной почты';
+
+  @override
+  String get validationPasswordTooShort =>
+      'Пароль должен содержать не менее 6 символов';
+
+  @override
+  String get validationPasswordMismatch => 'Пароли не совпадают';
+
+  @override
+  String get errorWrongPassword => 'Неверный email или пароль';
+
+  @override
+  String get errorUserNotFound => 'Аккаунт с таким email не найден';
+
+  @override
+  String get errorEmailAlreadyInUse =>
+      'Этот email уже зарегистрирован. Попробуйте войти.';
+
+  @override
+  String get errorWeakPassword =>
+      'Пароль слишком простой. Используйте не менее 6 символов.';
+
+  @override
+  String get errorRequiresRecentLogin =>
+      'По соображениям безопасности выйдите и войдите снова.';
+
+  @override
+  String get orLabel => 'или';
+
+  @override
+  String get continueWithGoogle => 'Войти через Google';
+
+  @override
+  String get onboardingTitle => 'Настройте профиль';
+
+  @override
+  String get onboardingSubtitle => 'Расскажите немного о себе';
+
+  @override
+  String get onboardingChooseAvatar => 'Выберите аватар';
+
+  @override
+  String get validationFieldRequired => 'Обязательное поле';
+
+  @override
+  String get onboardingChooseLanguage => 'Выберите язык обучения';
+
+  @override
+  String get editProfileTitle => 'Редактировать профиль';
 }

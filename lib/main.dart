@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linguobyte/core/locale/locale_provider.dart';
@@ -18,6 +19,12 @@ void main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // serverClientId нужен для получения idToken от Google (--dart-define=GOOGLE_SERVER_CLIENT_ID=...)
+  const googleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
+  await GoogleSignIn.instance.initialize(
+    serverClientId: googleServerClientId.isEmpty ? null : googleServerClientId,
   );
 
   // В debug-режиме показываем ошибки на экране; в release — отправляем в Crashlytics
