@@ -38,4 +38,25 @@ abstract class FirestorePaths {
 
   // Публичный профиль
   static String publicUser(String userId) => '$publicUserInfo/$userId';
+
+  // B1 Polish exam prep
+  static const String b1Polish = 'b1_polish';
+  static const String b1CourseId = 'b1_pl';
+
+  static const String b1Sections = '$b1Polish/sections';
+  static String b1Section(String sectionId) => '$b1Sections/$sectionId';
+  static String b1Topics(String sectionId) =>
+      '$b1Sections/$sectionId/topics';
+  static String b1Topic(String sectionId, String topicId) =>
+      '$b1Sections/$sectionId/topics/$topicId';
+  static String b1Vocabulary(String sectionId, String topicId) =>
+      '${b1Topic(sectionId, topicId)}/vocabulary';
+  static String b1Grammar(String sectionId, String topicId) =>
+      '${b1Topic(sectionId, topicId)}/grammar';
+  static String b1Phrases(String sectionId, String topicId) =>
+      '${b1Topic(sectionId, topicId)}/phrases';
+
+  // B1 progress
+  static String b1Progress(String userId) =>
+      '$privateUserInfo/$userId/b1_progress/pl';
 }

@@ -158,5 +158,32 @@
   "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
 
   "editProfileTitle": "Редактировать профиль",
-  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
+
+  "b1HomeTitle": "Подготовка к B1",
+  "b1ImageDescription": "Описание изображения",
+  "b1Monologue": "Монолог",
+  "b1Dialogue": "Диалог",
+  "b1Vocabulary": "Словарный запас",
+  "b1Grammar": "Грамматика",
+  "b1Phrases": "Фразы и обороты",
+  "b1Declension": "Склонение",
+  "b1Conjugation": "Спряжение",
+  "b1CaseUsage": "Употребление падежа",
+  "b1PhraseOpening": "Вступление",
+  "b1PhraseTransition": "Связка",
+  "b1PhraseOpinion": "Мнение",
+  "b1PhraseConclusion": "Заключение",
+  "b1PhraseDescription": "Описание",
+  "b1StartExercises": "Начать упражнения",
+  "b1CompleteLevel": "Завершить",
+  "b1LevelCompleted": "Уровень пройден!",
+  "b1NoExercises": "Упражнений пока нет",
+  "b1LevelSubtitle": "{contentCount} элементов, {exerciseCount} упражнений",
+  "@b1LevelSubtitle": {
+    "placeholders": {
+      "contentCount": { "type": "int" },
+      "exerciseCount": { "type": "int" }
+    }
+  }
 }

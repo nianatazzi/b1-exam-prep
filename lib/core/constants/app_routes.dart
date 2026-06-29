@@ -14,4 +14,19 @@ abstract class AppRoutes {
 
   static String lessonPath(String langId, String lessonId) =>
       '/lesson/$langId/$lessonId';
+
+  // B1 exam prep
+  static const String b1Home = '/b1';
+  static const String b1Topic = '/b1/topic/:sectionId/:topicId';
+  static const String b1Practice =
+      '/b1/practice/:sectionId/:topicId/:prepLevel';
+
+  static String b1TopicPath(String sectionId, String topicId) =>
+      '/b1/topic/$sectionId/$topicId';
+  static String b1PracticePath(
+    String sectionId,
+    String topicId,
+    String prepLevel,
+  ) =>
+      '/b1/practice/$sectionId/$topicId/$prepLevel';
 }

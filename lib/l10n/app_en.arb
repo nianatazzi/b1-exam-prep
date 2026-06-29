@@ -414,5 +414,71 @@
   "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
 
   "editProfileTitle": "Edit profile",
-  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
+
+  "b1HomeTitle": "B1 Exam Prep",
+  "@b1HomeTitle": { "description": "B1 exam home screen title" },
+
+  "b1ImageDescription": "Image Description",
+  "@b1ImageDescription": { "description": "Exam section: describe a photo" },
+
+  "b1Monologue": "Monologue",
+  "@b1Monologue": { "description": "Exam section: speak on a topic" },
+
+  "b1Dialogue": "Dialogue",
+  "@b1Dialogue": { "description": "Exam section: role-play conversation" },
+
+  "b1Vocabulary": "Vocabulary",
+  "@b1Vocabulary": { "description": "Prep level: topic-specific words" },
+
+  "b1Grammar": "Grammar",
+  "@b1Grammar": { "description": "Prep level: declensions and conjugations" },
+
+  "b1Phrases": "Phrases",
+  "@b1Phrases": { "description": "Prep level: useful expressions and patterns" },
+
+  "b1Declension": "Declension",
+  "@b1Declension": { "description": "Grammar rule type: noun/adjective declension" },
+
+  "b1Conjugation": "Conjugation",
+  "@b1Conjugation": { "description": "Grammar rule type: verb conjugation" },
+
+  "b1CaseUsage": "Case usage",
+  "@b1CaseUsage": { "description": "Grammar rule type: when to use a grammatical case" },
+
+  "b1PhraseOpening": "Opening",
+  "@b1PhraseOpening": { "description": "Phrase category: start of speech" },
+
+  "b1PhraseTransition": "Transition",
+  "@b1PhraseTransition": { "description": "Phrase category: connecting ideas" },
+
+  "b1PhraseOpinion": "Opinion",
+  "@b1PhraseOpinion": { "description": "Phrase category: expressing opinion" },
+
+  "b1PhraseConclusion": "Conclusion",
+  "@b1PhraseConclusion": { "description": "Phrase category: wrapping up" },
+
+  "b1PhraseDescription": "Description",
+  "@b1PhraseDescription": { "description": "Phrase category: describing what you see" },
+
+  "b1StartExercises": "Start exercises",
+  "@b1StartExercises": { "description": "Button to switch from content to exercises" },
+
+  "b1CompleteLevel": "Complete",
+  "@b1CompleteLevel": { "description": "Button to finish the current prep level" },
+
+  "b1LevelCompleted": "Level completed!",
+  "@b1LevelCompleted": { "description": "Shown after finishing a prep level" },
+
+  "b1NoExercises": "No exercises available yet",
+  "@b1NoExercises": { "description": "Shown when a prep level has no exercises" },
+
+  "b1LevelSubtitle": "{contentCount} items, {exerciseCount} exercises",
+  "@b1LevelSubtitle": {
+    "description": "Subtitle for prep level card showing content and exercise counts",
+    "placeholders": {
+      "contentCount": { "type": "int" },
+      "exerciseCount": { "type": "int" }
+    }
+  }
 }

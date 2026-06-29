@@ -11,6 +11,9 @@ import 'package:linguobyte/features/lesson/presentation/screens/lesson_screen.da
 import 'package:linguobyte/features/profile/presentation/profile_screen.dart';
 import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
 import 'package:linguobyte/features/lesson/presentation/screens/result_screen.dart';
+import 'package:linguobyte/features/b1_exam/presentation/screens/b1_home_screen.dart';
+import 'package:linguobyte/features/b1_exam/presentation/screens/practice_screen.dart';
+import 'package:linguobyte/features/b1_exam/presentation/screens/topic_detail_screen.dart';
 import 'package:linguobyte/features/profile/presentation/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -103,6 +106,25 @@ GoRouter router(Ref ref) {
         builder: (context, state) => LessonScreen(
           langId: state.pathParameters['langId']!,
           lessonId: state.pathParameters['lessonId']!,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.b1Home,
+        builder: (context, state) => const B1HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.b1Topic,
+        builder: (context, state) => TopicDetailScreen(
+          sectionId: state.pathParameters['sectionId']!,
+          topicId: state.pathParameters['topicId']!,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.b1Practice,
+        builder: (context, state) => PracticeScreen(
+          sectionId: state.pathParameters['sectionId']!,
+          topicId: state.pathParameters['topicId']!,
+          prepLevel: state.pathParameters['prepLevel']!,
         ),
       ),
     ],

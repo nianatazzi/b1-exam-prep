@@ -306,6 +306,92 @@ public_user_info/                       # коллекция
 
 ---
 
+## 4. B1 Polish Exam Prep
+
+```
+b1_polish/                              # корневая коллекция
+  sections/                             # подколлекция: 3 раздела устного экзамена
+    {sectionId}/                        # "image_description" | "monologue" | "dialogue"
+      s_id: number                      # порядковый номер
+      type: string                      # "image_description" | "monologue" | "dialogue"
+      title: string
+      description: string
+      icon: string                      # идентификатор иконки
+
+      topics/                           # подколлекция: темы внутри раздела
+        {topicId}/
+          t_id: number                  # порядковый номер
+          title: string
+          description: string
+          image_url: string | null      # изображение для раздела image_description
+
+          vocabulary/                   # подколлекция: слова по теме
+            {vocabId}/
+              voc_id: number
+              word: string              # слово на польском
+              translation: map<langCode, string>
+              transcription: string
+              gender: string | null     # "m" | "f" | "n"
+              example_sentence: map<langCode, string>
+              audio_url: string | null
+
+          grammar/                      # подколлекция: грамматические правила
+            {grammarId}/
+              g_id: number
+              title: string
+              rule_type: string         # "declension" | "conjugation" | "case_usage"
+              paradigm: map             # таблица парадигмы (гибкая структура)
+              explanation: map<langCode, string>
+              examples: array<map>      # [{pl: "...", en: "...", ru: "..."}, ...]
+
+          phrases/                      # подколлекция: полезные фразы и паттерны
+            {phraseId}/
+              p_id: number
+              phrase: string            # фраза на польском
+              translation: map<langCode, string>
+              usage_context: map<langCode, string>
+              category: string          # "opening" | "transition" | "opinion" | "conclusion" | "description"
+              audio_url: string | null
+```
+
+### B1 упражнения
+
+Используется общая коллекция `exercises/` с фильтрацией по `course_id: "b1_pl"`.
+
+```
+exercises/
+  {exerciseId}/
+    course_id: "b1_pl"                  # отличает B1-упражнения от basic_
+    lesson_id: number                   # = t_id темы (topic)
+    segment_type: string                # "vocabulary" | "grammar" | "phrases" (= уровень подготовки)
+    linked_item_id: number | null       # ссылка на конкретный элемент контента
+    type: string                        # стандартные типы: flashcard, fill_blank, mosaic и т.д.
+    type_data: map                      # данные упражнения (стандартная структура)
+    ...остальные поля как в основных exercises
+```
+
+### B1 прогресс пользователя
+
+```
+private_user_info/
+  {userId}/
+    b1_progress/                        # подколлекция
+      pl/                               # документ
+        topicResults: map
+          "{sectionType}_{topicTId}_{prepLevel}": map
+            correct: number
+            total: number
+            firstAttempt: boolean
+            completedAt: timestamp
+            incorrectExerciseIds: array<string>
+        stats: map
+          vocabulary: {correct, total}
+          grammar: {correct, total}
+          phrases: {correct, total}
+```
+
+---
+
 ## Ключевые решения
 
 | Решение | Причина |
@@ -324,3 +410,7 @@ public_user_info/                       # коллекция
 | Streak (`lastActiveDate`, `currentStreak`, `bestStreak`) в корне `private_user_info` | Стрик не привязан к языку — общий для пользователя |
 | `personalized_courses` — заглушка | Зарезервировано для персональных курсов (например, подготовка к просмотру фильмов) |
 | `AIPreference`, `botSettings` — заглушки в `service` | Будущие фичи после MVP |
+| `b1_polish` — отдельная корневая коллекция | B1 exam prep — отдельное приложение с собственной структурой контента (секции → темы → vocab/grammar/phrases) |
+| B1 exercises в общей коллекции `exercises` | Переиспользование существующих типов упражнений; `course_id: "b1_pl"` отделяет от `basic_*` |
+| `segment_type` для B1 = уровень подготовки | "vocabulary" / "grammar" / "phrases" — аналог "theory" / "vocab" / "verb" из linguobyte |
+| B1 прогресс в `b1_progress/pl` | Изолирован от `languages/{langId}` — разные приложения, разный прогресс |

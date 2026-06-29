@@ -158,5 +158,32 @@
   "@onboardingChooseLanguage": { "description": "Language picker section label on onboarding screen" },
 
   "editProfileTitle": "Editar perfil",
-  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" }
+  "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
+
+  "b1HomeTitle": "Preparación B1",
+  "b1ImageDescription": "Descripción de imagen",
+  "b1Monologue": "Monólogo",
+  "b1Dialogue": "Diálogo",
+  "b1Vocabulary": "Vocabulario",
+  "b1Grammar": "Gramática",
+  "b1Phrases": "Frases y expresiones",
+  "b1Declension": "Declinación",
+  "b1Conjugation": "Conjugación",
+  "b1CaseUsage": "Uso del caso",
+  "b1PhraseOpening": "Apertura",
+  "b1PhraseTransition": "Transición",
+  "b1PhraseOpinion": "Opinión",
+  "b1PhraseConclusion": "Conclusión",
+  "b1PhraseDescription": "Descripción",
+  "b1StartExercises": "Comenzar ejercicios",
+  "b1CompleteLevel": "Completar",
+  "b1LevelCompleted": "¡Nivel completado!",
+  "b1NoExercises": "Aún no hay ejercicios",
+  "b1LevelSubtitle": "{contentCount} elementos, {exerciseCount} ejercicios",
+  "@b1LevelSubtitle": {
+    "placeholders": {
+      "contentCount": { "type": "int" },
+      "exerciseCount": { "type": "int" }
+    }
+  }
 }
