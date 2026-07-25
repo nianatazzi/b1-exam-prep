@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/core/locale/locale_provider.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/home/data/repositories/user_progress_repository.dart';
-import 'package:linguobyte/features/home/domain/models/user_language_progress_model.dart';
-import 'package:linguobyte/features/profile/data/user_repository.dart';
-import 'package:linguobyte/features/profile/domain/achievement_model.dart';
-import 'package:linguobyte/features/profile/domain/exercise_stats_model.dart';
-import 'package:linguobyte/features/profile/domain/private_user_model.dart';
-import 'package:linguobyte/features/profile/domain/public_user_model.dart';
-import 'package:linguobyte/features/profile/domain/streak_model.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/core/locale/locale_provider.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_progress_repository.dart';
+import 'package:b1_exam_prep/features/profile/data/user_repository.dart';
+import 'package:b1_exam_prep/features/profile/domain/achievement_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/exercise_stats_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/private_user_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/public_user_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/streak_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'profile_notifier.g.dart';
@@ -47,16 +46,12 @@ class ProfileNotifier extends _$ProfileNotifier {
 
     final repo = ref.read(userRepositoryProvider);
 
-    // Определяем выбранный язык обучения для загрузки прогресса
-    final selectedLang = await repo.getSelectedLanguage(user.id);
-
-    // Загружаем все данные параллельно
+    // Загружаем все данные параллельно. Прогресс — из b1_progress/{userId},
+    // изолирован от languages/{langId} (см. FIRESTORE.md §4).
     final publicFuture = repo.getPublicProfile(user.id);
     final privateFuture = repo.getPrivateProfile(user.id);
-    final progressFuture = selectedLang != null
-        ? ref.read(userProgressRepositoryProvider)
-            .getUserLanguageProgress(user.id, selectedLang)
-        : Future<UserLanguageProgressModel?>.value(null);
+    final progressFuture =
+        ref.read(examProgressRepositoryProvider).getProgress(user.id);
 
     final results = await (publicFuture, privateFuture, progressFuture).wait;
     final publicProfile = results.$1;
@@ -77,8 +72,8 @@ class ProfileNotifier extends _$ProfileNotifier {
         bestStreak: privateProfile.bestStreak,
         lastActiveDate: privateProfile.lastActiveDate,
       ),
-      stats: progress?.stats ?? const ExerciseStatsModel(),
-      achievements: _buildAchievementList(progress?.achievements ?? {}),
+      stats: progress.stats,
+      achievements: _buildAchievementList(progress.achievements),
     );
   }
 

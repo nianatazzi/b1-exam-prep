@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:linguobyte/core/constants/firestore_paths.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/core/logger/app_logger.dart';
-import 'package:linguobyte/features/b1_exam/domain/repositories/i_exam_exercise_repository.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/core/logger/app_logger.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/repositories/i_exam_exercise_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'exam_exercise_repository.g.dart';

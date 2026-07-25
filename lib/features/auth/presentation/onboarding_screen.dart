@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:linguobyte/core/constants/app_sizes.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/core/theme/app_colors.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/auth/presentation/onboarding_notifier.dart';
-import 'package:linguobyte/features/home/domain/models/language_model.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
-import 'package:linguobyte/shared/widgets/avatar_picker_grid.dart';
+import 'package:b1_exam_prep/core/constants/app_sizes.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/theme/app_colors.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/auth/presentation/onboarding_notifier.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/shared/widgets/avatar_picker_grid.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -75,28 +74,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   selectedId: state.avatar,
                   onSelect: (id) =>
                       ref.read(onboardingProvider.notifier).setAvatar(id),
-                ),
-
-                const SizedBox(height: AppSpacing.x2l),
-
-                Text(
-                  l10n.onboardingChooseLanguage,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-
-                ref.watch(onboardingLanguagesProvider).when(
-                  data: (languages) => _LanguagePicker(
-                    languages: languages,
-                    selectedId: state.selectedLanguage,
-                    onSelect: (id) =>
-                        ref.read(onboardingProvider.notifier).setLanguage(id),
-                  ),
-                  loading: () => const SizedBox(
-                    height: AppSizes.buttonHeight,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  error: (_, _) => const SizedBox.shrink(),
                 ),
 
                 const SizedBox(height: AppSpacing.x2l),
@@ -178,68 +155,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _LanguagePicker extends StatelessWidget {
-  const _LanguagePicker({
-    required this.languages,
-    required this.selectedId,
-    required this.onSelect,
-  });
-
-  final List<LanguageModel> languages;
-  final String selectedId;
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final tt = Theme.of(context).textTheme;
-
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: [
-        for (final lang in languages)
-          GestureDetector(
-            onTap: () => onSelect(lang.id),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                border: Border.all(
-                  color: lang.id == selectedId ? cs.primary : cs.outline,
-                  width: lang.id == selectedId ? 2 : 1,
-                ),
-                color: lang.id == selectedId
-                    ? cs.primary.withValues(alpha: 0.08)
-                    : Colors.transparent,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(lang.flag, style: tt.titleLarge),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    lang.name,
-                    style: tt.bodyMedium?.copyWith(
-                      color: lang.id == selectedId ? cs.primary : null,
-                      fontWeight: lang.id == selectedId
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

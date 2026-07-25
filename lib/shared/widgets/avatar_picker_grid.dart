@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/core/constants/avatar_presets.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/constants/avatar_presets.dart';
 
 /// Сетка пресет-аватаров 4×N. Переиспользуется в онбординге и профиле.
 /// shrinkWrap — встраивается в скролл-контейнер родителя.

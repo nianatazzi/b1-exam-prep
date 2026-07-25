@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/features/auth/data/auth_repository.dart';
-import 'package:linguobyte/features/auth/domain/user_model.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/features/auth/data/auth_repository.dart';
+import 'package:b1_exam_prep/features/auth/domain/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';

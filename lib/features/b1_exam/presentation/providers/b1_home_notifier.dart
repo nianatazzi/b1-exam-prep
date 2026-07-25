@@ -1,9 +1,9 @@
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/b1_exam/data/repositories/exam_content_repository.dart';
-import 'package:linguobyte/features/b1_exam/data/repositories/exam_progress_repository.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_section_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_topic_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/topic_progress_model.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_content_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_progress_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_section_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_topic_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_progress_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'b1_home_notifier.g.dart';

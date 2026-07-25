@@ -31,7 +31,7 @@
   "save": "Save",
   "@save": { "description": "Save action" },
 
-  "authWelcomeTitle": "Welcome to LinguoByte",
+  "authWelcomeTitle": "Welcome to B1-exam-prep",
   "@authWelcomeTitle": { "description": "Auth screen main heading" },
 
   "authWelcomeSubtitle": "Learn a language, step by step",

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:linguobyte/core/constants/firestore_paths.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_section_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_topic_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/grammar_rule_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/phrase_pattern_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/topic_vocabulary_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/repositories/i_exam_content_repository.dart';
+import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_section_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_topic_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/grammar_rule_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/phrase_pattern_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_vocabulary_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/repositories/i_exam_content_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'exam_content_repository.g.dart';

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:linguobyte/core/constants/firestore_paths.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/features/profile/domain/private_user_model.dart';
-import 'package:linguobyte/features/profile/domain/public_user_model.dart';
-import 'package:linguobyte/features/profile/domain/repositories/i_streak_repository.dart';
+import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/features/profile/domain/private_user_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/public_user_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/repositories/i_streak_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_repository.g.dart';
@@ -128,52 +128,6 @@ class UserRepository implements IStreakRepository {
       } else {
         throw mapFirebaseException(e);
       }
-    }
-  }
-
-  Future<String?> getSelectedLanguage(String userId) async {
-    try {
-      final doc = await _firestore.doc(FirestorePaths.publicUser(userId)).get();
-      if (!doc.exists || doc.data() == null) return null;
-      final preference = doc.data()!['preference'];
-      if (preference is! Map) return null;
-      return preference['selectedLanguage'] as String?;
-    } on AppError {
-      rethrow;
-    } on FirebaseException catch (e) {
-      throw mapFirebaseException(e);
-    } catch (e) {
-      throw UnknownError(e.toString());
-    }
-  }
-
-  /// Создаёт документ языка с начальными значениями прогресса.
-  /// SetOptions(merge: true) гарантирует, что существующий прогресс не сбрасывается.
-  Future<void> updateLearningLanguage(String userId, String langId) async {
-    try {
-      await _firestore
-          .doc(FirestorePaths.userLanguage(userId, langId))
-          .set(
-            {
-              'lastLesson': '',
-              'lastParagraph': 0,
-              'stats': {
-                'grammar': {'correct': 0, 'total': 0},
-                'vocabulary': {'correct': 0, 'total': 0},
-                'listening': {'correct': 0, 'total': 0},
-                'speaking': {'correct': 0, 'total': 0},
-              },
-              'stepResults': <String, dynamic>{},
-              'achievements': <String, dynamic>{},
-            },
-            SetOptions(merge: true),
-          );
-    } on AppError {
-      rethrow;
-    } on FirebaseException catch (e) {
-      throw mapFirebaseException(e);
-    } catch (e) {
-      throw UnknownError(e.toString());
     }
   }
 

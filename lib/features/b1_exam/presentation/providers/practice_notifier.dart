@@ -1,13 +1,13 @@
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/b1_exam/data/repositories/exam_content_repository.dart';
-import 'package:linguobyte/features/b1_exam/data/repositories/exam_exercise_repository.dart';
-import 'package:linguobyte/features/b1_exam/data/repositories/exam_progress_repository.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/grammar_rule_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/phrase_pattern_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/prep_step.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/topic_vocabulary_model.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_content_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_exercise_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/usecases/complete_b1_step_use_case.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/grammar_rule_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/phrase_pattern_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/prep_step.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_vocabulary_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'practice_notifier.g.dart';
@@ -131,7 +131,7 @@ class PracticeNotifier extends _$PracticeNotifier {
 
   Future<void> completeStep(String sectionType, int topicTId) async {
     final current = state.requireValue;
-    final progressRepo = ref.read(examProgressRepositoryProvider);
+    final useCase = ref.read(completeB1StepUseCaseProvider);
 
     final prepLevelName = switch (current.step) {
       VocabularyPrepStep() => 'vocabulary',
@@ -139,15 +139,12 @@ class PracticeNotifier extends _$PracticeNotifier {
       PhrasesPrepStep() => 'phrases',
     };
 
-    final stepKey = '${sectionType}_${topicTId}_$prepLevelName';
-    final correct = current.results.where((r) => r.isCorrect).length;
-
-    await progressRepo.saveStepResult(
+    await useCase.execute(
       userId: _userId,
-      stepKey: stepKey,
-      correct: correct,
-      total: current.results.length,
-      results: current.results,
+      sectionType: sectionType,
+      topicTId: topicTId,
+      prepLevel: prepLevelName,
+      exerciseResults: current.results,
     );
 
     state = AsyncData(current.copyWith(isCompleted: true));

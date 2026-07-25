@@ -165,7 +165,7 @@ abstract class AppLocalizations {
   /// Auth screen main heading
   ///
   /// In en, this message translates to:
-  /// **'Welcome to LinguoByte'**
+  /// **'Welcome to B1-exam-prep'**
   String get authWelcomeTitle;
 
   /// Auth screen subheading
@@ -929,6 +929,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit profile'**
   String get editProfileTitle;
+
+  /// B1 exam home screen title
+  ///
+  /// In en, this message translates to:
+  /// **'B1 Exam Prep'**
+  String get b1HomeTitle;
+
+  /// Exam section: describe a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Image Description'**
+  String get b1ImageDescription;
+
+  /// Exam section: speak on a topic
+  ///
+  /// In en, this message translates to:
+  /// **'Monologue'**
+  String get b1Monologue;
+
+  /// Exam section: role-play conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Dialogue'**
+  String get b1Dialogue;
+
+  /// Prep level: topic-specific words
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get b1Vocabulary;
+
+  /// Prep level: declensions and conjugations
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get b1Grammar;
+
+  /// Prep level: useful expressions and patterns
+  ///
+  /// In en, this message translates to:
+  /// **'Phrases'**
+  String get b1Phrases;
+
+  /// Grammar rule type: noun/adjective declension
+  ///
+  /// In en, this message translates to:
+  /// **'Declension'**
+  String get b1Declension;
+
+  /// Grammar rule type: verb conjugation
+  ///
+  /// In en, this message translates to:
+  /// **'Conjugation'**
+  String get b1Conjugation;
+
+  /// Grammar rule type: when to use a grammatical case
+  ///
+  /// In en, this message translates to:
+  /// **'Case usage'**
+  String get b1CaseUsage;
+
+  /// Phrase category: start of speech
+  ///
+  /// In en, this message translates to:
+  /// **'Opening'**
+  String get b1PhraseOpening;
+
+  /// Phrase category: connecting ideas
+  ///
+  /// In en, this message translates to:
+  /// **'Transition'**
+  String get b1PhraseTransition;
+
+  /// Phrase category: expressing opinion
+  ///
+  /// In en, this message translates to:
+  /// **'Opinion'**
+  String get b1PhraseOpinion;
+
+  /// Phrase category: wrapping up
+  ///
+  /// In en, this message translates to:
+  /// **'Conclusion'**
+  String get b1PhraseConclusion;
+
+  /// Phrase category: describing what you see
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get b1PhraseDescription;
+
+  /// Button to switch from content to exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Start exercises'**
+  String get b1StartExercises;
+
+  /// Button to finish the current prep level
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get b1CompleteLevel;
+
+  /// Shown after finishing a prep level
+  ///
+  /// In en, this message translates to:
+  /// **'Level completed!'**
+  String get b1LevelCompleted;
+
+  /// Shown when a prep level has no exercises
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises available yet'**
+  String get b1NoExercises;
+
+  /// Subtitle for prep level card showing content and exercise counts
+  ///
+  /// In en, this message translates to:
+  /// **'{contentCount} items, {exerciseCount} exercises'**
+  String b1LevelSubtitle(int contentCount, int exerciseCount);
 }
 
 class _AppLocalizationsDelegate
