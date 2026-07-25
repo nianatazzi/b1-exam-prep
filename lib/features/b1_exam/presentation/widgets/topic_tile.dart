@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_section_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/exam_topic_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/topic_progress_model.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_section_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_topic_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_progress_model.dart';
 
 class TopicTile extends StatelessWidget {
   final ExamTopicModel topic;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/grammar_rule_model.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/grammar_rule_model.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
 
 class GrammarTableWidget extends StatelessWidget {
   final GrammarRuleModel rule;

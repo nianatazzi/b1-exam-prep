@@ -1,5 +1,5 @@
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/profile/data/user_repository.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/profile/data/user_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_status_provider.g.dart';

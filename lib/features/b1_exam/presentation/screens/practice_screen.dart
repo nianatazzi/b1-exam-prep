@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/prep_step.dart';
-import 'package:linguobyte/features/b1_exam/presentation/providers/practice_notifier.dart';
-import 'package:linguobyte/features/b1_exam/presentation/widgets/grammar_table_widget.dart';
-import 'package:linguobyte/features/b1_exam/presentation/widgets/phrase_card_widget.dart';
-import 'package:linguobyte/features/lesson/presentation/widgets/exercise_phase_widget.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
-import 'package:linguobyte/shared/widgets/error_view.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/prep_step.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/providers/practice_notifier.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/widgets/grammar_table_widget.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/widgets/phrase_card_widget.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/widgets/exercise_phase_widget.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/shared/widgets/error_view.dart';
 
 class PracticeScreen extends ConsumerWidget {
   final String sectionId;
@@ -25,7 +25,7 @@ class PracticeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      practiceNotifierProvider(sectionId, topicId, prepLevel),
+      practiceProvider(sectionId, topicId, prepLevel),
     );
     final l10n = AppLocalizations.of(context)!;
 
@@ -38,7 +38,7 @@ class PracticeScreen extends ConsumerWidget {
         error: (error, _) => ErrorView(
           message: l10n.errorGeneric,
           onRetry: () => ref.invalidate(
-            practiceNotifierProvider(sectionId, topicId, prepLevel),
+            practiceProvider(sectionId, topicId, prepLevel),
           ),
         ),
         data: (data) {
@@ -54,7 +54,7 @@ class PracticeScreen extends ConsumerWidget {
               step: data.step,
               onContinue: () {
                 ref
-                    .read(practiceNotifierProvider(
+                    .read(practiceProvider(
                       sectionId,
                       topicId,
                       prepLevel,
@@ -77,7 +77,7 @@ class PracticeScreen extends ConsumerWidget {
             completeButtonLabel: l10n.b1CompleteLevel,
             onResult: (result) {
               ref
-                  .read(practiceNotifierProvider(
+                  .read(practiceProvider(
                     sectionId,
                     topicId,
                     prepLevel,
@@ -86,7 +86,7 @@ class PracticeScreen extends ConsumerWidget {
             },
             onNext: () {
               ref
-                  .read(practiceNotifierProvider(
+                  .read(practiceProvider(
                     sectionId,
                     topicId,
                     prepLevel,

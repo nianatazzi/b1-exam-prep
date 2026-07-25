@@ -8,52 +8,6 @@ part of 'onboarding_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Список языков для пикера — загружается один раз при открытии онбординга.
-
-@ProviderFor(onboardingLanguages)
-const onboardingLanguagesProvider = OnboardingLanguagesProvider._();
-
-/// Список языков для пикера — загружается один раз при открытии онбординга.
-
-final class OnboardingLanguagesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<LanguageModel>>,
-          List<LanguageModel>,
-          FutureOr<List<LanguageModel>>
-        >
-    with
-        $FutureModifier<List<LanguageModel>>,
-        $FutureProvider<List<LanguageModel>> {
-  /// Список языков для пикера — загружается один раз при открытии онбординга.
-  const OnboardingLanguagesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'onboardingLanguagesProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$onboardingLanguagesHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<List<LanguageModel>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<LanguageModel>> create(Ref ref) {
-    return onboardingLanguages(ref);
-  }
-}
-
-String _$onboardingLanguagesHash() =>
-    r'f67ab639f98e908c235f25c3da3b3943802560eb';
 
 @ProviderFor(OnboardingNotifier)
 const onboardingProvider = OnboardingNotifierProvider._();
@@ -88,7 +42,7 @@ final class OnboardingNotifierProvider
 }
 
 String _$onboardingNotifierHash() =>
-    r'dbe6310db5410da4e73a0bf615579ff144beca62';
+    r'd1648b1fb4026178b64397d969a41e6b06b9f889';
 
 abstract class _$OnboardingNotifier extends $Notifier<OnboardingState> {
   OnboardingState build();

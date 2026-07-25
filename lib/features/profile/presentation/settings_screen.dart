@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linguobyte/core/constants/app_sizes.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/core/locale/locale_provider.dart';
-import 'package:linguobyte/core/theme/app_colors.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/profile/presentation/profile_notifier.dart';
-import 'package:linguobyte/features/profile/presentation/settings_notifier.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/core/constants/app_sizes.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/locale/locale_provider.dart';
+import 'package:b1_exam_prep/core/theme/app_colors.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/profile/presentation/profile_notifier.dart';
+import 'package:b1_exam_prep/features/profile/presentation/settings_notifier.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});

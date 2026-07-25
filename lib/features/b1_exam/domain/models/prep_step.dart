@@ -1,7 +1,7 @@
-import 'package:linguobyte/features/b1_exam/domain/models/grammar_rule_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/phrase_pattern_model.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/topic_vocabulary_model.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/grammar_rule_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/phrase_pattern_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_vocabulary_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
 
 enum PrepLevel { vocabulary, grammar, phrases }
 

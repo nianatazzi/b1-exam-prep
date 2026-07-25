@@ -1,7 +1,7 @@
 // Страховочная сетка (волна 0): чистая логика стрика и процентов.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:linguobyte/features/profile/domain/stat_entry_model.dart';
-import 'package:linguobyte/features/profile/domain/streak_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/stat_entry_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/streak_model.dart';
 
 void main() {
   group('StatEntryModel.percent', () {

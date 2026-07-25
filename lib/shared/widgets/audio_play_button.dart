@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:linguobyte/core/constants/app_sizes.dart';
+import 'package:b1_exam_prep/core/constants/app_sizes.dart';
 
 enum _AudioState { idle, loading, playing }
 

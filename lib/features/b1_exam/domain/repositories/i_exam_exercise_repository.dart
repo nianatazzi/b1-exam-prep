@@ -1,4 +1,4 @@
-import 'package:linguobyte/features/lesson/domain/models/exercise_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
 
 abstract class IExamExerciseRepository {
   /// Загружает все упражнения для темы (topic) одним запросом.

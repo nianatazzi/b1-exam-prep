@@ -3,19 +3,19 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linguobyte/core/constants/app_routes.dart';
-import 'package:linguobyte/core/constants/app_sizes.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/core/constants/avatar_presets.dart';
-import 'package:linguobyte/core/theme/app_colors.dart';
-import 'package:linguobyte/features/profile/domain/achievement_model.dart';
-import 'package:linguobyte/features/profile/domain/exercise_stats_model.dart';
-import 'package:linguobyte/features/profile/domain/public_user_model.dart';
-import 'package:linguobyte/features/profile/domain/streak_model.dart';
-import 'package:linguobyte/features/profile/presentation/profile_notifier.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
-import 'package:linguobyte/shared/widgets/avatar_picker_grid.dart';
-import 'package:linguobyte/shared/widgets/error_view.dart';
+import 'package:b1_exam_prep/core/constants/app_routes.dart';
+import 'package:b1_exam_prep/core/constants/app_sizes.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/constants/avatar_presets.dart';
+import 'package:b1_exam_prep/core/theme/app_colors.dart';
+import 'package:b1_exam_prep/features/profile/domain/achievement_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/exercise_stats_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/public_user_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/streak_model.dart';
+import 'package:b1_exam_prep/features/profile/presentation/profile_notifier.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/shared/widgets/avatar_picker_grid.dart';
+import 'package:b1_exam_prep/shared/widgets/error_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -43,7 +43,7 @@ class ProfileScreen extends ConsumerWidget {
               if (context.canPop()) {
                 context.pop();
               } else {
-                context.go(AppRoutes.home);
+                context.go(AppRoutes.b1Home);
               }
             },
           ),

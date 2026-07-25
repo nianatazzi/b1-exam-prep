@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:linguobyte/core/locale/locale_provider.dart';
-import 'package:linguobyte/core/logger/provider_observer.dart';
-import 'package:linguobyte/core/router/app_router.dart';
-import 'package:linguobyte/core/theme/app_theme.dart';
+import 'package:b1_exam_prep/core/locale/locale_provider.dart';
+import 'package:b1_exam_prep/core/logger/provider_observer.dart';
+import 'package:b1_exam_prep/core/router/app_router.dart';
+import 'package:b1_exam_prep/core/theme/app_theme.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 

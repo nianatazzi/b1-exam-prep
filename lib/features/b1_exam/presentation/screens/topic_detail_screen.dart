@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linguobyte/core/constants/app_routes.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/features/b1_exam/domain/models/prep_step.dart';
-import 'package:linguobyte/features/b1_exam/presentation/providers/topic_detail_notifier.dart';
-import 'package:linguobyte/features/b1_exam/presentation/widgets/prep_level_card.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
-import 'package:linguobyte/shared/widgets/error_view.dart';
+import 'package:b1_exam_prep/core/constants/app_routes.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/prep_step.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/providers/topic_detail_notifier.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/widgets/prep_level_card.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/shared/widgets/error_view.dart';
 
 class TopicDetailScreen extends ConsumerWidget {
   final String sectionId;
@@ -22,7 +22,7 @@ class TopicDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      topicDetailNotifierProvider(sectionId, topicId),
+      topicDetailProvider(sectionId, topicId),
     );
     final l10n = AppLocalizations.of(context)!;
 
@@ -33,7 +33,7 @@ class TopicDetailScreen extends ConsumerWidget {
         error: (error, _) => ErrorView(
           message: l10n.errorGeneric,
           onRetry: () => ref.invalidate(
-            topicDetailNotifierProvider(sectionId, topicId),
+            topicDetailProvider(sectionId, topicId),
           ),
         ),
         data: (data) => ListView(

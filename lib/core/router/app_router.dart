@@ -1,20 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:linguobyte/core/constants/app_routes.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/auth/presentation/authorization_screen.dart';
-import 'package:linguobyte/features/auth/presentation/onboarding_screen.dart';
-import 'package:linguobyte/features/auth/presentation/onboarding_status_provider.dart';
-import 'package:linguobyte/features/home/presentation/screens/home_screen.dart';
-import 'package:linguobyte/core/router/splash_screen.dart';
-import 'package:linguobyte/features/lesson/presentation/screens/lesson_screen.dart';
-import 'package:linguobyte/features/profile/presentation/profile_screen.dart';
-import 'package:linguobyte/features/lesson/domain/models/exercise_result.dart';
-import 'package:linguobyte/features/lesson/presentation/screens/result_screen.dart';
-import 'package:linguobyte/features/b1_exam/presentation/screens/b1_home_screen.dart';
-import 'package:linguobyte/features/b1_exam/presentation/screens/practice_screen.dart';
-import 'package:linguobyte/features/b1_exam/presentation/screens/topic_detail_screen.dart';
-import 'package:linguobyte/features/profile/presentation/settings_screen.dart';
+import 'package:b1_exam_prep/core/constants/app_routes.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/auth/presentation/authorization_screen.dart';
+import 'package:b1_exam_prep/features/auth/presentation/onboarding_screen.dart';
+import 'package:b1_exam_prep/features/auth/presentation/onboarding_status_provider.dart';
+import 'package:b1_exam_prep/core/router/splash_screen.dart';
+import 'package:b1_exam_prep/features/profile/presentation/profile_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/b1_home_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/practice_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/topic_detail_screen.dart';
+import 'package:b1_exam_prep/features/profile/presentation/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -49,18 +45,18 @@ GoRouter router(Ref ref) {
 
       if (location == AppRoutes.splash) {
         if (!isLoggedIn) return AppRoutes.auth;
-        return onboardingComplete ? AppRoutes.home : AppRoutes.onboarding;
+        return onboardingComplete ? AppRoutes.b1Home : AppRoutes.onboarding;
       }
 
       if (!isLoggedIn && location != AppRoutes.auth) return AppRoutes.auth;
 
       if (isLoggedIn && location == AppRoutes.auth) {
-        return onboardingComplete ? AppRoutes.home : AppRoutes.onboarding;
+        return onboardingComplete ? AppRoutes.b1Home : AppRoutes.onboarding;
       }
 
-      // После завершения онбординга — уходим с экрана онбординга на home.
+      // После завершения онбординга — уходим с экрана онбординга на B1Home.
       if (isLoggedIn && onboardingComplete && location == AppRoutes.onboarding) {
-        return AppRoutes.home;
+        return AppRoutes.b1Home;
       }
 
       // Защита: пользователь без онбординга не попадёт на другие экраны.
@@ -84,29 +80,12 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.result,
-        builder: (context, state) => ResultScreen(
-          results: state.extra! as List<ExerciseResult>,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.lesson,
-        builder: (context, state) => LessonScreen(
-          langId: state.pathParameters['langId']!,
-          lessonId: state.pathParameters['lessonId']!,
-        ),
       ),
       GoRoute(
         path: AppRoutes.b1Home,

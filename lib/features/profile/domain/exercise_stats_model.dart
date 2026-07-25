@@ -1,6 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:linguobyte/features/profile/domain/stat_entry_model.dart';
+import 'package:b1_exam_prep/features/profile/domain/stat_entry_model.dart';
 
 part 'exercise_stats_model.freezed.dart';
 part 'exercise_stats_model.g.dart';

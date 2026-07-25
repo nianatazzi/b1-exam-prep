@@ -294,6 +294,7 @@ public_user_info/                       # коллекция
 | `exercises/**` | read + write | read |
 | `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
 | `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
+| `b1_polish/**` | read + write | read |
 
 ### Правило доработки
 
@@ -309,49 +310,50 @@ public_user_info/                       # коллекция
 ## 4. B1 Polish Exam Prep
 
 ```
-b1_polish/                              # корневая коллекция
-  sections/                             # подколлекция: 3 раздела устного экзамена
-    {sectionId}/                        # "image_description" | "monologue" | "dialogue"
-      s_id: number                      # порядковый номер
-      type: string                      # "image_description" | "monologue" | "dialogue"
-      title: string
-      description: string
-      icon: string                      # идентификатор иконки
+b1_polish/                                # корневая коллекция
+  pl/                                      # документ языка (единственный на сейчас)
+    sections/                              # подколлекция: 3 раздела устного экзамена
+      {sectionId}/                         # "image_description" | "monologue" | "dialogue"
+        s_id: number                       # порядковый номер
+        type: string                       # "image_description" | "monologue" | "dialogue"
+        title: string
+        description: string
+        icon: string                       # идентификатор иконки
 
-      topics/                           # подколлекция: темы внутри раздела
-        {topicId}/
-          t_id: number                  # порядковый номер
-          title: string
-          description: string
-          image_url: string | null      # изображение для раздела image_description
+        topics/                            # подколлекция: темы внутри раздела
+          {topicId}/
+            t_id: number                   # порядковый номер
+            title: string
+            description: string
+            image_url: string | null       # изображение для раздела image_description
 
-          vocabulary/                   # подколлекция: слова по теме
-            {vocabId}/
-              voc_id: number
-              word: string              # слово на польском
-              translation: map<langCode, string>
-              transcription: string
-              gender: string | null     # "m" | "f" | "n"
-              example_sentence: map<langCode, string>
-              audio_url: string | null
+            vocabulary/                    # подколлекция: слова по теме
+              {vocabId}/
+                voc_id: number
+                word: string                # слово на польском
+                translation: map<langCode, string>
+                transcription: string
+                gender: string | null       # "m" | "f" | "n"
+                example_sentence: map<langCode, string>
+                audio_url: string | null
 
-          grammar/                      # подколлекция: грамматические правила
-            {grammarId}/
-              g_id: number
-              title: string
-              rule_type: string         # "declension" | "conjugation" | "case_usage"
-              paradigm: map             # таблица парадигмы (гибкая структура)
-              explanation: map<langCode, string>
-              examples: array<map>      # [{pl: "...", en: "...", ru: "..."}, ...]
+            grammar/                       # подколлекция: грамматические правила
+              {grammarId}/
+                g_id: number
+                title: string
+                rule_type: string           # "declension" | "conjugation" | "case_usage"
+                paradigm: map               # таблица парадигмы (гибкая структура)
+                explanation: map<langCode, string>
+                examples: array<map>        # [{pl: "...", en: "...", ru: "..."}, ...]
 
-          phrases/                      # подколлекция: полезные фразы и паттерны
-            {phraseId}/
-              p_id: number
-              phrase: string            # фраза на польском
-              translation: map<langCode, string>
-              usage_context: map<langCode, string>
-              category: string          # "opening" | "transition" | "opinion" | "conclusion" | "description"
-              audio_url: string | null
+            phrases/                       # подколлекция: полезные фразы и паттерны
+              {phraseId}/
+                p_id: number
+                phrase: string              # фраза на польском
+                translation: map<langCode, string>
+                usage_context: map<langCode, string>
+                category: string            # "opening" | "transition" | "opinion" | "conclusion" | "description"
+                audio_url: string | null
 ```
 
 ### B1 упражнения
@@ -384,11 +386,21 @@ private_user_info/
             firstAttempt: boolean
             completedAt: timestamp
             incorrectExerciseIds: array<string>
-        stats: map
+        stats: map                      # та же форма, что и languages/{langId}.stats в linguobyte —
+          grammar: {correct, total}     # общий ProfileScreen отображает оба приложения одинаково
           vocabulary: {correct, total}
-          grammar: {correct, total}
-          phrases: {correct, total}
+          listening: {correct, total}
+          speaking: {correct, total}
+        achievements: map               # та же форма, что и languages/{langId}.achievements
+          # Ключ map = тип достижения, дублируется в поле type (см. §2, то же требование)
+          master_conjugator: {type, level, updatedAt}
+          first_step: {type, level, updatedAt}
+          focused_learner: {type, level, updatedAt}
+          interested_learner: {type, level, updatedAt}
+          vocabulary_master: {type, level, updatedAt}
 ```
+
+`stats`/`achievements` заполняются `ExamProgressRepository` по тем же правилам, что `UserProgressRepository` для linguobyte: `stats` — инкременты по `ExerciseResult.grammarTypes` (не по `prepLevel`/`segment_type`); `achievements` — `CheckB1AchievementUseCase`, триггеры адаптированы под структуру B1 (раздел→тема→уровень подготовки, нет уроков/суб-шагов глаголов) — см. `ARCHITECTURE.md` §20.
 
 ---
 
@@ -413,4 +425,5 @@ private_user_info/
 | `b1_polish` — отдельная корневая коллекция | B1 exam prep — отдельное приложение с собственной структурой контента (секции → темы → vocab/grammar/phrases) |
 | B1 exercises в общей коллекции `exercises` | Переиспользование существующих типов упражнений; `course_id: "b1_pl"` отделяет от `basic_*` |
 | `segment_type` для B1 = уровень подготовки | "vocabulary" / "grammar" / "phrases" — аналог "theory" / "vocab" / "verb" из linguobyte |
-| B1 прогресс в `b1_progress/pl` | Изолирован от `languages/{langId}` — разные приложения, разный прогресс |
+| B1 прогресс в `b1_progress/pl` | Изолирован от `languages/{langId}` — разные приложения, разный прогресс. `stats`/`achievements` намеренно повторяют форму linguobyte (не изолированы по смыслу) — общий `ProfileScreen` показывает то и другое одинаково |
+| `basic`/`exercises` (`course_id: basic_*`)/`languages/{langId}` не используются кодом b1-exam-prep | `features/home`/`features/lesson` (linguobyte-логика) удалены из этого репозитория целиком. Коллекции описаны здесь только как справка по структуре общего Firebase-проекта — их пишет/читает только linguobyte |

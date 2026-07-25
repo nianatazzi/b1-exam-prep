@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/core/locale/locale_provider.dart';
-import 'package:linguobyte/core/logger/app_logger.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/features/profile/data/user_repository.dart';
-import 'package:linguobyte/features/profile/presentation/profile_notifier.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/core/locale/locale_provider.dart';
+import 'package:b1_exam_prep/core/logger/app_logger.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/features/profile/data/user_repository.dart';
+import 'package:b1_exam_prep/features/profile/presentation/profile_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'settings_notifier.g.dart';

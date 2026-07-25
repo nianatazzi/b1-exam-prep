@@ -39,7 +39,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get save => 'Сохранить';
 
   @override
-  String get authWelcomeTitle => 'Добро пожаловать в LinguoByte';
+  String get authWelcomeTitle => 'Добро пожаловать в B1-exam-prep';
 
   @override
   String get authWelcomeSubtitle => 'Учи язык шаг за шагом';
@@ -431,4 +431,66 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get editProfileTitle => 'Редактировать профиль';
+
+  @override
+  String get b1HomeTitle => 'Подготовка к B1';
+
+  @override
+  String get b1ImageDescription => 'Описание изображения';
+
+  @override
+  String get b1Monologue => 'Монолог';
+
+  @override
+  String get b1Dialogue => 'Диалог';
+
+  @override
+  String get b1Vocabulary => 'Словарный запас';
+
+  @override
+  String get b1Grammar => 'Грамматика';
+
+  @override
+  String get b1Phrases => 'Фразы и обороты';
+
+  @override
+  String get b1Declension => 'Склонение';
+
+  @override
+  String get b1Conjugation => 'Спряжение';
+
+  @override
+  String get b1CaseUsage => 'Употребление падежа';
+
+  @override
+  String get b1PhraseOpening => 'Вступление';
+
+  @override
+  String get b1PhraseTransition => 'Связка';
+
+  @override
+  String get b1PhraseOpinion => 'Мнение';
+
+  @override
+  String get b1PhraseConclusion => 'Заключение';
+
+  @override
+  String get b1PhraseDescription => 'Описание';
+
+  @override
+  String get b1StartExercises => 'Начать упражнения';
+
+  @override
+  String get b1CompleteLevel => 'Завершить';
+
+  @override
+  String get b1LevelCompleted => 'Уровень пройден!';
+
+  @override
+  String get b1NoExercises => 'Упражнений пока нет';
+
+  @override
+  String b1LevelSubtitle(int contentCount, int exerciseCount) {
+    return '$contentCount элементов, $exerciseCount упражнений';
+  }
 }

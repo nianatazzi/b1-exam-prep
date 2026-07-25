@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OnboardingState {
 
- String get name; String get surname; String get avatar; String get selectedLanguage; bool get isLoading; AppError? get error;
+ String get name; String get surname; String get avatar; bool get isLoading; AppError? get error;
 /// Create a copy of OnboardingState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $OnboardingStateCopyWith<OnboardingState> get copyWith => _$OnboardingStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnboardingState&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.selectedLanguage, selectedLanguage) || other.selectedLanguage == selectedLanguage)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnboardingState&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,surname,avatar,selectedLanguage,isLoading,error);
+int get hashCode => Object.hash(runtimeType,name,surname,avatar,isLoading,error);
 
 @override
 String toString() {
-  return 'OnboardingState(name: $name, surname: $surname, avatar: $avatar, selectedLanguage: $selectedLanguage, isLoading: $isLoading, error: $error)';
+  return 'OnboardingState(name: $name, surname: $surname, avatar: $avatar, isLoading: $isLoading, error: $error)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $OnboardingStateCopyWith<$Res>  {
   factory $OnboardingStateCopyWith(OnboardingState value, $Res Function(OnboardingState) _then) = _$OnboardingStateCopyWithImpl;
 @useResult
 $Res call({
- String name, String surname, String avatar, String selectedLanguage, bool isLoading, AppError? error
+ String name, String surname, String avatar, bool isLoading, AppError? error
 });
 
 
@@ -62,12 +62,11 @@ class _$OnboardingStateCopyWithImpl<$Res>
 
 /// Create a copy of OnboardingState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? surname = null,Object? avatar = null,Object? selectedLanguage = null,Object? isLoading = null,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? surname = null,Object? avatar = null,Object? isLoading = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,surname: null == surname ? _self.surname : surname // ignore: cast_nullable_to_non_nullable
 as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,selectedLanguage: null == selectedLanguage ? _self.selectedLanguage : selectedLanguage // ignore: cast_nullable_to_non_nullable
 as String,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppError?,
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String surname,  String avatar,  String selectedLanguage,  bool isLoading,  AppError? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String surname,  String avatar,  bool isLoading,  AppError? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OnboardingState() when $default != null:
-return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_that.isLoading,_that.error);case _:
+return $default(_that.name,_that.surname,_that.avatar,_that.isLoading,_that.error);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String surname,  String avatar,  String selectedLanguage,  bool isLoading,  AppError? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String surname,  String avatar,  bool isLoading,  AppError? error)  $default,) {final _that = this;
 switch (_that) {
 case _OnboardingState():
-return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_that.isLoading,_that.error);case _:
+return $default(_that.name,_that.surname,_that.avatar,_that.isLoading,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String surname,  String avatar,  String selectedLanguage,  bool isLoading,  AppError? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String surname,  String avatar,  bool isLoading,  AppError? error)?  $default,) {final _that = this;
 switch (_that) {
 case _OnboardingState() when $default != null:
-return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_that.isLoading,_that.error);case _:
+return $default(_that.name,_that.surname,_that.avatar,_that.isLoading,_that.error);case _:
   return null;
 
 }
@@ -211,13 +210,12 @@ return $default(_that.name,_that.surname,_that.avatar,_that.selectedLanguage,_th
 
 
 class _OnboardingState implements OnboardingState {
-  const _OnboardingState({this.name = '', this.surname = '', this.avatar = AvatarPresets.defaultId, this.selectedLanguage = '', this.isLoading = false, this.error});
+  const _OnboardingState({this.name = '', this.surname = '', this.avatar = AvatarPresets.defaultId, this.isLoading = false, this.error});
   
 
 @override@JsonKey() final  String name;
 @override@JsonKey() final  String surname;
 @override@JsonKey() final  String avatar;
-@override@JsonKey() final  String selectedLanguage;
 @override@JsonKey() final  bool isLoading;
 @override final  AppError? error;
 
@@ -231,16 +229,16 @@ _$OnboardingStateCopyWith<_OnboardingState> get copyWith => __$OnboardingStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OnboardingState&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.selectedLanguage, selectedLanguage) || other.selectedLanguage == selectedLanguage)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OnboardingState&&(identical(other.name, name) || other.name == name)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,surname,avatar,selectedLanguage,isLoading,error);
+int get hashCode => Object.hash(runtimeType,name,surname,avatar,isLoading,error);
 
 @override
 String toString() {
-  return 'OnboardingState(name: $name, surname: $surname, avatar: $avatar, selectedLanguage: $selectedLanguage, isLoading: $isLoading, error: $error)';
+  return 'OnboardingState(name: $name, surname: $surname, avatar: $avatar, isLoading: $isLoading, error: $error)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$OnboardingStateCopyWith<$Res> implements $OnboardingState
   factory _$OnboardingStateCopyWith(_OnboardingState value, $Res Function(_OnboardingState) _then) = __$OnboardingStateCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String surname, String avatar, String selectedLanguage, bool isLoading, AppError? error
+ String name, String surname, String avatar, bool isLoading, AppError? error
 });
 
 
@@ -268,12 +266,11 @@ class __$OnboardingStateCopyWithImpl<$Res>
 
 /// Create a copy of OnboardingState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? surname = null,Object? avatar = null,Object? selectedLanguage = null,Object? isLoading = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? surname = null,Object? avatar = null,Object? isLoading = null,Object? error = freezed,}) {
   return _then(_OnboardingState(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,surname: null == surname ? _self.surname : surname // ignore: cast_nullable_to_non_nullable
 as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,selectedLanguage: null == selectedLanguage ? _self.selectedLanguage : selectedLanguage // ignore: cast_nullable_to_non_nullable
 as String,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppError?,

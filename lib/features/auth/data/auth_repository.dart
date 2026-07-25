@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:linguobyte/core/constants/firestore_paths.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/features/auth/domain/user_model.dart';
+import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/features/auth/domain/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repository.g.dart';

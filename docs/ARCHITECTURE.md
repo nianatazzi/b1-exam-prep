@@ -6,10 +6,11 @@
 
 ## 1. Обзор проекта
 
-Мобильное приложение для изучения иностранных языков на базовом уровне (грамматика, словарный запас, общее понимание). Платформы: Android, iOS.
+Мобильное приложение для подготовки к устному экзамену B1 (польский язык): три раздела экзамена (image_description / monologue / dialogue) → темы → уровни подготовки (vocabulary / grammar / phrases) → упражнения. Платформы: Android, iOS.
 
-Контент: теория, упражнения, дополнительные материалы.
 Роли: пользователь, администратор. Админ-панель — отдельное веб-приложение, не часть этого проекта.
+
+Отдельное приложение от linguobyte (свой `applicationId`/bundle id, свой Firestore-контент `b1_polish`/`b1_progress`), но использует тот же Firebase-проект и общий профиль (`private_user_info`/`public_user_info`) — см. §12 и `FIRESTORE.md`. Изучаемый язык фиксирован (польский), пикера языков нет.
 
 ---
 
@@ -92,14 +93,11 @@ lib/
       data/
       domain/
       presentation/
-    home/
-      data/
-      domain/
-      presentation/
-    lesson/
-      data/
-      domain/
-      presentation/
+    b1_exam/
+      data/            # ExamContentRepository, ExamExerciseRepository, ExamProgressRepository
+      domain/          # ExamSectionModel/ExamTopicModel/..., ExerciseModel/ExerciseResult (движок упражнений),
+                       # CheckB1AchievementUseCase, CompleteB1StepUseCase
+      presentation/    # B1HomeScreen, TopicDetailScreen, PracticeScreen, ExerciseWidget + exercises/*
     profile/
       data/
       domain/
@@ -137,36 +135,25 @@ lib/
 ## 6. Навигация (GoRouter)
 
 - Все маршруты декларативные, пути — константы в `AppRoutes`
-- **`SplashScreen`** — только UI (spinner). Навигацию целиком берёт на себя `redirect` в GoRouter: пока auth загружается — остаётся на splash; когда auth определился — уходит на `/auth`, `/onboarding` или `/home`.
+- **`SplashScreen`** — только UI (spinner). Навигацию целиком берёт на себя `redirect` в GoRouter: пока auth загружается — остаётся на splash; когда auth определился — уходит на `/auth`, `/onboarding` или `/b1`.
 - **Авторизация и онбординг:** `refreshListenable` + `redirect`. GoRouter слушает два провайдера — `authProvider` и `onboardingStatusProvider`:
   - Не авторизован → `/auth`
   - Авторизован, онбординг не пройден → `/onboarding`
-  - Авторизован, онбординг пройден → `/home`
-- **`onboardingStatusProvider`** (`auth/presentation/`) читает `public_user_info/{userId}.onboardingComplete` из Firestore (legacy-юзеры без поля определяются по непустому `name`). Кэшируется Riverpod; `OnboardingNotifier` инвалидирует его после сохранения профиля — роутер уводит на `/home`. Признак «онбординг нужен» хранится в Firestore, а не в RAM, поэтому работает при любом сценарии входа (email/Google) и переживает перезапуск.
-- **LessonScreen** — один экран без вложенных маршрутов GoRouter. Внутри себя управляет последовательностью шагов урока через локальное состояние нотификатора. См. раздел 6.1.
-- Маршрут: `AppRoutes.lessonPath(langId, lessonId)` — `langId` передаётся явно, чтобы LessonScreen не зависел от `HomeNotifier` для определения языка обучения.
+  - Авторизован, онбординг пройден → `/b1` (`B1HomeScreen`)
+- **`onboardingStatusProvider`** (`auth/presentation/`) читает `public_user_info/{userId}.onboardingComplete` из Firestore (legacy-юзеры без поля определяются по непустому `name`). Кэшируется Riverpod; `OnboardingNotifier` инвалидирует его после сохранения профиля — роутер уводит на `/b1`. Признак «онбординг нужен» хранится в Firestore, а не в RAM, поэтому работает при любом сценарии входа (email/Google) и переживает перезапуск.
+- **PracticeScreen** — маршрут `AppRoutes.b1Practice` (`/b1/practice/:sectionId/:topicId/:prepLevel`). Внутри себя управляет фазой (контент → упражнения) через локальное состояние `PracticeNotifier`. См. раздел 6.1.
 
 ---
 
-## 6.1 Логика прохождения урока (LessonScreen)
+## 6.1 Логика прохождения уровня подготовки (PracticeScreen)
 
-Урок — детерминированная последовательность `List<LessonStep>`, собираемая `BuildLessonUseCase` при открытии. Порядок фиксирован: **theory[] → lexical? → verbs? → final?** (lexical/verbs/final добавляются только если их данные непусты).
+В отличие от linguobyte (последовательные уроки), в B1 темы доступны сразу — нет `lastLesson`/`lastParagraph`. Один `PracticeState.step` — пара «контент + упражнения» для одного `prepLevel` (`vocabulary` | `grammar` | `phrases`) одной темы, аналог `LessonStep` из linguobyte, но без последовательности и без suffix-структуры (theory/lexical/verbs/final).
 
-- **theory** — каждый блок (сортировка `th_id`) → `TheoryLessonStep` + его упражнения (`segment_type="theory"`, `linked_item_id=th_id`).
-- **lexical_set** — один `LexicalLessonStep`: все блоки (`voc_id`) + упражнения (`segment_type="vocab"`).
-- **verbs** — один `VerbsLessonStep` со списком `VerbSubStep` (`v_id`). Каждый глагол: таблица спряжения → его упражнения (`segment_type="verb"`). Суб-навигация — локальный стейт `VerbsStepWidget`; для прогресса вся пара — один шаг. Результат каждого глагола сохраняется отдельно (`recordVerbSubStep`, ключ `{lId}_verb_{vId}`, в т.ч. пустой при отсутствии упражнений — глагол считается пройденным); `progressIndex` двигается раз на последнем глаголе.
-- **final** — `FinalLessonStep` с упражнениями `segment_type="final"`.
-- **additional** — вне `List<LessonStep>`, в `LessonState.additional`; доступен через панель, не блокирует завершение.
-
-Все упражнения урока грузятся одним запросом (`course_id="basic_{langId}"`, `lesson_id=lId`) и группируются в памяти.
-
-**Два индекса в `LessonNotifier`:** `progressIndex` = `lastParagraph` (Firestore, завершённые шаги); `viewIndex` — просматриваемый шаг (навигация назад/через панель, без записи).
-
-**Завершение шага** делегируется `CompleteStepUseCase` (domain): сохранить результаты субпарта (+stats), обновить стрик, проверить достижения, продвинуть прогресс. Переигровка пройденного шага (`viewIndex < progressIndex`) обновляет результаты/достижения, но прогресс не двигает.
-
-**Поток внутри шага:** контент → упражнения по одному (общий `ExercisePhaseWidget`) → «Завершить». Завершение урока (`progressIndex >= steps.length`): `lastLesson=nextLesson.id`, `lastParagraph=0`, заглушка, возврат на Home.
-
-**Навигационная панель:** прогресс-бар в AppBar (`progressIndex / steps.length`); тап → BottomSheet шагов. Завершённые и текущий тапабельны, залоченные — нет.
+- **VocabularyPrepStep** / **GrammarPrepStep** / **PhrasesPrepStep** — контент темы (`TopicVocabularyModel` / `GrammarRuleModel` / `PhrasePatternModel`) + упражнения, отфильтрованные по `segment_type == prepLevel`.
+- Все упражнения темы грузятся одним запросом (`course_id="b1_pl"`, `lesson_id=topic.tId`) и фильтруются в памяти по `prepLevel`.
+- **Поток внутри шага:** контент → упражнения по одному (общий `ExercisePhaseWidget`, переиспользован из бывшего `lesson`-движка, теперь в `b1_exam/presentation/widgets/`) → «Завершить».
+- **Завершение шага** делегируется `CompleteB1StepUseCase` (domain, `b1_exam`): сохранить результат уровня подготовки (+stats), обновить стрик (общий `IStreakRepository` из `profile`), проверить достижения (`CheckB1AchievementUseCase`). Прогресс не последовательный — двигать нечего, в отличие от linguobyte's `CompleteStepUseCase`.
+- `stepKey` = `"{sectionType}_{topicTId}_{prepLevel}"`, хранится в `b1_progress/{userId}.topicResults`.
 
 ---
 
@@ -174,12 +161,12 @@ lib/
 
 - `SplashScreen`
 - `AuthorizationScreen` (вход, регистрация, восстановление пароля)
-- `OnboardingScreen` — первичная настройка профиля (аватар, имя, фамилия, язык обучения) сразу после регистрации. Маршрут по флагу `onboardingComplete` из Firestore. Лежит в `features/auth/presentation/` (часть auth-потока, проходится один раз).
-- `HomeScreen`
+- `OnboardingScreen` — первичная настройка профиля (аватар, имя, фамилия) сразу после регистрации. Язык обучения не выбирается — всегда польский. Маршрут по флагу `onboardingComplete` из Firestore. Лежит в `features/auth/presentation/` (часть auth-потока, проходится один раз).
+- `B1HomeScreen` — разделы экзамена → темы, прогресс по каждой теме.
+- `TopicDetailScreen` — уровни подготовки (vocabulary/grammar/phrases) для темы.
+- `PracticeScreen` — прохождение одного уровня подготовки. См. раздел 6.1.
 - `ProfileScreen`
 - `SettingsScreen` — настройки (тема, язык интерфейса, скорость речи). Открывается из `ProfileScreen`.
-- `ResultScreen` — результат прохождения субпарта (correct/total, список упражнений). Показывается после завершения шага.
-- `LessonScreen` — один экран, шаги урока (теория / лексика / глаголы / упражнения / доп. материалы) переключаются внутри него, без отдельных маршрутов. См. раздел 6.1.
 
 ---
 
@@ -232,9 +219,8 @@ lib/
 - Языки интерфейса MVP: EN, RU, FR, ES
 - **Язык интерфейса** и **язык обучения** — разные сущности, не смешивать:
   - **Язык интерфейса** — выбирается пользователем в `ProfileScreen`. Хранится в `public_user_info/{userId}.preference.uiLanguage`. Управляется через `AppLocaleNotifier` (`core/locale/`). `MaterialApp.locale` берёт значение из этого провайдера.
-  - **Язык обучения** — первично выбирается в `OnboardingScreen`, далее переключается на `HomeScreen`. Управляется через `HomeNotifier` (`features/home/presentation/providers/`).
-    - Прогресс по каждому языку хранится в `private_user_info/{userId}/languages/{langId}`.
-    - Последний выбранный язык (UI-предпочтение) хранится в `public_user_info/{userId}/preference.selectedLanguage` — записывается онбордингом при первом выборе, восстанавливается при следующем открытии экрана.
+  - **Язык обучения** — фиксирован (польский), пикера нет. `OnboardingNotifier` пишет `'pl'` в `public_user_info/{userId}.preference.selectedLanguage` при завершении онбординга — только для совместимости поля, общего с linguobyte на одном аккаунте; сам b1-exam-prep это поле не читает.
+    - Прогресс хранится в `private_user_info/{userId}/b1_progress/pl` — изолирован от `languages/{langId}` (linguobyte). См. `FIRESTORE.md` §4.
 - Все строки интерфейса — только через ARB. Хардкод строк запрещён.
 
 ---
@@ -253,13 +239,13 @@ lib/
 
 | Сущность | Стиль | Пример |
 |---|---|---|
-| Файлы | `snake_case` | `get_lesson_use_case.dart` |
-| Экраны | `PascalCase` + `Screen` | `HomeScreen` |
-| Модели | `PascalCase` + `Model` | `LessonModel` |
-| Репозитории | `PascalCase` + `Repository` | `LessonRepository` |
-| UseCase | `PascalCase` + `UseCase` | `GetLessonUseCase` |
-| Классы нотификаторов | `PascalCase` | `LessonNotifier` |
-| Провайдеры | `camelCase` + `Provider` | `lessonProvider` |
+| Файлы | `snake_case` | `exam_progress_repository.dart` |
+| Экраны | `PascalCase` + `Screen` | `B1HomeScreen` |
+| Модели | `PascalCase` + `Model` | `ExamTopicModel` |
+| Репозитории | `PascalCase` + `Repository` | `ExamProgressRepository` |
+| UseCase | `PascalCase` + `UseCase` | `CompleteB1StepUseCase` |
+| Классы нотификаторов | `PascalCase` | `PracticeNotifier` |
+| Провайдеры | `camelCase` + `Provider` | `practiceProvider` |
 | Коллекции Firestore | `camelCase` | `privateUserInfo` |
 
 > Провайдеры в `camelCase` — не исключение из правил, а поведение генератора `@riverpod`. Класс нотификатора (`LessonNotifier`) — `PascalCase`. Провайдер (`lessonProvider`) генерируется автоматически в `camelCase`. Riverpod 3.x убирает суффикс `Notifier` из имени провайдера.
@@ -323,24 +309,16 @@ lib/
 
 - **Запоминание входа** (`AuthorizationScreen`): поля email/пароль не сохраняются между сессиями. _Когда закрывать_: пост-MVP, при работе над UX онбординга.
 
-### Фаза 3 (HomeScreen)
+### B1 exam prep (после переноса движка упражнений из linguobyte)
 
-- **`get_home_data_use_case.dart`**: `@riverpod`-провайдер в domain-файле импортирует data-репозитории для DI-wiring. Класс `GetHomeDataUseCase` уже зависит только от domain-интерфейсов, но файловый уровень связи остался. Долгосрочное решение: перенести провайдер в `presentation/providers/home_providers.dart`.
-- **Новый пользователь**: полная инициализация документа (`updateLearningLanguage`) не вызывается — часть будущего онбординга. Для MVP не нужно: документ создаётся частично через `set(merge:true)`, модели терпимы к пропускам (`@Default`).
-- **`activeIndex == -1`**: если `lastLesson` есть, но урок не найден — все карточки locked. Пост-MVP: кнопка сброса прогресса в `ProfileScreen`.
-- **`getLessonStepSummaries` — 4·N чтений**: для N уроков `1` (уроки) + `1` (прогресс) + `4·N` (theory + lexical + verbs + final, по limit 1). Для MVP приемлемо (офлайн-кэш, ≤30 уроков). Денормализация `steps_summary` рассмотрена и **отклонена** (риск устаревания данных + правка админки).
+> `features/home` и `features/lesson` (уроки, теория/лексика/глаголы, `HomeScreen`) удалены целиком — это была логика linguobyte, к B1 (разделы → темы → уровни подготовки) не относится. Общий движок упражнений (`ExerciseModel`, `ExerciseResult`, `ExerciseWidget`, `ExercisePhaseWidget`, 8 виджетов типов) перенесён в `features/b1_exam`. Технический долг из старых фаз 3–4, привязанный к удалённому коду, снят вместе с ним.
 
-### Lesson (Фаза 4)
-
-- **`_LessonCompleteStub`**: экран завершения — заглушка. Баллы/проблемные моменты — после MVP.
-- **Additional / подписка**: additional через панель (заглушка-диалог); гейтинг по `subscription.plan` — после MVP.
-- **`isFullyCompleted`**: последний урок курса остаётся `active` с 100% (нет `nextLesson`, `lastLesson` не сдвигается). Пост-MVP: явное поле завершённости в прогрессе.
-- **Переигровка шага — побочки stats/достижений**: при возврате на пройденный шаг через панель и повторном «Завершить» `CompleteStepUseCase` (при `isReplay`) прогресс урока корректно не двигает, но всё равно инкрементит `stats` (`FieldValue.increment` → инфляция счётчиков радара), выдаёт инкрементальные достижения (`vocabulary_master`/`master_conjugator` накручиваются) и сбрасывает `viewIndex` на `progressIndex` (выбрасывает на текущий шаг/stub). Требует продуктового решения по UX и поведению stats/достижений при переигровке — обсудить с командой, затем изолировать `isReplay` в `execute` (обновлять только `stepResults`).
-
+- **`CheckB1AchievementUseCase` — эвристическая адаптация**: 5 достижений те же, что в linguobyte, но триггеры адаптированы под структуру B1 (нет уроков/суб-шагов глаголов): `master_conjugator` триггерится завершением `grammar`-уровня темы при полностью пройденной теме (vocab+grammar+phrases), `first_step` — первая тема (`t_id==1`) полностью пройдена. Продуктово не подтверждено — пересмотреть, когда появится реальный B1-контент и обратная связь.
+- **Переигровка уровня подготовки — побочки stats/достижений**: как и в linguobyte, повторное прохождение уже пройденного уровня подготовки инкрементит `stats` и достижения заново (`FieldValue.increment`, `master_conjugator`/`vocabulary_master` накручиваются). Решение то же, что и для linguobyte — не реализовано, требует продуктового решения.
 - **[TD-1] Debug Skip-кнопка** (`exercise_widget.dart`): debug-блок (`if (!kDebugMode)` + `Stack`) — убрать перед релизом.
-- **[TD-2] Молчаливый пропуск битых упражнений** (`exercise_repository.dart`): `fromJson` падает → упражнение пропадает без лога в release. Заменить `kDebugMode`-print на `AppLogger.w` (как уже сделано в `LessonContentRepository._parseDocs`).
 - **[TD-3] Пустой `form` в fill_blank**: показать заглушку вместо поля ввода без контекста.
 - **[TD-4] Ключ виджета по `exId`**: `ValueKey(exercise.exId)` — при дублях `ex_id` State переиспользуется. Сменить на `ValueKey(exercise.id)` (DocumentSnapshot.id).
+- **Нет тестов для `CheckB1AchievementUseCase`/`CompleteB1StepUseCase`**: старые `check_achievement_use_case_test.dart`/`complete_step_use_case_test.dart` тестировали linguobyte-версии и удалены вместе с ними. Тесты для B1-версий не написаны — не запрошено явно (см. CLAUDE.md «Открытые пункты»).
 
 ### Profile / Settings (Фаза 5)
 
@@ -354,7 +332,7 @@ lib/
 
 ### Кросс-фичевые зависимости (допустимо для MVP)
 
-- `UserRepository` (profile) используется в `HomeNotifier` и в онбординге (`auth`).
-- `LanguageRepository` / `LanguageModel` (home) используются онбордингом (`auth`) для пикера языка обучения. Пост-MVP: если язык понадобится третьей фиче — вынести в `shared/` или `core/`.
-- `BuildLessonUseCase` / `CompleteStepUseCase` (lesson/domain) зависят от интерфейсов других фич: `ILessonRepository`/`IUserProgressRepository` (home), `IStreakRepository` (profile). Пост-MVP: вынести общие интерфейсы в `shared/` или `core/`.
+- `UserRepository` (profile) используется в онбординге (`auth`) и в `CompleteB1StepUseCase` (`b1_exam`, через узкий интерфейс `IStreakRepository`) — стрик общий для аккаунта, не привязан к языку/приложению.
+- `AchievementModel`/`AchievementType`/`ExerciseStatsModel`/`StepResultModel` (profile/domain) используются `b1_exam` (`TopicProgressModel`, `CheckB1AchievementUseCase`) — одна и та же форма stats/achievements для общего `ProfileScreen`, при полностью изолированных Firestore-документах (`b1_progress` vs. несуществующий теперь `languages/{langId}`). `AchievementUpdate` вынесен в отдельный файл `profile/domain/achievement_update.dart`, чтобы `b1_exam` не тянул удалённый linguobyte-специфичный `CheckAchievementUseCase`.
+- Движок упражнений (`ExerciseModel`/`ExerciseResult`/`ExerciseWidget`/`ExercisePhaseWidget`/`exercises/*`) раньше был общим между `home`/`lesson` и `b1_exam`; после удаления `lesson` живёт целиком в `b1_exam` — больше не кросс-фичевая зависимость.
 

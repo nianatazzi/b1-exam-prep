@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:linguobyte/core/constants/app_sizes.dart';
-import 'package:linguobyte/core/constants/app_spacing.dart';
-import 'package:linguobyte/core/errors/app_error.dart';
-import 'package:linguobyte/core/theme/app_colors.dart';
-import 'package:linguobyte/features/auth/presentation/auth_notifier.dart';
-import 'package:linguobyte/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/core/constants/app_sizes.dart';
+import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/core/theme/app_colors.dart';
+import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
+import 'package:b1_exam_prep/l10n/app_localizations.dart';
 
 enum _AuthMode { signIn, signUp, resetPassword }
 
