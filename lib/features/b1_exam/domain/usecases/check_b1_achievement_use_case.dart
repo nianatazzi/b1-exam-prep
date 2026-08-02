@@ -9,6 +9,10 @@ import 'package:b1_exam_prep/features/profile/domain/step_result_model.dart';
 /// подготовки (vocabulary/grammar/phrases), без уроков и суб-шагов глаголов.
 class CheckB1AchievementUseCase {
   /// [allTopicResults] — topicResults ПОСЛЕ сохранения текущего шага.
+  /// [requiredPrepLevels] — какие уровни подготовки должны быть пройдены,
+  /// чтобы тема считалась завершённой. Разные секции экзамена имеют разный
+  /// набор уровней (например image_description не использует "vocabulary" —
+  /// существительные проходятся через "grammar", см. ImagePracticeStep).
   List<AchievementUpdate> check({
     required String sectionType,
     required int topicTId,
@@ -17,6 +21,7 @@ class CheckB1AchievementUseCase {
     required Map<String, StepResultModel> allTopicResults,
     required Map<String, AchievementModel> currentAchievements,
     required int currentStreak,
+    required List<String> requiredPrepLevels,
   }) {
     final updates = <AchievementUpdate>[];
 
@@ -24,6 +29,7 @@ class CheckB1AchievementUseCase {
       sectionType: sectionType,
       topicTId: topicTId,
       allTopicResults: allTopicResults,
+      requiredPrepLevels: requiredPrepLevels,
     );
 
     final masterConj = _checkMasterConjugator(
@@ -60,8 +66,9 @@ class CheckB1AchievementUseCase {
     required String sectionType,
     required int topicTId,
     required Map<String, StepResultModel> allTopicResults,
+    required List<String> requiredPrepLevels,
   }) {
-    return const ['vocabulary', 'grammar', 'phrases'].every(
+    return requiredPrepLevels.every(
       (level) =>
           allTopicResults.containsKey('${sectionType}_${topicTId}_$level'),
     );

@@ -1049,6 +1049,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{contentCount} items, {exerciseCount} exercises'**
   String b1LevelSubtitle(int contentCount, int exerciseCount);
+
+  /// Image description flow step: verb conjugation table
+  ///
+  /// In en, this message translates to:
+  /// **'Verb conjugation'**
+  String get b1VerbConjugation;
+
+  /// Image description flow step: noun declension table
+  ///
+  /// In en, this message translates to:
+  /// **'Noun declension'**
+  String get b1NounDeclension;
+
+  /// Image description flow step: timed self-recorded description
+  ///
+  /// In en, this message translates to:
+  /// **'Free practice'**
+  String get b1FreePractice;
+
+  /// Instructions shown before starting the free practice recording
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the image in Polish. You\'ll have 3 minutes to speak — the timer starts when you tap Start.'**
+  String get b1FreePracticeInstructions;
+
+  /// Button to start the free practice timer and recording
+  ///
+  /// In en, this message translates to:
+  /// **'Start recording'**
+  String get b1StartRecording;
+
+  /// Shown when the free practice countdown reaches zero
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up!'**
+  String get b1TimeUp;
+
+  /// Label above the recognized speech transcript in free practice
+  ///
+  /// In en, this message translates to:
+  /// **'Your transcript'**
+  String get b1YourTranscript;
+
+  /// Notice that free practice has no automatic analysis yet
+  ///
+  /// In en, this message translates to:
+  /// **'AI-based feedback isn\'t available yet. Review your transcript and self-assess for now.'**
+  String get b1FreePracticeSelfAssessNotice;
+
+  /// Button to submit the free practice transcript and finish the topic
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get b1FinishPractice;
+
+  /// Button to end the free practice recording early, before the timer runs out
+  ///
+  /// In en, this message translates to:
+  /// **'Stop recording'**
+  String get b1StopRecording;
+
+  /// Heading above the list of misused words from AI analysis
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to review'**
+  String get b1AnalysisTitle;
+
+  /// Shown when AI analysis found no misused verbs/nouns
+  ///
+  /// In en, this message translates to:
+  /// **'No mistakes found — great job!'**
+  String get b1AnalysisNoMistakes;
+
+  /// Shown when AI analysis failed or wasn't run
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis isn\'t available for this attempt.'**
+  String get b1AnalysisUnavailable;
+
+  /// Label before the form the user actually used
+  ///
+  /// In en, this message translates to:
+  /// **'You said'**
+  String get b1AnalysisYouSaid;
+
+  /// Label before the correct form for that context
+  ///
+  /// In en, this message translates to:
+  /// **'Correct form'**
+  String get b1AnalysisCorrectForm;
+
+  /// Part of speech label: verb
+  ///
+  /// In en, this message translates to:
+  /// **'Verb'**
+  String get b1WordTypeVerb;
+
+  /// Part of speech label: noun
+  ///
+  /// In en, this message translates to:
+  /// **'Noun'**
+  String get b1WordTypeNoun;
 }
 
 class _AppLocalizationsDelegate

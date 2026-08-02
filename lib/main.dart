@@ -17,9 +17,14 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // На Android google-services.json уже регистрирует "[DEFAULT]" через нативный
+  // FirebaseInitProvider до вызова main() — повторная инициализация иначе
+  // падает с [core/duplicate-app] и main() никогда не доходит до runApp().
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   // serverClientId нужен для получения idToken от Google (--dart-define=GOOGLE_SERVER_CLIENT_ID=...)
   const googleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');

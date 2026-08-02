@@ -480,5 +480,56 @@
       "contentCount": { "type": "int" },
       "exerciseCount": { "type": "int" }
     }
-  }
+  },
+
+  "b1VerbConjugation": "Verb conjugation",
+  "@b1VerbConjugation": { "description": "Image description flow step: verb conjugation table" },
+
+  "b1NounDeclension": "Noun declension",
+  "@b1NounDeclension": { "description": "Image description flow step: noun declension table" },
+
+  "b1FreePractice": "Free practice",
+  "@b1FreePractice": { "description": "Image description flow step: timed self-recorded description" },
+
+  "b1FreePracticeInstructions": "Describe the image in Polish. You'll have 3 minutes to speak — the timer starts when you tap Start.",
+  "@b1FreePracticeInstructions": { "description": "Instructions shown before starting the free practice recording" },
+
+  "b1StartRecording": "Start recording",
+  "@b1StartRecording": { "description": "Button to start the free practice timer and recording" },
+
+  "b1TimeUp": "Time's up!",
+  "@b1TimeUp": { "description": "Shown when the free practice countdown reaches zero" },
+
+  "b1YourTranscript": "Your transcript",
+  "@b1YourTranscript": { "description": "Label above the recognized speech transcript in free practice" },
+
+  "b1FreePracticeSelfAssessNotice": "AI-based feedback isn't available yet. Review your transcript and self-assess for now.",
+  "@b1FreePracticeSelfAssessNotice": { "description": "Notice that free practice has no automatic analysis yet" },
+
+  "b1FinishPractice": "Finish",
+  "@b1FinishPractice": { "description": "Button to submit the free practice transcript and finish the topic" },
+
+  "b1StopRecording": "Stop recording",
+  "@b1StopRecording": { "description": "Button to end the free practice recording early, before the timer runs out" },
+
+  "b1AnalysisTitle": "Areas to review",
+  "@b1AnalysisTitle": { "description": "Heading above the list of misused words from AI analysis" },
+
+  "b1AnalysisNoMistakes": "No mistakes found — great job!",
+  "@b1AnalysisNoMistakes": { "description": "Shown when AI analysis found no misused verbs/nouns" },
+
+  "b1AnalysisUnavailable": "Analysis isn't available for this attempt.",
+  "@b1AnalysisUnavailable": { "description": "Shown when AI analysis failed or wasn't run" },
+
+  "b1AnalysisYouSaid": "You said",
+  "@b1AnalysisYouSaid": { "description": "Label before the form the user actually used" },
+
+  "b1AnalysisCorrectForm": "Correct form",
+  "@b1AnalysisCorrectForm": { "description": "Label before the correct form for that context" },
+
+  "b1WordTypeVerb": "Verb",
+  "@b1WordTypeVerb": { "description": "Part of speech label: verb" },
+
+  "b1WordTypeNoun": "Noun",
+  "@b1WordTypeNoun": { "description": "Part of speech label: noun" }
 }

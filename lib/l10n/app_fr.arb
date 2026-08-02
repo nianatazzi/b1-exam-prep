@@ -185,5 +185,23 @@
       "contentCount": { "type": "int" },
       "exerciseCount": { "type": "int" }
     }
-  }
+  },
+
+  "b1VerbConjugation": "Conjugaison des verbes",
+  "b1NounDeclension": "Déclinaison des noms",
+  "b1FreePractice": "Pratique libre",
+  "b1FreePracticeInstructions": "Décrivez l'image en polonais. Vous aurez 3 minutes — le minuteur démarre après avoir appuyé sur « Démarrer ».",
+  "b1StartRecording": "Démarrer l'enregistrement",
+  "b1TimeUp": "Temps écoulé !",
+  "b1YourTranscript": "Votre transcription",
+  "b1FreePracticeSelfAssessNotice": "L'analyse par IA n'est pas encore disponible. Évaluez votre enregistrement vous-même pour l'instant.",
+  "b1FinishPractice": "Terminer",
+  "b1StopRecording": "Arrêter l'enregistrement",
+  "b1AnalysisTitle": "Points à revoir",
+  "b1AnalysisNoMistakes": "Aucune erreur trouvée — excellent travail !",
+  "b1AnalysisUnavailable": "L'analyse n'est pas disponible pour cet essai.",
+  "b1AnalysisYouSaid": "Vous avez dit",
+  "b1AnalysisCorrectForm": "Forme correcte",
+  "b1WordTypeVerb": "Verbe",
+  "b1WordTypeNoun": "Nom"
 }

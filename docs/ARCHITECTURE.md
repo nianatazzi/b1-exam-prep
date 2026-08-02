@@ -32,6 +32,8 @@
 | Локализация | `flutter_localizations` + `intl` + ARB-файлы |
 | Логирование | `logger` через абстракцию `AppLogger` |
 | Shimmer | `shimmer` |
+| Backend (LLM-вызовы) | Firebase Cloud Functions (Node.js, `functions/`) — единственное место, где живут внешние API-ключи (Secret Manager), клиент их не хранит и не хардкодит |
+| LLM (анализ свободной практики) | OpenAI API (`gpt-4o-mini`), вызывается только из Cloud Function `analyzeFreePractice` |
 
 > Видеоплеер и видеохостинг — открытый пункт, решается отдельно.
 > Не подключать новые пакеты без явного указания.
@@ -154,6 +156,28 @@ lib/
 - **Поток внутри шага:** контент → упражнения по одному (общий `ExercisePhaseWidget`, переиспользован из бывшего `lesson`-движка, теперь в `b1_exam/presentation/widgets/`) → «Завершить».
 - **Завершение шага** делегируется `CompleteB1StepUseCase` (domain, `b1_exam`): сохранить результат уровня подготовки (+stats), обновить стрик (общий `IStreakRepository` из `profile`), проверить достижения (`CheckB1AchievementUseCase`). Прогресс не последовательный — двигать нечего, в отличие от linguobyte's `CompleteStepUseCase`.
 - `stepKey` = `"{sectionType}_{topicTId}_{prepLevel}"`, хранится в `b1_progress/{userId}.topicResults`.
+
+---
+
+## 6.2 Фиксированная последовательность image_description (ImagePracticeScreen)
+
+В отличие от §6.1 (три независимых `PrepLevelCard`, любой порядок), топики `image_description` проходятся одним экраном по фиксированной последовательности: глаголы (спряжение) → существительные (склонение) → фразы → свободная практика. Отдельный маршрут `AppRoutes.b1ImagePractice`, не затрагивает `TopicDetailScreen`/`PracticeScreen` (те остаются для monologue/dialogue). `B1HomeScreen` ветвится на этот маршрут по `section.type == ExamSectionType.imageDescription`.
+
+- **`ImagePracticeStep`** (domain, plain sealed class, не freezed — in-memory UI-состояние): `VerbConjugationStep`/`NounDeclensionStep`/`IntroPhrasesStep`. Глаголы/существительные — не отдельные модели, а `GrammarRuleModel` с `rule_type == conjugation`/`declension` соответственно; упражнения сопоставляются через `linked_item_id == rule.gId`.
+- Оба грамматических шага пишутся под одним `prepLevel` `"grammar"` (см. `ImagePracticeStep.prepLevel`) — результаты накапливаются в `ImagePracticeNotifier` и сохраняются одним вызовом `CompleteB1StepUseCase` только когда следующий шаг относится к другому `prepLevel`.
+- `image_description` не использует `prepLevel` `"vocabulary"` — поэтому `CompleteB1StepUseCase.execute()`/`CheckB1AchievementUseCase.check()` принимают `requiredPrepLevels` (какой набор уровней считается «темой пройдена полностью»), вместо захардкоженной тройки `vocabulary/grammar/phrases` (см. §20).
+- После прохождения всех шагов — свободная практика (`isFreePractice` в `ImagePracticeState`), см. §6.3.
+
+---
+
+## 6.3 Анализ свободной практики (LLM)
+
+Свободная практика (`FreePracticeView`): картинка темы + таймер 3 минуты + `speech_to_text` → транскрипт. По завершении (`SubmitFreePracticeUseCase`, domain `b1_exam`):
+
+1. Транскрипт отправляется в Cloud Function `analyzeFreePractice` (`functions/index.js`) через `IFreePracticeAnalysisRepository`/`cloud_functions`. Функция вызывает OpenAI (`gpt-4o-mini`) с ключом из Secret Manager (`OPENAI_API_KEY`) — ключ никогда не попадает в клиент.
+2. Анализ — **best-effort**: ошибка (сеть, OpenAI недоступен) не должна ронять сохранение транскрипта, тот же паттерн что у streak/достижений в `CompleteB1StepUseCase`. При сбое `analysis` сохраняется как `null`.
+3. Результат (`FreePracticeAnalysisModel.misusedWords` — список неправильно использованных глаголов/существительных с `userForm`/`correctForm`/`explanation`) сохраняется вместе с транскриптом в `b1_progress/{userId}.freePractice.{sectionType}_{topicTId}.analysis` (см. `FIRESTORE.md`) и показывается пользователю на экране завершения.
+4. `misusedWords` — задел на будущее: список конкретных слов для повторной тренировки (сама повторная тренировка — отдельная фаза, не реализована).
 
 ---
 
@@ -313,7 +337,7 @@ lib/
 
 > `features/home` и `features/lesson` (уроки, теория/лексика/глаголы, `HomeScreen`) удалены целиком — это была логика linguobyte, к B1 (разделы → темы → уровни подготовки) не относится. Общий движок упражнений (`ExerciseModel`, `ExerciseResult`, `ExerciseWidget`, `ExercisePhaseWidget`, 8 виджетов типов) перенесён в `features/b1_exam`. Технический долг из старых фаз 3–4, привязанный к удалённому коду, снят вместе с ним.
 
-- **`CheckB1AchievementUseCase` — эвристическая адаптация**: 5 достижений те же, что в linguobyte, но триггеры адаптированы под структуру B1 (нет уроков/суб-шагов глаголов): `master_conjugator` триггерится завершением `grammar`-уровня темы при полностью пройденной теме (vocab+grammar+phrases), `first_step` — первая тема (`t_id==1`) полностью пройдена. Продуктово не подтверждено — пересмотреть, когда появится реальный B1-контент и обратная связь.
+- **`CheckB1AchievementUseCase` — эвристическая адаптация**: 5 достижений те же, что в linguobyte, но триггеры адаптированы под структуру B1 (нет уроков/суб-шагов глаголов): `master_conjugator` триггерится завершением `grammar`-уровня темы при полностью пройденной теме, `first_step` — первая тема (`t_id==1`) полностью пройдена. «Полностью пройдена» — `requiredPrepLevels` (параметр `check()`/`CompleteB1StepUseCase.execute()`) вместо захардкоженной тройки `vocabulary/grammar/phrases`: image_description не использует `vocabulary` (существительные — через `grammar`/declension, см. `ImagePracticeStep`), поэтому набор обязательных уровней передаётся вызывающей стороной (`['vocabulary','grammar','phrases']` для generic-потока, `['grammar','phrases']` для image_description). Продуктово не подтверждено — пересмотреть, когда появится реальный B1-контент и обратная связь.
 - **Переигровка уровня подготовки — побочки stats/достижений**: как и в linguobyte, повторное прохождение уже пройденного уровня подготовки инкрементит `stats` и достижения заново (`FieldValue.increment`, `master_conjugator`/`vocabulary_master` накручиваются). Решение то же, что и для linguobyte — не реализовано, требует продуктового решения.
 - **[TD-1] Debug Skip-кнопка** (`exercise_widget.dart`): debug-блок (`if (!kDebugMode)` + `Stack`) — убрать перед релизом.
 - **[TD-3] Пустой `form` в fill_blank**: показать заглушку вместо поля ввода без контекста.

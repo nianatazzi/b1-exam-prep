@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TopicProgressModel {
 
-@JsonKey(includeToJson: false) String get id; Map<String, StepResultModel> get topicResults; ExerciseStatsModel get stats; Map<String, AchievementModel> get achievements;
+@JsonKey(includeToJson: false) String get id; Map<String, StepResultModel> get topicResults; ExerciseStatsModel get stats; Map<String, AchievementModel> get achievements;// Ключ = "{sectionType}_{topicTId}", хранится только последняя попытка.
+ Map<String, FreePracticeResultModel> get freePractice;
 /// Create a copy of TopicProgressModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $TopicProgressModelCopyWith<TopicProgressModel> get copyWith => _$TopicProgressM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TopicProgressModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.topicResults, topicResults)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other.achievements, achievements));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TopicProgressModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.topicResults, topicResults)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other.achievements, achievements)&&const DeepCollectionEquality().equals(other.freePractice, freePractice));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(topicResults),stats,const DeepCollectionEquality().hash(achievements));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(topicResults),stats,const DeepCollectionEquality().hash(achievements),const DeepCollectionEquality().hash(freePractice));
 
 @override
 String toString() {
-  return 'TopicProgressModel(id: $id, topicResults: $topicResults, stats: $stats, achievements: $achievements)';
+  return 'TopicProgressModel(id: $id, topicResults: $topicResults, stats: $stats, achievements: $achievements, freePractice: $freePractice)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $TopicProgressModelCopyWith<$Res>  {
   factory $TopicProgressModelCopyWith(TopicProgressModel value, $Res Function(TopicProgressModel) _then) = _$TopicProgressModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, Map<String, StepResultModel> topicResults, ExerciseStatsModel stats, Map<String, AchievementModel> achievements
+@JsonKey(includeToJson: false) String id, Map<String, StepResultModel> topicResults, ExerciseStatsModel stats, Map<String, AchievementModel> achievements, Map<String, FreePracticeResultModel> freePractice
 });
 
 
@@ -65,13 +66,14 @@ class _$TopicProgressModelCopyWithImpl<$Res>
 
 /// Create a copy of TopicProgressModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? topicResults = null,Object? stats = null,Object? achievements = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? topicResults = null,Object? stats = null,Object? achievements = null,Object? freePractice = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,topicResults: null == topicResults ? _self.topicResults : topicResults // ignore: cast_nullable_to_non_nullable
 as Map<String, StepResultModel>,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ExerciseStatsModel,achievements: null == achievements ? _self.achievements : achievements // ignore: cast_nullable_to_non_nullable
-as Map<String, AchievementModel>,
+as Map<String, AchievementModel>,freePractice: null == freePractice ? _self.freePractice : freePractice // ignore: cast_nullable_to_non_nullable
+as Map<String, FreePracticeResultModel>,
   ));
 }
 /// Create a copy of TopicProgressModel
@@ -165,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements,  Map<String, FreePracticeResultModel> freePractice)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TopicProgressModel() when $default != null:
-return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case _:
+return $default(_that.id,_that.topicResults,_that.stats,_that.achievements,_that.freePractice);case _:
   return orElse();
 
 }
@@ -186,10 +188,10 @@ return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements,  Map<String, FreePracticeResultModel> freePractice)  $default,) {final _that = this;
 switch (_that) {
 case _TopicProgressModel():
-return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case _:
+return $default(_that.id,_that.topicResults,_that.stats,_that.achievements,_that.freePractice);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +208,10 @@ return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  Map<String, StepResultModel> topicResults,  ExerciseStatsModel stats,  Map<String, AchievementModel> achievements,  Map<String, FreePracticeResultModel> freePractice)?  $default,) {final _that = this;
 switch (_that) {
 case _TopicProgressModel() when $default != null:
-return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case _:
+return $default(_that.id,_that.topicResults,_that.stats,_that.achievements,_that.freePractice);case _:
   return null;
 
 }
@@ -221,7 +223,7 @@ return $default(_that.id,_that.topicResults,_that.stats,_that.achievements);case
 @JsonSerializable()
 
 class _TopicProgressModel implements TopicProgressModel {
-  const _TopicProgressModel({@JsonKey(includeToJson: false) required this.id, final  Map<String, StepResultModel> topicResults = const <String, StepResultModel>{}, this.stats = const ExerciseStatsModel(), final  Map<String, AchievementModel> achievements = const <String, AchievementModel>{}}): _topicResults = topicResults,_achievements = achievements;
+  const _TopicProgressModel({@JsonKey(includeToJson: false) required this.id, final  Map<String, StepResultModel> topicResults = const <String, StepResultModel>{}, this.stats = const ExerciseStatsModel(), final  Map<String, AchievementModel> achievements = const <String, AchievementModel>{}, final  Map<String, FreePracticeResultModel> freePractice = const <String, FreePracticeResultModel>{}}): _topicResults = topicResults,_achievements = achievements,_freePractice = freePractice;
   factory _TopicProgressModel.fromJson(Map<String, dynamic> json) => _$TopicProgressModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -240,6 +242,15 @@ class _TopicProgressModel implements TopicProgressModel {
   return EqualUnmodifiableMapView(_achievements);
 }
 
+// Ключ = "{sectionType}_{topicTId}", хранится только последняя попытка.
+ final  Map<String, FreePracticeResultModel> _freePractice;
+// Ключ = "{sectionType}_{topicTId}", хранится только последняя попытка.
+@override@JsonKey() Map<String, FreePracticeResultModel> get freePractice {
+  if (_freePractice is EqualUnmodifiableMapView) return _freePractice;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_freePractice);
+}
+
 
 /// Create a copy of TopicProgressModel
 /// with the given fields replaced by the non-null parameter values.
@@ -254,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TopicProgressModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._topicResults, _topicResults)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other._achievements, _achievements));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TopicProgressModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._topicResults, _topicResults)&&(identical(other.stats, stats) || other.stats == stats)&&const DeepCollectionEquality().equals(other._achievements, _achievements)&&const DeepCollectionEquality().equals(other._freePractice, _freePractice));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_topicResults),stats,const DeepCollectionEquality().hash(_achievements));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_topicResults),stats,const DeepCollectionEquality().hash(_achievements),const DeepCollectionEquality().hash(_freePractice));
 
 @override
 String toString() {
-  return 'TopicProgressModel(id: $id, topicResults: $topicResults, stats: $stats, achievements: $achievements)';
+  return 'TopicProgressModel(id: $id, topicResults: $topicResults, stats: $stats, achievements: $achievements, freePractice: $freePractice)';
 }
 
 
@@ -274,7 +285,7 @@ abstract mixin class _$TopicProgressModelCopyWith<$Res> implements $TopicProgres
   factory _$TopicProgressModelCopyWith(_TopicProgressModel value, $Res Function(_TopicProgressModel) _then) = __$TopicProgressModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, Map<String, StepResultModel> topicResults, ExerciseStatsModel stats, Map<String, AchievementModel> achievements
+@JsonKey(includeToJson: false) String id, Map<String, StepResultModel> topicResults, ExerciseStatsModel stats, Map<String, AchievementModel> achievements, Map<String, FreePracticeResultModel> freePractice
 });
 
 
@@ -291,13 +302,14 @@ class __$TopicProgressModelCopyWithImpl<$Res>
 
 /// Create a copy of TopicProgressModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? topicResults = null,Object? stats = null,Object? achievements = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? topicResults = null,Object? stats = null,Object? achievements = null,Object? freePractice = null,}) {
   return _then(_TopicProgressModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,topicResults: null == topicResults ? _self._topicResults : topicResults // ignore: cast_nullable_to_non_nullable
 as Map<String, StepResultModel>,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ExerciseStatsModel,achievements: null == achievements ? _self._achievements : achievements // ignore: cast_nullable_to_non_nullable
-as Map<String, AchievementModel>,
+as Map<String, AchievementModel>,freePractice: null == freePractice ? _self._freePractice : freePractice // ignore: cast_nullable_to_non_nullable
+as Map<String, FreePracticeResultModel>,
   ));
 }
 

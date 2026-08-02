@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/free_practice_result_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/achievement_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/exercise_stats_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/step_result_model.dart';
@@ -19,6 +20,9 @@ abstract class TopicProgressModel with _$TopicProgressModel {
     @Default(ExerciseStatsModel()) ExerciseStatsModel stats,
     @Default(<String, AchievementModel>{})
     Map<String, AchievementModel> achievements,
+    // Ключ = "{sectionType}_{topicTId}", хранится только последняя попытка.
+    @Default(<String, FreePracticeResultModel>{})
+    Map<String, FreePracticeResultModel> freePractice,
   }) = _TopicProgressModel;
 
   factory TopicProgressModel.fromJson(Map<String, dynamic> json) =>

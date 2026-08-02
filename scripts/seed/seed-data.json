@@ -1,0 +1,1433 @@
+{
+  "sections": [
+    {
+      "id": "image_description",
+      "data": {
+        "s_id": 1,
+        "type": "image_description",
+        "title": "Описание изображения"
+      },
+      "topics": [
+        {
+          "id": "topic_restaurant",
+          "data": {
+            "t_id": 1,
+            "title": "W restauracji",
+            "description": "Опишите фотографию",
+            "image_url": "REPLACE_WITH_YOUR_IMAGE_URL"
+          },
+          "grammar": [
+            {
+              "id": "verb_siadac",
+              "data": {
+                "g_id": 1,
+                "title": "siedzieć (сидеть)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "siedzę",
+                  "ty": "siedzisz",
+                  "on / ona / ono": "siedzi",
+                  "my": "siedzimy",
+                  "wy": "siedzicie",
+                  "oni / one": "siedzą"
+                },
+                "explanation": { "ru": "Настоящее время глагола 'siedzieć'. Используется для описания людей, сидящих за столом." },
+                "examples": [
+                  { "pl": "Oni siedzą przy stole.", "ru": "Они сидят за столом." }
+                ]
+              }
+            },
+            {
+              "id": "verb_pic",
+              "data": {
+                "g_id": 2,
+                "title": "pić (пить)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "piję",
+                  "ty": "pijesz",
+                  "on / ona / ono": "pije",
+                  "my": "pijemy",
+                  "wy": "pijecie",
+                  "oni / one": "piją"
+                },
+                "explanation": { "ru": "Настоящее время глагола 'pić'. Используется для описания того, что люди пьют." },
+                "examples": [
+                  { "pl": "Oni piją czerwone wino.", "ru": "Они пьют красное вино." }
+                ]
+              }
+            },
+            {
+              "id": "verb_rozmawiac",
+              "data": {
+                "g_id": 3,
+                "title": "rozmawiać (разговаривать)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "rozmawiam",
+                  "ty": "rozmawiasz",
+                  "on / ona / ono": "rozmawia",
+                  "my": "rozmawiamy",
+                  "wy": "rozmawiacie",
+                  "oni / one": "rozmawiają"
+                },
+                "explanation": { "ru": "Настоящее время глагола 'rozmawiać'. Описывает общение между людьми." },
+                "examples": [
+                  { "pl": "Oni rozmawiają ze sobą.", "ru": "Они разговаривают между собой." }
+                ]
+              }
+            },
+            {
+              "id": "verb_smiac_sie",
+              "data": {
+                "g_id": 4,
+                "title": "śmiać się (смеяться)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "śmieję się",
+                  "ty": "śmiejesz się",
+                  "on / ona / ono": "śmieje się",
+                  "my": "śmiejemy się",
+                  "wy": "śmiejecie się",
+                  "oni / one": "śmieją się"
+                },
+                "explanation": { "ru": "Возвратный глагол 'śmiać się'. Частица 'się' не изменяется." },
+                "examples": [
+                  { "pl": "Oni śmieją się razem.", "ru": "Они смеются вместе." }
+                ]
+              }
+            },
+            {
+              "id": "verb_jesc",
+              "data": {
+                "g_id": 5,
+                "title": "jeść (есть / кушать)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "jem",
+                  "ty": "jesz",
+                  "on / ona / ono": "je",
+                  "my": "jemy",
+                  "wy": "jecie",
+                  "oni / one": "jedzą"
+                },
+                "explanation": { "ru": "Нерегулярный глагол 'jeść'. Форма 3 л. мн.ч. — jedzą." },
+                "examples": [
+                  { "pl": "Oni jedzą przy stole.", "ru": "Они едят за столом." }
+                ]
+              }
+            },
+            {
+              "id": "verb_trzymac",
+              "data": {
+                "g_id": 6,
+                "title": "trzymać (держать)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "trzymam",
+                  "ty": "trzymasz",
+                  "on / ona / ono": "trzyma",
+                  "my": "trzymamy",
+                  "wy": "trzymacie",
+                  "oni / one": "trzymają"
+                },
+                "explanation": { "ru": "Настоящее время глагола 'trzymać'. Правильный глагол I спряжения." },
+                "examples": [
+                  { "pl": "On trzyma kieliszek w ręce.", "ru": "Он держит бокал в руке." }
+                ]
+              }
+            },
+            {
+              "id": "verb_patrzyc",
+              "data": {
+                "g_id": 7,
+                "title": "patrzeć (смотреть)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "patrzę",
+                  "ty": "patrzysz",
+                  "on / ona / ono": "patrzy",
+                  "my": "patrzymy",
+                  "wy": "patrzycie",
+                  "oni / one": "patrzą"
+                },
+                "explanation": { "ru": "Настоящее время глагола 'patrzeć'. Используйте с предлогом 'na' + Biernik." },
+                "examples": [
+                  { "pl": "Oni patrzą na siebie.", "ru": "Они смотрят друг на друга." }
+                ]
+              }
+            },
+            {
+              "id": "verb_swietowac",
+              "data": {
+                "g_id": 8,
+                "title": "świętować (праздновать)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "świętuje",
+                  "ty": "świętujesz",
+                  "on / ona / ono": "świętuje",
+                  "my": "świętujemy",
+                  "wy": "świętujecie",
+                  "oni / one": "świętują"
+                },
+                "explanation": { "ru": "Глаголы на -ować образуют настоящее время через суффикс -uj-." },
+                "examples": [
+                  { "pl": "Oni świętują razem.", "ru": "Они вместе отмечают праздник." }
+                ]
+              }
+            },
+            {
+              "id": "verb_bawic_sie",
+              "data": {
+                "g_id": 9,
+                "title": "bawić się (веселиться)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "bawię się",
+                  "ty": "bawisz się",
+                  "on / ona / ono": "bawi się",
+                  "my": "bawimy się",
+                  "wy": "bawicie się",
+                  "oni / one": "bawią się"
+                },
+                "explanation": { "ru": "Возвратный глагол 'bawić się'. Обозначает хорошее проведение времени." },
+                "examples": [
+                  { "pl": "Rodzina bawi się świetnie.", "ru": "Семья хорошо веселится." }
+                ]
+              }
+            },
+            {
+              "id": "verb_usmiecac_sie",
+              "data": {
+                "g_id": 10,
+                "title": "uśmiechać się (улыбаться)",
+                "rule_type": "conjugation",
+                "paradigm": {
+                  "ja": "uśmiecham się",
+                  "ty": "uśmiechasz się",
+                  "on / ona / ono": "uśmiecha się",
+                  "my": "uśmiechamy się",
+                  "wy": "uśmiechacie się",
+                  "oni / one": "uśmiechają się"
+                },
+                "explanation": { "ru": "Возвратный глагол 'uśmiechać się'. Правильный глагол I спряжения." },
+                "examples": [
+                  { "pl": "Ona uśmiecha się do kamery.", "ru": "Она улыбается в камеру." }
+                ]
+              }
+            },
+            {
+              "id": "noun_rodzina",
+              "data": {
+                "g_id": 11,
+                "title": "rodzina (семья, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "rodzina",
+                  "Dopełniacz (kogo / czego?)": "rodziny",
+                  "Celownik (komu / czemu?)": "rodzinie",
+                  "Biernik (kogo / co?)": "rodzinę",
+                  "Narzędnik (z kim / czym?)": "rodziną",
+                  "Miejscownik (o kim / czym?)": "rodzinie",
+                  "Wołacz (o!)": "rodzino"
+                },
+                "explanation": { "ru": "Существительное женского рода. Окончание Biernika -ę характерно для слов на -a." },
+                "examples": [
+                  { "pl": "Na zdjęciu widzę rodzinę.", "ru": "На фото я вижу семью." }
+                ]
+              }
+            },
+            {
+              "id": "noun_stol",
+              "data": {
+                "g_id": 12,
+                "title": "stół (стол, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "stół",
+                  "Dopełniacz (kogo / czego?)": "stołu",
+                  "Celownik (komu / czemu?)": "stołowi",
+                  "Biernik (kogo / co?)": "stół",
+                  "Narzędnik (z kim / czym?)": "stołem",
+                  "Miejscownik (o kim / czym?)": "stole",
+                  "Wołacz (o!)": "stole"
+                },
+                "explanation": { "ru": "Неодушевлённое существительное мужского рода. Biernik = Mianownik." },
+                "examples": [
+                  { "pl": "Jedzenie stoi na stole.", "ru": "Еда стоит на столе." }
+                ]
+              }
+            },
+            {
+              "id": "noun_kieliszek",
+              "data": {
+                "g_id": 13,
+                "title": "kieliszek (бокал, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "kieliszek",
+                  "Dopełniacz (kogo / czego?)": "kieliszka",
+                  "Celownik (komu / czemu?)": "kieliszkowi",
+                  "Biernik (kogo / co?)": "kieliszek",
+                  "Narzędnik (z kim / czym?)": "kieliszkiem",
+                  "Miejscownik (o kim / czym?)": "kieliszku",
+                  "Wołacz (o!)": "kieliszku"
+                },
+                "explanation": { "ru": "Беглая гласная 'e': kieliszek → kieliszka (в косвенных падежах 'e' исчезает)." },
+                "examples": [
+                  { "pl": "On trzyma kieliszek.", "ru": "Он держит бокал." }
+                ]
+              }
+            },
+            {
+              "id": "noun_wino",
+              "data": {
+                "g_id": 14,
+                "title": "wino (вино, ср.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "wino",
+                  "Dopełniacz (kogo / czego?)": "wina",
+                  "Celownik (komu / czemu?)": "winu",
+                  "Biernik (kogo / co?)": "wino",
+                  "Narzędnik (z kim / czym?)": "winem",
+                  "Miejscownik (o kim / czym?)": "winie",
+                  "Wołacz (o!)": "wino"
+                },
+                "explanation": { "ru": "Существительное среднего рода на -o. Biernik = Mianownik." },
+                "examples": [
+                  { "pl": "Piją czerwone wino.", "ru": "Они пьют красное вино." }
+                ]
+              }
+            },
+            {
+              "id": "noun_kolacja",
+              "data": {
+                "g_id": 15,
+                "title": "kolacja (ужин, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "kolacja",
+                  "Dopełniacz (kogo / czego?)": "kolacji",
+                  "Celownik (komu / czemu?)": "kolacji",
+                  "Biernik (kogo / co?)": "kolację",
+                  "Narzędnik (z kim / czym?)": "kolacją",
+                  "Miejscownik (o kim / czym?)": "kolacji",
+                  "Wołacz (o!)": "kolacjo"
+                },
+                "explanation": { "ru": "Женский род на -cja. Dopełniacz, Celownik и Miejscownik совпадают: kolacji." },
+                "examples": [
+                  { "pl": "Oni siedzą przy kolacji.", "ru": "Они сидят за ужином." }
+                ]
+              }
+            },
+            {
+              "id": "noun_kwiat",
+              "data": {
+                "g_id": 16,
+                "title": "kwiat (цветок, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "kwiat",
+                  "Dopełniacz (kogo / czego?)": "kwiatu",
+                  "Celownik (komu / czemu?)": "kwiatowi",
+                  "Biernik (kogo / co?)": "kwiat",
+                  "Narzędnik (z kim / czym?)": "kwiatem",
+                  "Miejscownik (o kim / czym?)": "kwiecie",
+                  "Wołacz (o!)": "kwiecie"
+                },
+                "explanation": { "ru": "Мужской род. В Miejscowniku основа меняется: kwiat → kwiecie." },
+                "examples": [
+                  { "pl": "Na stole stoi żółty kwiat.", "ru": "На столе стоит жёлтый цветок." }
+                ]
+              }
+            },
+            {
+              "id": "noun_talerz",
+              "data": {
+                "g_id": 17,
+                "title": "talerz (тарелка, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "talerz",
+                  "Dopełniacz (kogo / czego?)": "talerza",
+                  "Celownik (komu / czemu?)": "talerzowi",
+                  "Biernik (kogo / co?)": "talerz",
+                  "Narzędnik (z kim / czym?)": "talerzem",
+                  "Miejscownik (o kim / czym?)": "talerzu",
+                  "Wołacz (o!)": "talerzu"
+                },
+                "explanation": { "ru": "Мужской род. Biernik неодушевлённого существительного = Mianownik." },
+                "examples": [
+                  { "pl": "Na talerzu jest jedzenie.", "ru": "На тарелке есть еда." }
+                ]
+              }
+            },
+            {
+              "id": "noun_salatka",
+              "data": {
+                "g_id": 18,
+                "title": "sałatka (салат, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "sałatka",
+                  "Dopełniacz (kogo / czego?)": "sałatki",
+                  "Celownik (komu / czemu?)": "sałatce",
+                  "Biernik (kogo / co?)": "sałatkę",
+                  "Narzędnik (z kim / czym?)": "sałatką",
+                  "Miejscownik (o kim / czym?)": "sałatce",
+                  "Wołacz (o!)": "sałatko"
+                },
+                "explanation": { "ru": "Женский род на -ka. В Celowniku и Miejscowniku: sałatce (чередование k→c)." },
+                "examples": [
+                  { "pl": "Na stole stoi miska sałatki.", "ru": "На столе стоит миска салата." }
+                ]
+              }
+            },
+            {
+              "id": "noun_mezczyzna",
+              "data": {
+                "g_id": 19,
+                "title": "mężczyzna (мужчина, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "mężczyzna",
+                  "Dopełniacz (kogo / czego?)": "mężczyzny",
+                  "Celownik (komu / czemu?)": "mężczyźnie",
+                  "Biernik (kogo / co?)": "mężczyznę",
+                  "Narzędnik (z kim / czym?)": "mężczyzną",
+                  "Miejscownik (o kim / czym?)": "mężczyźnie",
+                  "Wołacz (o!)": "mężczyzno"
+                },
+                "explanation": { "ru": "Мужской род с женским склонением (оканчивается на -a). Одушевлённый: Biernik = Dopełniacz формально, но форма как у женского рода." },
+                "examples": [
+                  { "pl": "Widzę mężczyznę na zdjęciu.", "ru": "Я вижу мужчину на фото." }
+                ]
+              }
+            },
+            {
+              "id": "noun_kobieta",
+              "data": {
+                "g_id": 20,
+                "title": "kobieta (женщина, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "kobieta",
+                  "Dopełniacz (kogo / czego?)": "kobiety",
+                  "Celownik (komu / czemu?)": "kobiecie",
+                  "Biernik (kogo / co?)": "kobietę",
+                  "Narzędnik (z kim / czym?)": "kobietą",
+                  "Miejscownik (o kim / czym?)": "kobiecie",
+                  "Wołacz (o!)": "kobieto"
+                },
+                "explanation": { "ru": "Стандартное склонение женского рода на -a." },
+                "examples": [
+                  { "pl": "Obok kobiety siedzi starszy pan.", "ru": "Рядом с женщиной сидит пожилой мужчина." }
+                ]
+              }
+            },
+            {
+              "id": "noun_dziadek",
+              "data": {
+                "g_id": 21,
+                "title": "dziadek (дедушка, м.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "dziadek",
+                  "Dopełniacz (kogo / czego?)": "dziadka",
+                  "Celownik (komu / czemu?)": "dziadkowi",
+                  "Biernik (kogo / co?)": "dziadka",
+                  "Narzędnik (z kim / czym?)": "dziadkiem",
+                  "Miejscownik (o kim / czym?)": "dziadku",
+                  "Wołacz (o!)": "dziadku"
+                },
+                "explanation": { "ru": "Одушевлённый мужской род: Biernik = Dopełniacz (dziadka). Беглая 'e': dziadek → dziadka." },
+                "examples": [
+                  { "pl": "Rozmawiam z dziadkiem.", "ru": "Я разговариваю с дедушкой." }
+                ]
+              }
+            },
+            {
+              "id": "noun_babcia",
+              "data": {
+                "g_id": 22,
+                "title": "babcia (бабушка, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "babcia",
+                  "Dopełniacz (kogo / czego?)": "babci",
+                  "Celownik (komu / czemu?)": "babci",
+                  "Biernik (kogo / co?)": "babcię",
+                  "Narzędnik (z kim / czym?)": "babcią",
+                  "Miejscownik (o kim / czym?)": "babci",
+                  "Wołacz (o!)": "babciu"
+                },
+                "explanation": { "ru": "Женский род. Dopełniacz, Celownik и Miejscownik совпадают: babci." },
+                "examples": [
+                  { "pl": "Widzę babcię na pierwszym planie.", "ru": "Я вижу бабушку на переднем плане." }
+                ]
+              }
+            },
+            {
+              "id": "noun_restauracja",
+              "data": {
+                "g_id": 23,
+                "title": "restauracja (ресторан, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "restauracja",
+                  "Dopełniacz (kogo / czego?)": "restauracji",
+                  "Celownik (komu / czemu?)": "restauracji",
+                  "Biernik (kogo / co?)": "restaurację",
+                  "Narzędnik (z kim / czym?)": "restauracją",
+                  "Miejscownik (o kim / czym?)": "restauracji",
+                  "Wołacz (o!)": "restauracjo"
+                },
+                "explanation": { "ru": "Женский род на -cja. Три падежа совпадают: restauracji." },
+                "examples": [
+                  { "pl": "Oni siedzą w restauracji.", "ru": "Они сидят в ресторане." }
+                ]
+              }
+            },
+            {
+              "id": "noun_sciana",
+              "data": {
+                "g_id": 24,
+                "title": "ściana (стена, ж.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "ściana",
+                  "Dopełniacz (kogo / czego?)": "ściany",
+                  "Celownik (komu / czemu?)": "ścianie",
+                  "Biernik (kogo / co?)": "ścianę",
+                  "Narzędnik (z kim / czym?)": "ścianą",
+                  "Miejscownik (o kim / czym?)": "ścianie",
+                  "Wołacz (o!)": "ściano"
+                },
+                "explanation": { "ru": "Женский род на -a. Стандартное склонение." },
+                "examples": [
+                  { "pl": "Za nimi jest biała ściana.", "ru": "За ними белая стена." }
+                ]
+              }
+            },
+            {
+              "id": "noun_spotkanie",
+              "data": {
+                "g_id": 25,
+                "title": "spotkanie (встреча, ср.р.)",
+                "rule_type": "declension",
+                "paradigm": {
+                  "Mianownik (kto / co?)": "spotkanie",
+                  "Dopełniacz (kogo / czego?)": "spotkania",
+                  "Celownik (komu / czemu?)": "spotkaniu",
+                  "Biernik (kogo / co?)": "spotkanie",
+                  "Narzędnik (z kim / czym?)": "spotkaniem",
+                  "Miejscownik (o kim / czym?)": "spotkaniu",
+                  "Wołacz (o!)": "spotkanie"
+                },
+                "explanation": { "ru": "Средний род на -ie. Biernik = Mianownik." },
+                "examples": [
+                  { "pl": "To jest rodzinne spotkanie.", "ru": "Это семейная встреча." }
+                ]
+              }
+            }
+          ],
+          "phrases": [
+            {
+              "id": "phrase_foto",
+              "data": {
+                "p_id": 1,
+                "phrase": "Na zdjęciu widzę...",
+                "translation": { "ru": "На фото я вижу..." },
+                "usage_context": { "ru": "Фото — начало описания. Используй для открытия монолога." },
+                "category": "opening"
+              }
+            },
+            {
+              "id": "phrase_peredny_plan",
+              "data": {
+                "p_id": 2,
+                "phrase": "Na pierwszym planie widać...",
+                "translation": { "ru": "На переднем плане видно..." },
+                "usage_context": { "ru": "На переднем плане — описание того, что ближе всего к зрителю." },
+                "category": "description"
+              }
+            },
+            {
+              "id": "phrase_vtoroj_plan",
+              "data": {
+                "p_id": 3,
+                "phrase": "Na drugim planie znajduje się...",
+                "translation": { "ru": "На втором плане находится..." },
+                "usage_context": { "ru": "На втором плане — переход от переднего плана к фону." },
+                "category": "description"
+              }
+            },
+            {
+              "id": "phrase_zadny_plan",
+              "data": {
+                "p_id": 4,
+                "phrase": "W tle widać...",
+                "translation": { "ru": "На заднем плане видно..." },
+                "usage_context": { "ru": "На заднем плане — описание фона изображения." },
+                "category": "description"
+              }
+            },
+            {
+              "id": "phrase_v_glubine",
+              "data": {
+                "p_id": 5,
+                "phrase": "W głębi zdjęcia...",
+                "translation": { "ru": "В глубине фото..." },
+                "usage_context": { "ru": "В глубине — альтернатива 'в tle', акцент на перспективе." },
+                "category": "description"
+              }
+            },
+            {
+              "id": "phrase_ryadom",
+              "data": {
+                "p_id": 6,
+                "phrase": "Obok niego / niej siedzi...",
+                "translation": { "ru": "Рядом с ним / ней сидит..." },
+                "usage_context": { "ru": "Рядом с — описание расположения людей относительно друг друга." },
+                "category": "description"
+              }
+            },
+            {
+              "id": "phrase_atmosfera",
+              "data": {
+                "p_id": 7,
+                "phrase": "Atmosfera na zdjęciu jest...",
+                "translation": { "ru": "Атмосфера на фото..." },
+                "usage_context": { "ru": "Атмосфера — описание общего настроения и эмоций на фото. Используй в конце описания." },
+                "category": "opinion"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex_verb_siadac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 1,
+        "type": "voice_translate",
+        "ex_id": 1,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они сидят за столом" },
+          "correct_answer": "Oni siedzą przy stole",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni siedzą przy stole.", "siedzą przy stole"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_pic_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 2,
+        "type": "voice_translate",
+        "ex_id": 2,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они пьют красное вино" },
+          "correct_answer": "Oni piją czerwone wino",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni piją czerwone wino.", "piją czerwone wino"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_rozmawiac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 3,
+        "type": "voice_translate",
+        "ex_id": 3,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они разговаривают между собой" },
+          "correct_answer": "Oni rozmawiają ze sobą",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni rozmawiają ze sobą.", "rozmawiają ze sobą"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_smiac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 4,
+        "type": "voice_translate",
+        "ex_id": 4,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они смеются вместе" },
+          "correct_answer": "Oni śmieją się razem",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni śmieją się razem.", "śmieją się razem"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_jesc_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 5,
+        "type": "voice_translate",
+        "ex_id": 5,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они едят за столом" },
+          "correct_answer": "Oni jedzą przy stole",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni jedzą przy stole.", "jedzą przy stole"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_trzymac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 6,
+        "type": "voice_translate",
+        "ex_id": 6,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Он держит бокал в руке" },
+          "correct_answer": "On trzyma kieliszek w ręce",
+          "correct_pattern": null,
+          "accepted_answers": ["On trzyma kieliszek w ręce.", "trzyma kieliszek"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_patrzyc_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 7,
+        "type": "voice_translate",
+        "ex_id": 7,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они смотрят друг на друга" },
+          "correct_answer": "Oni patrzą na siebie",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni patrzą na siebie.", "patrzą na siebie"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_swietowac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 8,
+        "type": "voice_translate",
+        "ex_id": 8,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Они вместе отмечают праздник" },
+          "correct_answer": "Oni świętują razem",
+          "correct_pattern": null,
+          "accepted_answers": ["Oni świętują razem.", "świętują razem"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_bawic_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 9,
+        "type": "voice_translate",
+        "ex_id": 9,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Семья хорошо веселится" },
+          "correct_answer": "Rodzina bawi się świetnie",
+          "correct_pattern": null,
+          "accepted_answers": ["Rodzina bawi się świetnie.", "bawi się świetnie"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_verb_usmiecac_voice",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 10,
+        "type": "voice_translate",
+        "ex_id": 10,
+        "type_data": {
+          "title": { "ru": "Скажи по-польски" },
+          "prompts": { "ru": "Она улыбается в камеру" },
+          "correct_answer": "Ona uśmiecha się do kamery",
+          "correct_pattern": null,
+          "accepted_answers": ["Ona uśmiecha się do kamery.", "uśmiecha się do kamery"],
+          "stt_language_code": "pl-PL"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_rodzina_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 11,
+        "type": "flashcard",
+        "ex_id": 11,
+        "type_data": {
+          "base_word": "rodzina",
+          "translations": { "ru": "семья" },
+          "context_sentence": { "ru": "Na zdjęciu widzę rodzinę." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_rodzina_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 11,
+        "type": "fill_blank",
+        "ex_id": 12,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "На фото я вижу семью" },
+          "form": "Na zdjęciu widzę [].",
+          "blanks": [ { "accepted": ["rodzinę"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_stol_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 12,
+        "type": "flashcard",
+        "ex_id": 13,
+        "type_data": {
+          "base_word": "stół",
+          "translations": { "ru": "стол" },
+          "context_sentence": { "ru": "Jedzenie stoi na stole." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_stol_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 12,
+        "type": "fill_blank",
+        "ex_id": 14,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Еда стоит на столе" },
+          "form": "Jedzenie stoi na [].",
+          "blanks": [ { "accepted": ["stole"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kieliszek_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 13,
+        "type": "flashcard",
+        "ex_id": 15,
+        "type_data": {
+          "base_word": "kieliszek",
+          "translations": { "ru": "бокал" },
+          "context_sentence": { "ru": "On trzyma kieliszek." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kieliszek_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 13,
+        "type": "fill_blank",
+        "ex_id": 16,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Он держит бокал в руке" },
+          "form": "On trzyma [] w ręce.",
+          "blanks": [ { "accepted": ["kieliszek"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_wino_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 14,
+        "type": "flashcard",
+        "ex_id": 17,
+        "type_data": {
+          "base_word": "wino",
+          "translations": { "ru": "вино" },
+          "context_sentence": { "ru": "Piją czerwone wino." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_wino_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 14,
+        "type": "fill_blank",
+        "ex_id": 18,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Они пьют красное вино" },
+          "form": "Piją czerwone [].",
+          "blanks": [ { "accepted": ["wino"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kolacja_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 15,
+        "type": "flashcard",
+        "ex_id": 19,
+        "type_data": {
+          "base_word": "kolacja",
+          "translations": { "ru": "ужин" },
+          "context_sentence": { "ru": "Oni siedzą przy kolacji." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kolacja_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 15,
+        "type": "fill_blank",
+        "ex_id": 20,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Они сидят за ужином" },
+          "form": "Oni siedzą przy [].",
+          "blanks": [ { "accepted": ["kolacji"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kwiat_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 16,
+        "type": "flashcard",
+        "ex_id": 21,
+        "type_data": {
+          "base_word": "kwiat",
+          "translations": { "ru": "цветок" },
+          "context_sentence": { "ru": "Na stole stoi żółty kwiat." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kwiat_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 16,
+        "type": "fill_blank",
+        "ex_id": 22,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Рядом с цветком стоит ваза" },
+          "form": "Obok [] stoi wazon.",
+          "blanks": [ { "accepted": ["kwiatu"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_talerz_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 17,
+        "type": "flashcard",
+        "ex_id": 23,
+        "type_data": {
+          "base_word": "talerz",
+          "translations": { "ru": "тарелка" },
+          "context_sentence": { "ru": "Na talerzu jest jedzenie." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_talerz_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 17,
+        "type": "fill_blank",
+        "ex_id": 24,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "На тарелке есть еда" },
+          "form": "Na [] jest jedzenie.",
+          "blanks": [ { "accepted": ["talerzu"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_salatka_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 18,
+        "type": "flashcard",
+        "ex_id": 25,
+        "type_data": {
+          "base_word": "sałatka",
+          "translations": { "ru": "салат" },
+          "context_sentence": { "ru": "Na stole stoi miska sałatki." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_salatka_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 18,
+        "type": "fill_blank",
+        "ex_id": 26,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "На столе стоит миска салата" },
+          "form": "Na stole stoi miska [].",
+          "blanks": [ { "accepted": ["sałatki"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_mezczyzna_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 19,
+        "type": "flashcard",
+        "ex_id": 27,
+        "type_data": {
+          "base_word": "mężczyzna",
+          "translations": { "ru": "мужчина" },
+          "context_sentence": { "ru": "Widzę mężczyznę na zdjęciu." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_mezczyzna_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 19,
+        "type": "fill_blank",
+        "ex_id": 28,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Я вижу мужчину на фото" },
+          "form": "Widzę [] na zdjęciu.",
+          "blanks": [ { "accepted": ["mężczyznę"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kobieta_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 20,
+        "type": "flashcard",
+        "ex_id": 29,
+        "type_data": {
+          "base_word": "kobieta",
+          "translations": { "ru": "женщина" },
+          "context_sentence": { "ru": "Obok kobiety siedzi starszy pan." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_kobieta_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 20,
+        "type": "fill_blank",
+        "ex_id": 30,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Рядом с женщиной сидит пожилой мужчина" },
+          "form": "Obok [] siedzi starszy pan.",
+          "blanks": [ { "accepted": ["kobiety"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_dziadek_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 21,
+        "type": "flashcard",
+        "ex_id": 31,
+        "type_data": {
+          "base_word": "dziadek",
+          "translations": { "ru": "дедушка" },
+          "context_sentence": { "ru": "Rozmawiam z dziadkiem." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_dziadek_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 21,
+        "type": "fill_blank",
+        "ex_id": 32,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Они разговаривают с дедушкой" },
+          "form": "Rozmawiają z [].",
+          "blanks": [ { "accepted": ["dziadkiem"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_babcia_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 22,
+        "type": "flashcard",
+        "ex_id": 33,
+        "type_data": {
+          "base_word": "babcia",
+          "translations": { "ru": "бабушка" },
+          "context_sentence": { "ru": "Widzę babcię na pierwszym planie." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_babcia_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 22,
+        "type": "fill_blank",
+        "ex_id": 34,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Я вижу бабушку на переднем плане" },
+          "form": "Widzę [] na pierwszym planie.",
+          "blanks": [ { "accepted": ["babcię"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_restauracja_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 23,
+        "type": "flashcard",
+        "ex_id": 35,
+        "type_data": {
+          "base_word": "restauracja",
+          "translations": { "ru": "ресторан" },
+          "context_sentence": { "ru": "Oni siedzą w restauracji." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_restauracja_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 23,
+        "type": "fill_blank",
+        "ex_id": 36,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Они сидят в ресторане" },
+          "form": "Oni siedzą w [].",
+          "blanks": [ { "accepted": ["restauracji"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_sciana_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 24,
+        "type": "flashcard",
+        "ex_id": 37,
+        "type_data": {
+          "base_word": "ściana",
+          "translations": { "ru": "стена" },
+          "context_sentence": { "ru": "Za nimi jest biała ściana." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_sciana_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 24,
+        "type": "fill_blank",
+        "ex_id": 38,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "За ними белая стена из кирпича" },
+          "form": "Za nimi jest biała [] z cegły.",
+          "blanks": [ { "accepted": ["ściana"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_noun_spotkanie_flashcard",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 25,
+        "type": "flashcard",
+        "ex_id": 39,
+        "type_data": {
+          "base_word": "spotkanie",
+          "translations": { "ru": "встреча" },
+          "context_sentence": { "ru": "To jest rodzinne spotkanie." },
+          "part_of_speech": "noun"
+        }
+      }
+    },
+    {
+      "id": "ex_noun_spotkanie_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "grammar",
+        "linked_item_id": 25,
+        "type": "fill_blank",
+        "ex_id": 40,
+        "type_data": {
+          "title": { "ru": "Вставь правильную форму" },
+          "prompts": { "ru": "Они присутствуют на семейной встрече" },
+          "form": "Są na rodzinnym [].",
+          "blanks": [ { "accepted": ["spotkaniu"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_foto_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 1,
+        "type": "fill_blank",
+        "ex_id": 41,
+        "type_data": {
+          "title": { "ru": "Закончи вступительную фразу" },
+          "prompts": { "ru": "На ___ я вижу..." },
+          "form": "Na [] widzę...",
+          "blanks": [ { "accepted": ["zdjęciu", "fotografii"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_peredny_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 2,
+        "type": "fill_blank",
+        "ex_id": 42,
+        "type_data": {
+          "title": { "ru": "Закончи фразу о переднем плане" },
+          "prompts": { "ru": "На ___ плане видно..." },
+          "form": "Na [] planie widać...",
+          "blanks": [ { "accepted": ["pierwszym"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_vtoroj_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 3,
+        "type": "fill_blank",
+        "ex_id": 43,
+        "type_data": {
+          "title": { "ru": "Закончи фразу о втором плане" },
+          "prompts": { "ru": "На втором плане ___ ..." },
+          "form": "Na drugim planie [] się...",
+          "blanks": [ { "accepted": ["znajduje", "widać"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_zadny_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 4,
+        "type": "fill_blank",
+        "ex_id": 44,
+        "type_data": {
+          "title": { "ru": "Закончи фразу о заднем плане" },
+          "prompts": { "ru": "На заднем плане видно..." },
+          "form": "W [] widać...",
+          "blanks": [ { "accepted": ["tle"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_gleba_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 5,
+        "type": "fill_blank",
+        "ex_id": 45,
+        "type_data": {
+          "title": { "ru": "Закончи фразу 'В глубине...'" },
+          "prompts": { "ru": "В ___ фото..." },
+          "form": "W [] zdjęcia...",
+          "blanks": [ { "accepted": ["głębi"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_ryadom_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 6,
+        "type": "fill_blank",
+        "ex_id": 46,
+        "type_data": {
+          "title": { "ru": "Закончи фразу 'Рядом с ним...'" },
+          "prompts": { "ru": "Рядом с ним сидит..." },
+          "form": "[] niego siedzi...",
+          "blanks": [ { "accepted": ["Obok", "obok"] } ]
+        }
+      }
+    },
+    {
+      "id": "ex_phrase_atmosfera_fillblank",
+      "data": {
+        "course_id": "b1_pl",
+        "lesson_id": 1,
+        "segment_type": "phrases",
+        "linked_item_id": 7,
+        "type": "fill_blank",
+        "ex_id": 47,
+        "type_data": {
+          "title": { "ru": "Опиши атмосферу на фото" },
+          "prompts": { "ru": "Атмосфера на фото радостная" },
+          "form": "[] na zdjęciu jest radosna.",
+          "blanks": [ { "accepted": ["Atmosfera"] } ]
+        }
+      }
+    }
+  ]
+}

@@ -49,7 +49,14 @@ app.*.map.json
 
 # Firebase config (содержат конфигурацию проекта — не коммитим)
 android/app/google-services.json
-firebase.json
+
+# firebase.json / .firebaserc / functions/ — трекаются: секретов не содержат,
+# ключ OpenAI хранится через Secret Manager (`firebase functions:secrets:set`)
+functions/node_modules/
 
 # Android build артефакты (корневой /build/ выше не покрывает android/build/)
 android/build/
+
+# Firebase Admin SDK service account key (полный админ-доступ к проекту)
+scripts/seed/serviceAccountKey.json
+scripts/seed/node_modules/

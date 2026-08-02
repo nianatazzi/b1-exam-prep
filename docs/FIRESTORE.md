@@ -398,6 +398,19 @@ private_user_info/
           focused_learner: {type, level, updatedAt}
           interested_learner: {type, level, updatedAt}
           vocabulary_master: {type, level, updatedAt}
+        freePractice: map                # свободная практика (image_description) — только последняя попытка
+          "{sectionType}_{topicTId}": map
+            transcript: string           # текст, распознанный speech_to_text за сессию таймера
+            durationSeconds: number      # фактическая длительность записи
+            completedAt: timestamp
+            analysis: map | null         # результат LLM-анализа (Фаза 2, analyzeFreePractice Cloud Function).
+                                          # null если анализ не запускался или упал — не критично для завершения топика
+              misusedWords: array
+                - word: string           # словарная форма правильного польского слова
+                  type: string           # "verb" | "noun"
+                  userForm: string       # форма, которую использовал пользователь
+                  correctForm: string    # правильная форма в этом контексте
+                  explanation: string    # объяснение на языке интерфейса пользователя
 ```
 
 `stats`/`achievements` заполняются `ExamProgressRepository` по тем же правилам, что `UserProgressRepository` для linguobyte: `stats` — инкременты по `ExerciseResult.grammarTypes` (не по `prepLevel`/`segment_type`); `achievements` — `CheckB1AchievementUseCase`, триггеры адаптированы под структуру B1 (раздел→тема→уровень подготовки, нет уроков/суб-шагов глаголов) — см. `ARCHITECTURE.md` §20.

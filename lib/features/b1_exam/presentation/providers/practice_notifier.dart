@@ -145,6 +145,7 @@ class PracticeNotifier extends _$PracticeNotifier {
       topicTId: topicTId,
       prepLevel: prepLevelName,
       exerciseResults: current.results,
+      requiredPrepLevels: const ['vocabulary', 'grammar', 'phrases'],
     );
 
     state = AsyncData(current.copyWith(isCompleted: true));

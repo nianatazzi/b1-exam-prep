@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:b1_exam_prep/core/constants/app_routes.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_section_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/providers/b1_home_notifier.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/widgets/section_card.dart';
 import 'package:b1_exam_prep/l10n/app_localizations.dart';
@@ -43,10 +44,16 @@ class B1HomeScreen extends ConsumerWidget {
               topics: sectionWithTopics.topics,
               progress: data.progress,
               onTopicTap: (topicId) {
-                context.push(AppRoutes.b1TopicPath(
-                  sectionWithTopics.section.id,
-                  topicId,
-                ));
+                final sectionId = sectionWithTopics.section.id;
+                // image_description проходится фиксированной
+                // последовательностью (ImagePracticeScreen), а не через
+                // независимые карточки vocabulary/grammar/phrases.
+                final path =
+                    sectionWithTopics.section.type ==
+                            ExamSectionType.imageDescription
+                        ? AppRoutes.b1ImagePracticePath(sectionId, topicId)
+                        : AppRoutes.b1TopicPath(sectionId, topicId);
+                context.push(path);
               },
             );
           },

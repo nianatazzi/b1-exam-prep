@@ -50,7 +50,7 @@ final class PracticeNotifierProvider
   }
 }
 
-String _$practiceNotifierHash() => r'fd87c6d8505bb8e6dbdf35f8e7dd5a813a54da71';
+String _$practiceNotifierHash() => r'0c3339f816a9a735ef252a5dd8aafdf916bc8943';
 
 final class PracticeNotifierFamily extends $Family
     with

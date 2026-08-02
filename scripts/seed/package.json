@@ -1,0 +1,9 @@
+{
+  "name": "b1-exam-seed",
+  "private": true,
+  "version": "1.0.0",
+  "description": "One-off Firestore seed script for image_description test content",
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

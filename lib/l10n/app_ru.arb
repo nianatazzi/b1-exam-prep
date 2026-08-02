@@ -185,5 +185,23 @@
       "contentCount": { "type": "int" },
       "exerciseCount": { "type": "int" }
     }
-  }
+  },
+
+  "b1VerbConjugation": "Спряжение глаголов",
+  "b1NounDeclension": "Склонение существительных",
+  "b1FreePractice": "Свободная практика",
+  "b1FreePracticeInstructions": "Опишите изображение по-польски. У вас будет 3 минуты — таймер запустится после нажатия «Начать».",
+  "b1StartRecording": "Начать запись",
+  "b1TimeUp": "Время вышло!",
+  "b1YourTranscript": "Ваш транскрипт",
+  "b1FreePracticeSelfAssessNotice": "AI-анализ пока недоступен. Оцените запись самостоятельно.",
+  "b1FinishPractice": "Завершить",
+  "b1StopRecording": "Остановить запись",
+  "b1AnalysisTitle": "На что обратить внимание",
+  "b1AnalysisNoMistakes": "Ошибок не найдено — отлично!",
+  "b1AnalysisUnavailable": "Анализ для этой попытки недоступен.",
+  "b1AnalysisYouSaid": "Вы сказали",
+  "b1AnalysisCorrectForm": "Правильная форма",
+  "b1WordTypeVerb": "Глагол",
+  "b1WordTypeNoun": "Существительное"
 }

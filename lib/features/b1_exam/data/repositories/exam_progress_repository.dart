@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
 import 'package:b1_exam_prep/core/errors/app_error.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/free_practice_analysis_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_progress_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/repositories/i_exam_progress_repository.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_result.dart';
@@ -79,6 +80,22 @@ class ExamProgressRepository implements IExamProgressRepository {
       result['achievements'] = converted;
     }
 
+    final freePractice = result['freePractice'];
+    if (freePractice is Map) {
+      final converted = <String, dynamic>{};
+      for (final entry in freePractice.entries) {
+        if (entry.value is Map) {
+          final attempt = Map<String, dynamic>.from(entry.value as Map);
+          final completedAt = attempt['completedAt'];
+          if (completedAt is Timestamp) {
+            attempt['completedAt'] = completedAt.toDate().toIso8601String();
+          }
+          converted[entry.key as String] = attempt;
+        }
+      }
+      result['freePractice'] = converted;
+    }
+
     return result;
   }
 
@@ -140,6 +157,33 @@ class ExamProgressRepository implements IExamProgressRepository {
     }
   }
 
+  @override
+  Future<void> saveFreePracticeResult({
+    required String userId,
+    required String sectionType,
+    required int topicTId,
+    required String transcript,
+    required int durationSeconds,
+    FreePracticeAnalysisModel? analysis,
+  }) async {
+    try {
+      final key = '${sectionType}_$topicTId';
+      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId));
+      await _updateOrInit(docRef, {
+        'freePractice.$key': {
+          'transcript': transcript,
+          'durationSeconds': durationSeconds,
+          'completedAt': FieldValue.serverTimestamp(),
+          'analysis': analysis?.toJson(),
+        },
+      });
+    } on FirebaseException catch (e) {
+      throw mapFirebaseException(e);
+    } catch (e) {
+      throw UnknownError(e.toString());
+    }
+  }
+
   /// Выполняет update(); если документа ещё нет (первый шаг нового
   /// пользователя) — создаёт с начальной структурой и повторяет.
   Future<void> _updateOrInit(
@@ -164,6 +208,7 @@ class ExamProgressRepository implements IExamProgressRepository {
           'speaking': {'correct': 0, 'total': 0},
         },
         'achievements': <String, dynamic>{},
+        'freePractice': <String, dynamic>{},
       };
 
   /// Строит map инкрементов stats по grammarTypes каждого упражнения.
