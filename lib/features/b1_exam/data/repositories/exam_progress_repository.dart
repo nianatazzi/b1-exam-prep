@@ -169,6 +169,11 @@ class ExamProgressRepository implements IExamProgressRepository {
     try {
       final key = '${sectionType}_$topicTId';
       final docRef = _firestore.doc(FirestorePaths.b1Progress(userId));
+      // update()/set() локально применяют мутацию к офлайн-кэшу сразу же —
+      // Future ждёт только подтверждения от сервера. При деградации сети
+      // (не полном обрыве, а "подвисшем" канале) Future может не завершиться
+      // сколько угодно долго, хотя запись уже стоит в очереди на синк.
+      // Таймаут не отменяет запись — просто не держит вызывающий код в ожидании.
       await _updateOrInit(docRef, {
         'freePractice.$key': {
           'transcript': transcript,
@@ -176,9 +181,14 @@ class ExamProgressRepository implements IExamProgressRepository {
           'completedAt': FieldValue.serverTimestamp(),
           'analysis': analysis?.toJson(),
         },
-      });
+      }).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => throw const NetworkError(),
+      );
     } on FirebaseException catch (e) {
       throw mapFirebaseException(e);
+    } on NetworkError {
+      rethrow;
     } catch (e) {
       throw UnknownError(e.toString());
     }

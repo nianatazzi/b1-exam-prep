@@ -46,14 +46,21 @@ class SubmitFreePracticeUseCase {
       AppLogger.e('Free practice analysis failed', error: e, stackTrace: st);
     }
 
-    await progressRepository.saveFreePracticeResult(
-      userId: userId,
-      sectionType: sectionType,
-      topicTId: topicTId,
-      transcript: transcript,
-      durationSeconds: durationSeconds,
-      analysis: analysis,
-    );
+    try {
+      await progressRepository.saveFreePracticeResult(
+        userId: userId,
+        sectionType: sectionType,
+        topicTId: topicTId,
+        transcript: transcript,
+        durationSeconds: durationSeconds,
+        analysis: analysis,
+      );
+    } catch (e, st) {
+      // Best-effort, как и анализ: при таймауте/сети запись уже стоит в
+      // офлайн-очереди Firestore и досинкается сама — не блокируем экран
+      // результата ожиданием подтверждения от сервера.
+      AppLogger.e('Free practice save failed', error: e, stackTrace: st);
+    }
 
     return analysis;
   }

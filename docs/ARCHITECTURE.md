@@ -33,7 +33,7 @@
 | Логирование | `logger` через абстракцию `AppLogger` |
 | Shimmer | `shimmer` |
 | Backend (LLM-вызовы) | Firebase Cloud Functions (Node.js, `functions/`) — единственное место, где живут внешние API-ключи (Secret Manager), клиент их не хранит и не хардкодит |
-| LLM (анализ свободной практики) | OpenAI API (`gpt-4o-mini`), вызывается только из Cloud Function `analyzeFreePractice` |
+| LLM (анализ свободной практики) | OpenAI API (`gpt-4o-mini`) — основной провайдер; Claude (`claude-haiku-4-5`) через сторонний Anthropic-совместимый провайдер — запасной, временно на этапе тестирования (см. §6.3). Оба вызываются только из Cloud Function `analyzeFreePractice` |
 
 > Видеоплеер и видеохостинг — открытый пункт, решается отдельно.
 > Не подключать новые пакеты без явного указания.
@@ -175,9 +175,11 @@ lib/
 Свободная практика (`FreePracticeView`): картинка темы + таймер 3 минуты + `speech_to_text` → транскрипт. По завершении (`SubmitFreePracticeUseCase`, domain `b1_exam`):
 
 1. Транскрипт отправляется в Cloud Function `analyzeFreePractice` (`functions/index.js`) через `IFreePracticeAnalysisRepository`/`cloud_functions`. Функция вызывает OpenAI (`gpt-4o-mini`) с ключом из Secret Manager (`OPENAI_API_KEY`) — ключ никогда не попадает в клиент.
-2. Анализ — **best-effort**: ошибка (сеть, OpenAI недоступен) не должна ронять сохранение транскрипта, тот же паттерн что у streak/достижений в `CompleteB1StepUseCase`. При сбое `analysis` сохраняется как `null`.
-3. Результат (`FreePracticeAnalysisModel.misusedWords` — список неправильно использованных глаголов/существительных с `userForm`/`correctForm`/`explanation`) сохраняется вместе с транскриптом в `b1_progress/{userId}.freePractice.{sectionType}_{topicTId}.analysis` (см. `FIRESTORE.md`) и показывается пользователю на экране завершения.
-4. `misusedWords` — задел на будущее: список конкретных слов для повторной тренировки (сама повторная тренировка — отдельная фаза, не реализована).
+2. **Fallback-провайдер (Claude, `claude-haiku-4-5`, через стороннего провайдера):** если запрос к OpenAI падает с ошибкой квоты/rate-limit (`429` / `insufficient_quota`), функция читает флаг `b1_polish/pl/service/llmConfig.fallbackEnabled` (Firestore, Admin SDK) — при `true` тот же промпт повторно отправляется через `@anthropic-ai/sdk`, но с переопределённым `baseURL` (константа `ANTHROPIC_BASE_URL` в `functions/index.js`) — сейчас это `https://api.ai-keys-shop.com`, сторонний провайдер с Anthropic-совместимым API (`/v1/messages`), **временное решение на этапе тестирования**, не прямой контракт с Anthropic. Ключ — `ANTHROPIC_API_KEY` в Secret Manager. Флаг переключается вручную через Firebase Console (админ-панели у проекта нет — см. §1); отсутствие документа или ошибка чтения трактуется как `false` (fail closed). Сбой fallback-провайдера не отличается от сбоя OpenAI — попадает в тот же best-effort путь (см. п.3).
+3. Анализ — **best-effort**: ошибка (сеть, оба провайдера недоступны) не должна ронять сохранение транскрипта, тот же паттерн что у streak/достижений в `CompleteB1StepUseCase`. При сбое `analysis` сохраняется как `null`.
+4. Сохранение в Firestore (`saveFreePracticeResult`) — тоже **best-effort**, с таймаутом 15с (`ExamProgressRepository`): `update()`/`set()` кладут мутацию в офлайн-кэш `cloud_firestore` сразу же, но их `Future` не завершается до подтверждения сервером — при "подвисшей" (не оборванной явно) сети это может держать экран результата бесконечно. По таймауту `SubmitFreePracticeUseCase` не ретраит и не ждёт — запись уже стоит в очереди SDK и досинкается сама при восстановлении сети.
+5. Результат (`FreePracticeAnalysisModel.misusedWords` — список неправильно использованных глаголов/существительных с `userForm`/`correctForm`/`explanation`) сохраняется вместе с транскриптом в `b1_progress/{userId}.freePractice.{sectionType}_{topicTId}.analysis` (см. `FIRESTORE.md`) и показывается пользователю на экране завершения.
+6. `misusedWords` — задел на будущее: список конкретных слов для повторной тренировки (сама повторная тренировка — отдельная фаза, не реализована).
 
 ---
 

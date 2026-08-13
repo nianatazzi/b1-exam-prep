@@ -18,12 +18,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // На Android google-services.json уже регистрирует "[DEFAULT]" через нативный
-  // FirebaseInitProvider до вызова main() — повторная инициализация иначе
-  // падает с [core/duplicate-app] и main() никогда не доходит до runApp().
-  if (Firebase.apps.isEmpty) {
+  // FirebaseInitProvider до вызова main(). Проверка Firebase.apps.isEmpty ненадёжна —
+  // на части устройств Dart-кэш ещё не синхронизирован с нативной стороной на этом
+  // этапе, поэтому initializeApp() всё равно вызывается и падает с [core/duplicate-app].
+  // Без обработки это необработанное исключение в main() — main() никогда не доходит
+  // до runApp(), приложение зависает на splash-экране.
+  try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') rethrow;
   }
 
   // serverClientId нужен для получения idToken от Google (--dart-define=GOOGLE_SERVER_CLIENT_ID=...)

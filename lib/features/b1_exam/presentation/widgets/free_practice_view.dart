@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:b1_exam_prep/core/constants/app_sizes.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/logger/app_logger.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_topic_model.dart';
 import 'package:b1_exam_prep/l10n/app_localizations.dart';
 
@@ -14,10 +16,10 @@ const _sttLocaleId = 'pl-PL';
 
 enum _Stage { idle, recording, timeUp }
 
-/// Свободная практика image_description (Фаза 1): картинка темы, таймер
-/// 3 минуты, запись голоса через speech_to_text, транскрипт по истечении
-/// времени. Без AI-анализа — пользователь оценивает себя сам
-/// (см. b1FreePracticeSelfAssessNotice).
+/// Свободная практика image_description: картинка темы, таймер 3 минуты,
+/// запись голоса через speech_to_text, транскрипт по истечении времени.
+/// Сам transcript отправляется на AI-анализ при сабмите — см.
+/// SubmitFreePracticeUseCase и ImagePracticeScreen._CompletedView.
 class FreePracticeView extends StatefulWidget {
   final ExamTopicModel topic;
   final bool isSubmitting;
@@ -48,6 +50,11 @@ class _FreePracticeViewState extends State<FreePracticeView> {
   String _committedTranscript = '';
   String _currentPartial = '';
 
+  // true, если initialize()/listen() сообщили об ошибке (движок недоступен,
+  // локаль не поддерживается и т.п.) — раньше такие ошибки просто терялись
+  // (onError не был подключён), транскрипт оставался пустым без объяснения.
+  bool _speechUnavailable = false;
+
   String get _fullTranscript =>
       [_committedTranscript, _currentPartial].where((s) => s.isNotEmpty).join(' ');
 
@@ -59,14 +66,18 @@ class _FreePracticeViewState extends State<FreePracticeView> {
   }
 
   Future<void> _start() async {
-    final available = await _speech.initialize();
-    if (!available || !mounted) return;
+    final available = await _speech.initialize(onError: _onSpeechError);
+    if (!available || !mounted) {
+      setState(() => _speechUnavailable = true);
+      return;
+    }
 
     setState(() {
       _stage = _Stage.recording;
       _secondsRemaining = _practiceDurationSeconds;
       _committedTranscript = '';
       _currentPartial = '';
+      _speechUnavailable = false;
     });
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -91,7 +102,7 @@ class _FreePracticeViewState extends State<FreePracticeView> {
                 : '$_committedTranscript ${result.recognizedWords}'.trim();
             _currentPartial = '';
           });
-          if (_stage == _Stage.recording) _listenOnce();
+          _restartListening();
         } else {
           setState(() => _currentPartial = result.recognizedWords);
         }
@@ -103,6 +114,46 @@ class _FreePracticeViewState extends State<FreePracticeView> {
         cancelOnError: true,
       ),
     );
+  }
+
+  // Нативный плагин (Android) сбрасывает свой внутренний флаг "listening"
+  // только по explicit stop()/cancel() или по onError — обычный final result
+  // его не трогает. Поэтому listen() сразу после finalResult молча
+  // отклоняется нативной стороной (isListening() всё ещё true) — сессия
+  // без единой ошибки просто умирает после первой фразы. cancel() форсирует
+  // сброс флага перед тем как начать новую сессию.
+  Future<void> _restartListening() async {
+    if (!mounted || _stage != _Stage.recording) return;
+    await _speech.cancel();
+    if (!mounted || _stage != _Stage.recording) return;
+    await _listenOnce();
+  }
+
+  void _onSpeechError(SpeechRecognitionError error) {
+    AppLogger.w(
+      'Speech recognition error: ${error.errorMsg} (permanent: ${error.permanent})',
+    );
+    if (!mounted) return;
+
+    if (_stage == _Stage.recording) {
+      // Сессия распознавания может оборваться ошибкой в любой момент — из-за
+      // паузы в речи, лимита движка и т.п. На iOS такие ошибки всегда
+      // приходят с permanent:true (нативный плагин не различает их), на
+      // Android часть — с permanent:false. Раньше проверка `!error.permanent`
+      // из-за этого либо молча обрывала запись на середине (Android,
+      // ошибка просто игнорировалась), либо сбрасывала практику на idle
+      // посреди таймера (iOS). Пока идёт запись — просто начинаем новую
+      // сессию распознавания вместо остановки, как и при finalResult.
+      _restartListening();
+      return;
+    }
+
+    // Ошибка вне записи (при initialize()) — движок недоступен, ждать нечего.
+    _timer?.cancel();
+    setState(() {
+      _speechUnavailable = true;
+      _stage = _Stage.idle;
+    });
   }
 
   void _finish() {
@@ -155,6 +206,14 @@ class _FreePracticeViewState extends State<FreePracticeView> {
               style: theme.textTheme.bodyLarge,
             ),
             const SizedBox(height: AppSpacing.lg),
+            if (_speechUnavailable) ...[
+              Text(
+                l10n.b1SpeechRecognitionUnavailable,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.error),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
             FilledButton.icon(
               onPressed: _start,
               icon: const Icon(Icons.mic),
@@ -201,7 +260,7 @@ class _FreePracticeViewState extends State<FreePracticeView> {
             ],
             if (_stage == _Stage.timeUp) ...[
               Text(
-                l10n.b1FreePracticeSelfAssessNotice,
+                l10n.b1FreePracticeAnalysisNotice,
                 style: theme.textTheme.bodySmall
                     ?.copyWith(fontStyle: FontStyle.italic),
               ),

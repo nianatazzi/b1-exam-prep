@@ -494,6 +494,9 @@
   "b1FreePracticeInstructions": "Describe the image in Polish. You'll have 3 minutes to speak — the timer starts when you tap Start.",
   "@b1FreePracticeInstructions": { "description": "Instructions shown before starting the free practice recording" },
 
+  "b1SpeechRecognitionUnavailable": "Speech recognition isn't available right now. Check your microphone permission and try again.",
+  "@b1SpeechRecognitionUnavailable": { "description": "Shown when the speech recognizer reports a permanent error (e.g. engine unavailable, locale not supported)" },
+
   "b1StartRecording": "Start recording",
   "@b1StartRecording": { "description": "Button to start the free practice timer and recording" },
 
@@ -503,8 +506,8 @@
   "b1YourTranscript": "Your transcript",
   "@b1YourTranscript": { "description": "Label above the recognized speech transcript in free practice" },
 
-  "b1FreePracticeSelfAssessNotice": "AI-based feedback isn't available yet. Review your transcript and self-assess for now.",
-  "@b1FreePracticeSelfAssessNotice": { "description": "Notice that free practice has no automatic analysis yet" },
+  "b1FreePracticeAnalysisNotice": "Your transcript will be analyzed by AI after you submit.",
+  "@b1FreePracticeAnalysisNotice": { "description": "Notice shown when the free practice timer ends, before the user submits the transcript for AI analysis" },
 
   "b1FinishPractice": "Finish",
   "@b1FinishPractice": { "description": "Button to submit the free practice transcript and finish the topic" },

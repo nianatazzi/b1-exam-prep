@@ -507,6 +507,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Describe the image in Polish. You\'ll have 3 minutes to speak — the timer starts when you tap Start.';
 
   @override
+  String get b1SpeechRecognitionUnavailable =>
+      'Speech recognition isn\'t available right now. Check your microphone permission and try again.';
+
+  @override
   String get b1StartRecording => 'Start recording';
 
   @override
@@ -516,8 +520,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get b1YourTranscript => 'Your transcript';
 
   @override
-  String get b1FreePracticeSelfAssessNotice =>
-      'AI-based feedback isn\'t available yet. Review your transcript and self-assess for now.';
+  String get b1FreePracticeAnalysisNotice =>
+      'Your transcript will be analyzed by AI after you submit.';
 
   @override
   String get b1FinishPractice => 'Finish';

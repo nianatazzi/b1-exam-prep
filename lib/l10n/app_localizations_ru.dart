@@ -508,6 +508,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Опишите изображение по-польски. У вас будет 3 минуты — таймер запустится после нажатия «Начать».';
 
   @override
+  String get b1SpeechRecognitionUnavailable =>
+      'Распознавание речи сейчас недоступно. Проверьте разрешение на микрофон и попробуйте снова.';
+
+  @override
   String get b1StartRecording => 'Начать запись';
 
   @override
@@ -517,8 +521,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get b1YourTranscript => 'Ваш транскрипт';
 
   @override
-  String get b1FreePracticeSelfAssessNotice =>
-      'AI-анализ пока недоступен. Оцените запись самостоятельно.';
+  String get b1FreePracticeAnalysisNotice =>
+      'После отправки транскрипт будет проанализирован AI.';
 
   @override
   String get b1FinishPractice => 'Завершить';

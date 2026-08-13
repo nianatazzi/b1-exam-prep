@@ -513,6 +513,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Describe la imagen en polaco. Tendrás 3 minutos — el temporizador comienza al pulsar «Comenzar».';
 
   @override
+  String get b1SpeechRecognitionUnavailable =>
+      'El reconocimiento de voz no está disponible ahora mismo. Comprueba el permiso del micrófono e inténtalo de nuevo.';
+
+  @override
   String get b1StartRecording => 'Iniciar grabación';
 
   @override
@@ -522,8 +526,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get b1YourTranscript => 'Tu transcripción';
 
   @override
-  String get b1FreePracticeSelfAssessNotice =>
-      'El análisis con IA aún no está disponible. Por ahora, evalúa tu grabación tú mismo.';
+  String get b1FreePracticeAnalysisNotice =>
+      'Tu transcripción será analizada por IA después de enviarla.';
 
   @override
   String get b1FinishPractice => 'Finalizar';

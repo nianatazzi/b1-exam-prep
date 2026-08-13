@@ -22,17 +22,33 @@ class FreePracticeAnalysisRepository implements IFreePracticeAnalysisRepository 
   }) async {
     try {
       final callable = _functions.httpsCallable('analyzeFreePractice');
-      final result = await callable.call<Map<String, dynamic>>({
+      final result = await callable.call<Map<Object?, Object?>>({
         'transcript': transcript,
         'uiLanguage': uiLanguage,
       });
-      return FreePracticeAnalysisModel.fromJson(
-        Map<String, dynamic>.from(result.data),
-      );
+      return FreePracticeAnalysisModel.fromJson(_deepStringKeyedMap(result.data));
     } on FirebaseFunctionsException catch (e) {
       throw mapFirebaseException(e);
     } catch (e) {
       throw UnknownError(e.toString());
     }
   }
+}
+
+// На Android cloud_functions отдаёт вложенные map/list как Map<Object?, Object?> —
+// поверхностный Map<String, dynamic>.from() чинит только верхний уровень, а
+// misusedWords[i] as Map<String, dynamic> внутри generated fromJson падает с
+// TypeError на непустом списке. Рекурсивно приводим все вложенные map к
+// Map<String, dynamic> перед парсингом.
+Map<String, dynamic> _deepStringKeyedMap(Map<Object?, Object?> map) =>
+    map.map((key, value) => MapEntry(key.toString(), _deepConvert(value)));
+
+dynamic _deepConvert(dynamic value) {
+  if (value is Map) {
+    return _deepStringKeyedMap(Map<Object?, Object?>.from(value));
+  }
+  if (value is List) {
+    return value.map(_deepConvert).toList();
+  }
+  return value;
 }

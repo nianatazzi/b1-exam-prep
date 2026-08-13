@@ -513,6 +513,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Décrivez l\'image en polonais. Vous aurez 3 minutes — le minuteur démarre après avoir appuyé sur « Démarrer ».';
 
   @override
+  String get b1SpeechRecognitionUnavailable =>
+      'La reconnaissance vocale n\'est pas disponible pour le moment. Vérifiez l\'autorisation du microphone et réessayez.';
+
+  @override
   String get b1StartRecording => 'Démarrer l\'enregistrement';
 
   @override
@@ -522,8 +526,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get b1YourTranscript => 'Votre transcription';
 
   @override
-  String get b1FreePracticeSelfAssessNotice =>
-      'L\'analyse par IA n\'est pas encore disponible. Évaluez votre enregistrement vous-même pour l\'instant.';
+  String get b1FreePracticeAnalysisNotice =>
+      'Votre transcription sera analysée par IA après l\'envoi.';
 
   @override
   String get b1FinishPractice => 'Terminer';

@@ -1074,6 +1074,12 @@ abstract class AppLocalizations {
   /// **'Describe the image in Polish. You\'ll have 3 minutes to speak — the timer starts when you tap Start.'**
   String get b1FreePracticeInstructions;
 
+  /// Shown when the speech recognizer reports a permanent error (e.g. engine unavailable, locale not supported)
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition isn\'t available right now. Check your microphone permission and try again.'**
+  String get b1SpeechRecognitionUnavailable;
+
   /// Button to start the free practice timer and recording
   ///
   /// In en, this message translates to:
@@ -1092,11 +1098,11 @@ abstract class AppLocalizations {
   /// **'Your transcript'**
   String get b1YourTranscript;
 
-  /// Notice that free practice has no automatic analysis yet
+  /// Notice shown when the free practice timer ends, before the user submits the transcript for AI analysis
   ///
   /// In en, this message translates to:
-  /// **'AI-based feedback isn\'t available yet. Review your transcript and self-assess for now.'**
-  String get b1FreePracticeSelfAssessNotice;
+  /// **'Your transcript will be analyzed by AI after you submit.'**
+  String get b1FreePracticeAnalysisNotice;
 
   /// Button to submit the free practice transcript and finish the topic
   ///
