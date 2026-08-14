@@ -8,6 +8,7 @@ import 'package:b1_exam_prep/features/auth/presentation/onboarding_status_provid
 import 'package:b1_exam_prep/core/router/splash_screen.dart';
 import 'package:b1_exam_prep/features/profile/presentation/profile_screen.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/screens/b1_home_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/image_practice_screen.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/screens/practice_screen.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/screens/topic_detail_screen.dart';
 import 'package:b1_exam_prep/features/profile/presentation/settings_screen.dart';
@@ -104,6 +105,13 @@ GoRouter router(Ref ref) {
           sectionId: state.pathParameters['sectionId']!,
           topicId: state.pathParameters['topicId']!,
           prepLevel: state.pathParameters['prepLevel']!,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.b1ImagePractice,
+        builder: (context, state) => ImagePracticeScreen(
+          sectionId: state.pathParameters['sectionId']!,
+          topicId: state.pathParameters['topicId']!,
         ),
       ),
     ],

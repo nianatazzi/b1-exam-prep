@@ -498,4 +498,63 @@ class AppLocalizationsFr extends AppLocalizations {
   String b1LevelSubtitle(int contentCount, int exerciseCount) {
     return '$contentCount éléments, $exerciseCount exercices';
   }
+
+  @override
+  String get b1VerbConjugation => 'Conjugaison des verbes';
+
+  @override
+  String get b1NounDeclension => 'Déclinaison des noms';
+
+  @override
+  String get b1FreePractice => 'Pratique libre';
+
+  @override
+  String get b1FreePracticeInstructions =>
+      'Décrivez l\'image en polonais. Vous aurez 3 minutes — le minuteur démarre après avoir appuyé sur « Démarrer ».';
+
+  @override
+  String get b1SpeechRecognitionUnavailable =>
+      'La reconnaissance vocale n\'est pas disponible pour le moment. Vérifiez l\'autorisation du microphone et réessayez.';
+
+  @override
+  String get b1StartRecording => 'Démarrer l\'enregistrement';
+
+  @override
+  String get b1TimeUp => 'Temps écoulé !';
+
+  @override
+  String get b1YourTranscript => 'Votre transcription';
+
+  @override
+  String get b1FreePracticeAnalysisNotice =>
+      'Votre transcription sera analysée par IA après l\'envoi.';
+
+  @override
+  String get b1FinishPractice => 'Terminer';
+
+  @override
+  String get b1StopRecording => 'Arrêter l\'enregistrement';
+
+  @override
+  String get b1AnalysisTitle => 'Points à revoir';
+
+  @override
+  String get b1AnalysisNoMistakes =>
+      'Aucune erreur trouvée — excellent travail !';
+
+  @override
+  String get b1AnalysisUnavailable =>
+      'L\'analyse n\'est pas disponible pour cet essai.';
+
+  @override
+  String get b1AnalysisYouSaid => 'Vous avez dit';
+
+  @override
+  String get b1AnalysisCorrectForm => 'Forme correcte';
+
+  @override
+  String get b1WordTypeVerb => 'Verbe';
+
+  @override
+  String get b1WordTypeNoun => 'Nom';
 }

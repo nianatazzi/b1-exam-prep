@@ -35,6 +35,7 @@ class CompleteB1StepUseCase {
     required int topicTId,
     required String prepLevel,
     required List<ExerciseResult> exerciseResults,
+    required List<String> requiredPrepLevels,
   }) async {
     final stepKey = '${sectionType}_${topicTId}_$prepLevel';
     final correct = exerciseResults.where((r) => r.isCorrect).length;
@@ -68,6 +69,7 @@ class CompleteB1StepUseCase {
         allTopicResults: progress.topicResults,
         currentAchievements: progress.achievements,
         currentStreak: currentStreak,
+        requiredPrepLevels: requiredPrepLevels,
       );
 
       for (final update in updates) {

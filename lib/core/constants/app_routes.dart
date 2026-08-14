@@ -10,6 +10,8 @@ abstract class AppRoutes {
   static const String b1Topic = '/b1/topic/:sectionId/:topicId';
   static const String b1Practice =
       '/b1/practice/:sectionId/:topicId/:prepLevel';
+  static const String b1ImagePractice =
+      '/b1/image-practice/:sectionId/:topicId';
 
   static String b1TopicPath(String sectionId, String topicId) =>
       '/b1/topic/$sectionId/$topicId';
@@ -19,4 +21,6 @@ abstract class AppRoutes {
     String prepLevel,
   ) =>
       '/b1/practice/$sectionId/$topicId/$prepLevel';
+  static String b1ImagePracticePath(String sectionId, String topicId) =>
+      '/b1/image-practice/$sectionId/$topicId';
 }

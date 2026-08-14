@@ -493,4 +493,61 @@ class AppLocalizationsRu extends AppLocalizations {
   String b1LevelSubtitle(int contentCount, int exerciseCount) {
     return '$contentCount элементов, $exerciseCount упражнений';
   }
+
+  @override
+  String get b1VerbConjugation => 'Спряжение глаголов';
+
+  @override
+  String get b1NounDeclension => 'Склонение существительных';
+
+  @override
+  String get b1FreePractice => 'Свободная практика';
+
+  @override
+  String get b1FreePracticeInstructions =>
+      'Опишите изображение по-польски. У вас будет 3 минуты — таймер запустится после нажатия «Начать».';
+
+  @override
+  String get b1SpeechRecognitionUnavailable =>
+      'Распознавание речи сейчас недоступно. Проверьте разрешение на микрофон и попробуйте снова.';
+
+  @override
+  String get b1StartRecording => 'Начать запись';
+
+  @override
+  String get b1TimeUp => 'Время вышло!';
+
+  @override
+  String get b1YourTranscript => 'Ваш транскрипт';
+
+  @override
+  String get b1FreePracticeAnalysisNotice =>
+      'После отправки транскрипт будет проанализирован AI.';
+
+  @override
+  String get b1FinishPractice => 'Завершить';
+
+  @override
+  String get b1StopRecording => 'Остановить запись';
+
+  @override
+  String get b1AnalysisTitle => 'На что обратить внимание';
+
+  @override
+  String get b1AnalysisNoMistakes => 'Ошибок не найдено — отлично!';
+
+  @override
+  String get b1AnalysisUnavailable => 'Анализ для этой попытки недоступен.';
+
+  @override
+  String get b1AnalysisYouSaid => 'Вы сказали';
+
+  @override
+  String get b1AnalysisCorrectForm => 'Правильная форма';
+
+  @override
+  String get b1WordTypeVerb => 'Глагол';
+
+  @override
+  String get b1WordTypeNoun => 'Существительное';
 }

@@ -185,5 +185,24 @@
       "contentCount": { "type": "int" },
       "exerciseCount": { "type": "int" }
     }
-  }
+  },
+
+  "b1VerbConjugation": "Conjugación de verbos",
+  "b1NounDeclension": "Declinación de sustantivos",
+  "b1FreePractice": "Práctica libre",
+  "b1FreePracticeInstructions": "Describe la imagen en polaco. Tendrás 3 minutos — el temporizador comienza al pulsar «Comenzar».",
+  "b1SpeechRecognitionUnavailable": "El reconocimiento de voz no está disponible ahora mismo. Comprueba el permiso del micrófono e inténtalo de nuevo.",
+  "b1StartRecording": "Iniciar grabación",
+  "b1TimeUp": "¡Se acabó el tiempo!",
+  "b1YourTranscript": "Tu transcripción",
+  "b1FreePracticeAnalysisNotice": "Tu transcripción será analizada por IA después de enviarla.",
+  "b1FinishPractice": "Finalizar",
+  "b1StopRecording": "Detener grabación",
+  "b1AnalysisTitle": "Puntos a revisar",
+  "b1AnalysisNoMistakes": "No se encontraron errores — ¡muy bien!",
+  "b1AnalysisUnavailable": "El análisis no está disponible para este intento.",
+  "b1AnalysisYouSaid": "Dijiste",
+  "b1AnalysisCorrectForm": "Forma correcta",
+  "b1WordTypeVerb": "Verbo",
+  "b1WordTypeNoun": "Sustantivo"
 }

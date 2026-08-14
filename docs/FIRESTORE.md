@@ -294,7 +294,8 @@ public_user_info/                       # коллекция
 | `exercises/**` | read + write | read |
 | `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
 | `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
-| `b1_polish/**` | read + write | read |
+| `b1_polish/**` (кроме `service/**`) | read + write | read |
+| `b1_polish/{langId}/service/**` | read + write | нет доступа — читает только Cloud Function через Admin SDK, обходит правила |
 
 ### Правило доработки
 
@@ -354,6 +355,11 @@ b1_polish/                                # корневая коллекция
                 usage_context: map<langCode, string>
                 category: string            # "opening" | "transition" | "opinion" | "conclusion" | "description"
                 audio_url: string | null
+
+    service/                               # подколлекция: серверная конфигурация (читается Cloud Functions, Admin SDK)
+      llmConfig/                           # документ
+        fallbackEnabled: boolean           # вкл/выкл fallback-провайдера (Anthropic) в analyzeFreePractice, см. ARCHITECTURE.md §6.3.
+                                            # Переключается вручную через Firebase Console. Отсутствие документа = false (fail closed)
 ```
 
 ### B1 упражнения
@@ -398,6 +404,19 @@ private_user_info/
           focused_learner: {type, level, updatedAt}
           interested_learner: {type, level, updatedAt}
           vocabulary_master: {type, level, updatedAt}
+        freePractice: map                # свободная практика (image_description) — только последняя попытка
+          "{sectionType}_{topicTId}": map
+            transcript: string           # текст, распознанный speech_to_text за сессию таймера
+            durationSeconds: number      # фактическая длительность записи
+            completedAt: timestamp
+            analysis: map | null         # результат LLM-анализа (Фаза 2, analyzeFreePractice Cloud Function).
+                                          # null если анализ не запускался или упал — не критично для завершения топика
+              misusedWords: array
+                - word: string           # словарная форма правильного польского слова
+                  type: string           # "verb" | "noun"
+                  userForm: string       # форма, которую использовал пользователь
+                  correctForm: string    # правильная форма в этом контексте
+                  explanation: string    # объяснение на языке интерфейса пользователя
 ```
 
 `stats`/`achievements` заполняются `ExamProgressRepository` по тем же правилам, что `UserProgressRepository` для linguobyte: `stats` — инкременты по `ExerciseResult.grammarTypes` (не по `prepLevel`/`segment_type`); `achievements` — `CheckB1AchievementUseCase`, триггеры адаптированы под структуру B1 (раздел→тема→уровень подготовки, нет уроков/суб-шагов глаголов) — см. `ARCHITECTURE.md` §20.
@@ -427,3 +446,4 @@ private_user_info/
 | `segment_type` для B1 = уровень подготовки | "vocabulary" / "grammar" / "phrases" — аналог "theory" / "vocab" / "verb" из linguobyte |
 | B1 прогресс в `b1_progress/pl` | Изолирован от `languages/{langId}` — разные приложения, разный прогресс. `stats`/`achievements` намеренно повторяют форму linguobyte (не изолированы по смыслу) — общий `ProfileScreen` показывает то и другое одинаково |
 | `basic`/`exercises` (`course_id: basic_*`)/`languages/{langId}` не используются кодом b1-exam-prep | `features/home`/`features/lesson` (linguobyte-логика) удалены из этого репозитория целиком. Коллекции описаны здесь только как справка по структуре общего Firebase-проекта — их пишет/читает только linguobyte |
+| `service/llmConfig.fallbackEnabled` вместо переменной окружения Cloud Function | Читается на лету (Admin SDK) без передеплоя функции — переключается вручную через Firebase Console; переменная окружения потребовала бы `firebase deploy --only functions` на каждое включение/выключение |

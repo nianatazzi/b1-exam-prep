@@ -492,4 +492,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String b1LevelSubtitle(int contentCount, int exerciseCount) {
     return '$contentCount items, $exerciseCount exercises';
   }
+
+  @override
+  String get b1VerbConjugation => 'Verb conjugation';
+
+  @override
+  String get b1NounDeclension => 'Noun declension';
+
+  @override
+  String get b1FreePractice => 'Free practice';
+
+  @override
+  String get b1FreePracticeInstructions =>
+      'Describe the image in Polish. You\'ll have 3 minutes to speak — the timer starts when you tap Start.';
+
+  @override
+  String get b1SpeechRecognitionUnavailable =>
+      'Speech recognition isn\'t available right now. Check your microphone permission and try again.';
+
+  @override
+  String get b1StartRecording => 'Start recording';
+
+  @override
+  String get b1TimeUp => 'Time\'s up!';
+
+  @override
+  String get b1YourTranscript => 'Your transcript';
+
+  @override
+  String get b1FreePracticeAnalysisNotice =>
+      'Your transcript will be analyzed by AI after you submit.';
+
+  @override
+  String get b1FinishPractice => 'Finish';
+
+  @override
+  String get b1StopRecording => 'Stop recording';
+
+  @override
+  String get b1AnalysisTitle => 'Areas to review';
+
+  @override
+  String get b1AnalysisNoMistakes => 'No mistakes found — great job!';
+
+  @override
+  String get b1AnalysisUnavailable =>
+      'Analysis isn\'t available for this attempt.';
+
+  @override
+  String get b1AnalysisYouSaid => 'You said';
+
+  @override
+  String get b1AnalysisCorrectForm => 'Correct form';
+
+  @override
+  String get b1WordTypeVerb => 'Verb';
+
+  @override
+  String get b1WordTypeNoun => 'Noun';
 }
