@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:b1_exam_prep/core/constants/app_constants.dart';
 import 'package:b1_exam_prep/core/constants/app_sizes.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
 import 'package:b1_exam_prep/core/theme/app_colors.dart';
@@ -22,7 +23,7 @@ class ExerciseWidget extends StatelessWidget {
   final ExerciseModel exercise;
   final VoidCallback onReady;
   final ValueChanged<ExerciseResult>? onResult;
-  // только для дебаг-кнопки Skip — переходит к следующему упражнению без проверки
+  // только для тестовой кнопки Skip — переходит к следующему упражнению без проверки
   final VoidCallback? onSkip;
   // автопереход после ответа (используется в verbs для voice_translate)
   final VoidCallback? onAutoAdvance;
@@ -91,7 +92,7 @@ class ExerciseWidget extends StatelessWidget {
       _ => _UnknownExerciseStub(exercise: exercise, onReady: onReady),
     };
 
-    if (!kDebugMode) return child;
+    if (!kDebugMode && !AppConstants.showSkipButton) return child;
 
     return Stack(
       children: [
