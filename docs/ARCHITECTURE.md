@@ -343,7 +343,6 @@ lib/
 - **Переигровка уровня подготовки — побочки stats/достижений**: как и в linguobyte, повторное прохождение уже пройденного уровня подготовки инкрементит `stats` и достижения заново (`FieldValue.increment`, `master_conjugator`/`vocabulary_master` накручиваются). Решение то же, что и для linguobyte — не реализовано, требует продуктового решения.
 - **[TD-1] Debug Skip-кнопка** (`exercise_widget.dart`): debug-блок (`if (!kDebugMode)` + `Stack`) — убрать перед релизом.
 - **[TD-3] Пустой `form` в fill_blank**: показать заглушку вместо поля ввода без контекста.
-- **[TD-4] Ключ виджета по `exId`**: `ValueKey(exercise.exId)` — при дублях `ex_id` State переиспользуется. Сменить на `ValueKey(exercise.id)` (DocumentSnapshot.id).
 - **Нет тестов для `CheckB1AchievementUseCase`/`CompleteB1StepUseCase`**: старые `check_achievement_use_case_test.dart`/`complete_step_use_case_test.dart` тестировали linguobyte-версии и удалены вместе с ними. Тесты для B1-версий не написаны — не запрошено явно (см. CLAUDE.md «Открытые пункты»).
 
 ### Profile / Settings (Фаза 5)
