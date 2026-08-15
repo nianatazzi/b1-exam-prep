@@ -40,49 +40,49 @@ class ExerciseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final child = switch (exercise.type) {
       'fill_blank' => FillBlankExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'translate_sentence' => TranslateSentenceExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'mosaic' => MosaicExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'listen_pick' => ListenPickExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'multiple_choice' => MultipleChoiceExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'wordcard' => WordcardExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'flashcard' => FlashcardExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
         ),
       'voice_translate' => VoiceTranslateExerciseWidget(
-          key: ValueKey(exercise.exId),
+          key: ValueKey(exercise.id),
           exercise: exercise,
           onReady: onReady,
           onResult: onResult,
