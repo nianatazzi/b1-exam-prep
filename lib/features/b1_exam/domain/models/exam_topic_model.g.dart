@@ -13,6 +13,11 @@ _ExamTopicModel _$ExamTopicModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       description: json['description'] as String? ?? '',
       imageUrl: json['image_url'] as String?,
+      freePracticeTask: json['free_practice_task'] == null
+          ? null
+          : FreePracticeTaskModel.fromJson(
+              json['free_practice_task'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$ExamTopicModelToJson(_ExamTopicModel instance) =>
@@ -21,4 +26,5 @@ Map<String, dynamic> _$ExamTopicModelToJson(_ExamTopicModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'image_url': instance.imageUrl,
+      'free_practice_task': instance.freePracticeTask,
     };

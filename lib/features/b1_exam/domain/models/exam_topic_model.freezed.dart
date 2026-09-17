@@ -15,7 +15,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExamTopicModel {
 
-@JsonKey(includeToJson: false) String get id;@JsonKey(name: 't_id') int get tId; String get title; String get description;@JsonKey(name: 'image_url') String? get imageUrl;
+@JsonKey(includeToJson: false) String get id;@JsonKey(name: 't_id') int get tId; String get title; String get description;@JsonKey(name: 'image_url') String? get imageUrl;// Задание свободной практики; заполняется только для monologue.
+// null и для image_description (там задание — картинка темы), и для тем,
+// где свободной практики нет вовсе.
+@JsonKey(name: 'free_practice_task') FreePracticeTaskModel? get freePracticeTask;
 /// Create a copy of ExamTopicModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +31,16 @@ $ExamTopicModelCopyWith<ExamTopicModel> get copyWith => _$ExamTopicModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExamTopicModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tId, tId) || other.tId == tId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExamTopicModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tId, tId) || other.tId == tId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.freePracticeTask, freePracticeTask) || other.freePracticeTask == freePracticeTask));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,tId,title,description,imageUrl);
+int get hashCode => Object.hash(runtimeType,id,tId,title,description,imageUrl,freePracticeTask);
 
 @override
 String toString() {
-  return 'ExamTopicModel(id: $id, tId: $tId, title: $title, description: $description, imageUrl: $imageUrl)';
+  return 'ExamTopicModel(id: $id, tId: $tId, title: $title, description: $description, imageUrl: $imageUrl, freePracticeTask: $freePracticeTask)';
 }
 
 
@@ -48,11 +51,11 @@ abstract mixin class $ExamTopicModelCopyWith<$Res>  {
   factory $ExamTopicModelCopyWith(ExamTopicModel value, $Res Function(ExamTopicModel) _then) = _$ExamTopicModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(name: 't_id') int tId, String title, String description,@JsonKey(name: 'image_url') String? imageUrl
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 't_id') int tId, String title, String description,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'free_practice_task') FreePracticeTaskModel? freePracticeTask
 });
 
 
-
+$FreePracticeTaskModelCopyWith<$Res>? get freePracticeTask;
 
 }
 /// @nodoc
@@ -65,17 +68,30 @@ class _$ExamTopicModelCopyWithImpl<$Res>
 
 /// Create a copy of ExamTopicModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? tId = null,Object? title = null,Object? description = null,Object? imageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? tId = null,Object? title = null,Object? description = null,Object? imageUrl = freezed,Object? freePracticeTask = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,tId: null == tId ? _self.tId : tId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,freePracticeTask: freezed == freePracticeTask ? _self.freePracticeTask : freePracticeTask // ignore: cast_nullable_to_non_nullable
+as FreePracticeTaskModel?,
   ));
 }
+/// Create a copy of ExamTopicModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FreePracticeTaskModelCopyWith<$Res>? get freePracticeTask {
+    if (_self.freePracticeTask == null) {
+    return null;
+  }
 
+  return $FreePracticeTaskModelCopyWith<$Res>(_self.freePracticeTask!, (value) {
+    return _then(_self.copyWith(freePracticeTask: value));
+  });
+}
 }
 
 
@@ -157,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'free_practice_task')  FreePracticeTaskModel? freePracticeTask)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExamTopicModel() when $default != null:
-return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl);case _:
+return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl,_that.freePracticeTask);case _:
   return orElse();
 
 }
@@ -178,10 +194,10 @@ return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'free_practice_task')  FreePracticeTaskModel? freePracticeTask)  $default,) {final _that = this;
 switch (_that) {
 case _ExamTopicModel():
-return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl);case _:
+return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl,_that.freePracticeTask);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +214,10 @@ return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(name: 't_id')  int tId,  String title,  String description, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'free_practice_task')  FreePracticeTaskModel? freePracticeTask)?  $default,) {final _that = this;
 switch (_that) {
 case _ExamTopicModel() when $default != null:
-return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl);case _:
+return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl,_that.freePracticeTask);case _:
   return null;
 
 }
@@ -213,7 +229,7 @@ return $default(_that.id,_that.tId,_that.title,_that.description,_that.imageUrl)
 @JsonSerializable()
 
 class _ExamTopicModel implements ExamTopicModel {
-  const _ExamTopicModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 't_id') required this.tId, required this.title, this.description = '', @JsonKey(name: 'image_url') this.imageUrl});
+  const _ExamTopicModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(name: 't_id') required this.tId, required this.title, this.description = '', @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'free_practice_task') this.freePracticeTask});
   factory _ExamTopicModel.fromJson(Map<String, dynamic> json) => _$ExamTopicModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -221,6 +237,10 @@ class _ExamTopicModel implements ExamTopicModel {
 @override final  String title;
 @override@JsonKey() final  String description;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;
+// Задание свободной практики; заполняется только для monologue.
+// null и для image_description (там задание — картинка темы), и для тем,
+// где свободной практики нет вовсе.
+@override@JsonKey(name: 'free_practice_task') final  FreePracticeTaskModel? freePracticeTask;
 
 /// Create a copy of ExamTopicModel
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExamTopicModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tId, tId) || other.tId == tId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExamTopicModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tId, tId) || other.tId == tId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.freePracticeTask, freePracticeTask) || other.freePracticeTask == freePracticeTask));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,tId,title,description,imageUrl);
+int get hashCode => Object.hash(runtimeType,id,tId,title,description,imageUrl,freePracticeTask);
 
 @override
 String toString() {
-  return 'ExamTopicModel(id: $id, tId: $tId, title: $title, description: $description, imageUrl: $imageUrl)';
+  return 'ExamTopicModel(id: $id, tId: $tId, title: $title, description: $description, imageUrl: $imageUrl, freePracticeTask: $freePracticeTask)';
 }
 
 
@@ -255,11 +275,11 @@ abstract mixin class _$ExamTopicModelCopyWith<$Res> implements $ExamTopicModelCo
   factory _$ExamTopicModelCopyWith(_ExamTopicModel value, $Res Function(_ExamTopicModel) _then) = __$ExamTopicModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(name: 't_id') int tId, String title, String description,@JsonKey(name: 'image_url') String? imageUrl
+@JsonKey(includeToJson: false) String id,@JsonKey(name: 't_id') int tId, String title, String description,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'free_practice_task') FreePracticeTaskModel? freePracticeTask
 });
 
 
-
+@override $FreePracticeTaskModelCopyWith<$Res>? get freePracticeTask;
 
 }
 /// @nodoc
@@ -272,18 +292,31 @@ class __$ExamTopicModelCopyWithImpl<$Res>
 
 /// Create a copy of ExamTopicModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? tId = null,Object? title = null,Object? description = null,Object? imageUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? tId = null,Object? title = null,Object? description = null,Object? imageUrl = freezed,Object? freePracticeTask = freezed,}) {
   return _then(_ExamTopicModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,tId: null == tId ? _self.tId : tId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,freePracticeTask: freezed == freePracticeTask ? _self.freePracticeTask : freePracticeTask // ignore: cast_nullable_to_non_nullable
+as FreePracticeTaskModel?,
   ));
 }
 
+/// Create a copy of ExamTopicModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FreePracticeTaskModelCopyWith<$Res>? get freePracticeTask {
+    if (_self.freePracticeTask == null) {
+    return null;
+  }
 
+  return $FreePracticeTaskModelCopyWith<$Res>(_self.freePracticeTask!, (value) {
+    return _then(_self.copyWith(freePracticeTask: value));
+  });
+}
 }
 
 // dart format on
