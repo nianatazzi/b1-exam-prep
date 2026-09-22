@@ -446,6 +446,12 @@
   "b1CaseUsage": "Case usage",
   "@b1CaseUsage": { "description": "Grammar rule type: when to use a grammatical case" },
 
+  "b1Mood": "Mood",
+  "@b1Mood": { "description": "Grammar rule type: verb mood beyond present tense (conditional, imperative)" },
+
+  "b1Degree": "Comparison degree",
+  "@b1Degree": { "description": "Grammar rule type: comparative/superlative adjective or adverb forms" },
+
   "b1PhraseOpening": "Opening",
   "@b1PhraseOpening": { "description": "Phrase category: start of speech" },
 

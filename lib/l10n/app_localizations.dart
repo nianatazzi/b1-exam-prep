@@ -990,6 +990,18 @@ abstract class AppLocalizations {
   /// **'Case usage'**
   String get b1CaseUsage;
 
+  /// Grammar rule type: verb mood beyond present tense (conditional, imperative)
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get b1Mood;
+
+  /// Grammar rule type: comparative/superlative adjective or adverb forms
+  ///
+  /// In en, this message translates to:
+  /// **'Comparison degree'**
+  String get b1Degree;
+
   /// Phrase category: start of speech
   ///
   /// In en, this message translates to:

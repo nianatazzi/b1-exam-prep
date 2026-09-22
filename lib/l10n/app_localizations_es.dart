@@ -468,6 +468,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get b1CaseUsage => 'Uso del caso';
 
   @override
+  String get b1Mood => 'Modo';
+
+  @override
+  String get b1Degree => 'Grado de comparación';
+
+  @override
   String get b1PhraseOpening => 'Apertura';
 
   @override
