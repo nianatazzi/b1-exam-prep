@@ -10,7 +10,26 @@ enum ExamSectionType {
   @JsonValue('monologue')
   monologue,
   @JsonValue('dialogue')
-  dialogue,
+  dialogue;
+
+  /// Разбор строкового ключа раздела в тип. Нужен на границе маршрута:
+  /// GoRouter отдаёт sectionId строкой, а ExamSectionModel ниже B1HomeScreen
+  /// не загружается — ни TopicDetail, ни Practice, ни ImagePractice его не читают.
+  /// null — раздела с таким ключом нет (битый маршрут или новый тип в Firestore).
+  static ExamSectionType? fromKey(String key) {
+    for (final entry in _$ExamSectionTypeEnumMap.entries) {
+      if (entry.value == key) return entry.key;
+    }
+    return null;
+  }
+}
+
+extension ExamSectionTypeKey on ExamSectionType {
+  /// Строковый ключ раздела (= JsonValue = id документа в Firestore).
+  /// Единственный источник — сгенерированная `_$ExamSectionTypeEnumMap`,
+  /// без ручных switch-копий. Использовать только его, не `.name`:
+  /// `.name` даёт `imageDescription`, а в базе лежит `image_description`.
+  String get key => _$ExamSectionTypeEnumMap[this]!;
 }
 
 @freezed
