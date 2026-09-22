@@ -463,6 +463,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get b1CaseUsage => 'Употребление падежа';
 
   @override
+  String get b1Mood => 'Наклонение';
+
+  @override
+  String get b1Degree => 'Степень сравнения';
+
+  @override
   String get b1PhraseOpening => 'Вступление';
 
   @override

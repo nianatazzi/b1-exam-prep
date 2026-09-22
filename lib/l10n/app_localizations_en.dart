@@ -462,6 +462,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get b1CaseUsage => 'Case usage';
 
   @override
+  String get b1Mood => 'Mood';
+
+  @override
+  String get b1Degree => 'Comparison degree';
+
+  @override
   String get b1PhraseOpening => 'Opening';
 
   @override

@@ -38,4 +38,6 @@ const _$GrammarRuleTypeEnumMap = {
   GrammarRuleType.declension: 'declension',
   GrammarRuleType.conjugation: 'conjugation',
   GrammarRuleType.caseUsage: 'case_usage',
+  GrammarRuleType.mood: 'mood',
+  GrammarRuleType.degree: 'degree',
 };

@@ -18,6 +18,13 @@ class GrammarTableWidget extends StatelessWidget {
       GrammarRuleType.declension => l10n.b1Declension,
       GrammarRuleType.conjugation => l10n.b1Conjugation,
       GrammarRuleType.caseUsage => l10n.b1CaseUsage,
+      // mood/degree добавлены для грамматических тем вроде "Tryb warunkowy"/
+      // "Stopień najwyższy" (Lesson Matrix §0) — сами темы этот виджет не
+      // затрагивают, но rule.ruleType остаётся закрытым enum (CLAUDE.md:
+      // enum вместо строк там, где есть закрытый список значений), поэтому
+      // switch должен покрывать все значения уже сейчас.
+      GrammarRuleType.mood => l10n.b1Mood,
+      GrammarRuleType.degree => l10n.b1Degree,
     };
 
     return Card(
