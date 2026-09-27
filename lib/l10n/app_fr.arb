@@ -219,6 +219,5 @@
   "b1RemedialReviewTitle": "Mots à revoir",
   "b1DialogueStart": "Commencer le dialogue",
   "b1DialogueTurnsLeft": "{count} tours restants",
-  "b1DialogueTypeMessage": "Tapez votre réponse…",
   "b1DialogueFinish": "Terminer le dialogue"
 }

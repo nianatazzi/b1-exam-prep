@@ -219,6 +219,5 @@
   "b1RemedialReviewTitle": "Слова для повторения",
   "b1DialogueStart": "Начать диалог",
   "b1DialogueTurnsLeft": "Осталось реплик: {count}",
-  "b1DialogueTypeMessage": "Введите ответ…",
   "b1DialogueFinish": "Завершить диалог"
 }

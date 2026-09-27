@@ -1242,12 +1242,6 @@ abstract class AppLocalizations {
   /// **'{count} turns left'**
   String b1DialogueTurnsLeft(int count);
 
-  /// Text input placeholder in the dialogue screen
-  ///
-  /// In en, this message translates to:
-  /// **'Type your reply…'**
-  String get b1DialogueTypeMessage;
-
   /// Button to end the dialogue and submit it for analysis
   ///
   /// In en, this message translates to:

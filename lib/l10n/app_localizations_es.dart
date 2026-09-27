@@ -603,8 +603,5 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get b1DialogueTypeMessage => 'Escribe tu respuesta…';
-
-  @override
   String get b1DialogueFinish => 'Terminar diálogo';
 }

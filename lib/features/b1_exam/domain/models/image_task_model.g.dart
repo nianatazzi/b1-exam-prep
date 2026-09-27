@@ -7,17 +7,7 @@ part of 'image_task_model.dart';
 // **************************************************************************
 
 _ImageTaskModel _$ImageTaskModelFromJson(Map<String, dynamic> json) =>
-    _ImageTaskModel(
-      imageUrl: json['image_url'] as String? ?? '',
-      pointsToDescribe:
-          (json['points_to_describe'] as List<dynamic>?)
-              ?.map((e) => e as Map<String, dynamic>)
-              .toList() ??
-          const <Map<String, dynamic>>[],
-    );
+    _ImageTaskModel(imageUrl: json['image_url'] as String? ?? '');
 
 Map<String, dynamic> _$ImageTaskModelToJson(_ImageTaskModel instance) =>
-    <String, dynamic>{
-      'image_url': instance.imageUrl,
-      'points_to_describe': instance.pointsToDescribe,
-    };
+    <String, dynamic>{'image_url': instance.imageUrl};

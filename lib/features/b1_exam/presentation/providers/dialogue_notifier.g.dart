@@ -65,7 +65,7 @@ final class DialogueNotifierProvider
   }
 }
 
-String _$dialogueNotifierHash() => r'5c760b78eacd05437f610debbc22db0b17732454';
+String _$dialogueNotifierHash() => r'f60408dd94c69c0334017d3bb0a4ea79bfe4ed42';
 
 /// Диалог урока (дизайн диалога, Lesson Matrix) — состояние хода хранится на
 /// клиенте, continueDialogue вызывается заново на каждый ход с полной

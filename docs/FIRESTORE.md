@@ -147,6 +147,7 @@ type_data:
   title: map<langCode, string>       # инструкция
   prompts: map<langCode, string>     # перевод-подсказка
   answer: string                     # правильное предложение (слова через пробел)
+  distractor_chunks: array<string>   # слова-обманки, показываются вперемешку с правильными в банке слов
 
 # multiple_choice — заполнить пропуски словами из банка
 type_data:
@@ -378,6 +379,10 @@ b1_exam_content/                          # корневая коллекция 
           goal: map<langCode, string>
           opening_line: string              # первая реплика ИИ, на языке langId
           max_turns: number                 # потолок реплик студента, дефолт 10
+          points: array<map<langCode, string>> # пункты, которые студент должен раскрыть в разговоре —
+                                             # той же формы, что monologue_task.points; в клиент НЕ мапится
+                                             # (не показывается студенту), читает только Cloud Function
+                                             # analyzeSpeech для сверки talkingPointsCovered в LLM-анализе
 
 b1_service/                                # НОВАЯ отдельная root-коллекция, Admin SDK-only
                                             # (была подколлекцией b1_polish/pl/service/** — вынесена
@@ -387,10 +392,14 @@ b1_service/                                # НОВАЯ отдельная root-
     fallbackEnabled: boolean               # вкл/выкл fallback-провайдера (Anthropic) в analyzeSpeech/continueDialogue.
                                             # Переключается вручную через Firebase Console. Отсутствие документа = false (fail closed)
 
-  llmQuota/                                # подколлекция: квота вызовов LLM на пользователя (общая по всем языкам)
-    {userId}/                              # документ, пишется/читается только Cloud Functions (Admin SDK)
-      date: string                         # "YYYY-MM-DD" (UTC) — квота суточная
-      count: number                        # сколько вызовов analyzeSpeech/continueDialogue уже сделано за date
+llmQuota/                                  # ОТДЕЛЬНАЯ root-коллекция (НЕ подколлекция b1_service) — квота вызовов
+                                            # LLM на пользователя, общая по всем языкам. b1_service/llmQuota/{userId}
+                                            # был невалидным путём документа (3 сегмента, Firestore требует чётное
+                                            # число) — enforceQuota падал синхронно на каждом вызове, анализ речи
+                                            # молча не работал ни для одного устного шага
+  {userId}/                                # документ, пишется/читается только Cloud Functions (Admin SDK)
+    date: string                           # "YYYY-MM-DD" (UTC) — квота суточная
+    count: number                          # сколько вызовов analyzeSpeech/continueDialogue уже сделано за date
 ```
 
 Launch-контент (§F плана редизайна) — четыре польских урока, а не полная
@@ -466,7 +475,7 @@ private_user_info/
               targetGrammarErrors: array # [{word, userForm, correctForm, explanation}, ...] — ошибки в grammar_topic_id ЭТОГО урока
               otherGrammarErrors: array  # та же форма — прочие грамматические ошибки
               lexicalErrors: array       # та же форма — серверная сверка (не решение LLM) со словарём lexical_topic_id урока
-              talkingPointsCovered: array # [{point, covered: boolean}, ...] — раскрытие пунктов image_task/monologue_task
+              talkingPointsCovered: array # [{point, covered: boolean}, ...] — раскрытие пунктов image_task/monologue_task/dialogue_task
               coherenceScore: number     # 0-15, холистическая оценка LLM
 ```
 

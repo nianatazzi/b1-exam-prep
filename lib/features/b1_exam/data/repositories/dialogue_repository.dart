@@ -25,7 +25,10 @@ class DialogueRepository implements IDialogueRepository {
     required String uiLanguage,
   }) async {
     try {
-      final callable = _functions.httpsCallable('continueDialogue');
+      final callable = _functions.httpsCallable(
+        'continueDialogue',
+        options: HttpsCallableOptions(timeout: const Duration(seconds: 65)),
+      );
       final result = await callable.call<Map<Object?, Object?>>({
         'langId': langId,
         'lessonId': lessonId,
