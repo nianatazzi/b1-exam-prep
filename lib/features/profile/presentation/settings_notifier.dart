@@ -21,16 +21,21 @@ class SettingsNotifier extends _$SettingsNotifier {
     final user = ref.read(authProvider).asData?.value;
     if (user == null) return;
 
+    // settingsProvider ничем не watch-ится (только .notifier для вызова
+    // методов) — без keepAlive() autoDispose уничтожает провайдер до
+    // завершения await, и invalidate() ниже молча не выполняется.
+    final link = ref.keepAlive();
     try {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.theme': theme});
-      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setTheme failed', error: e, stackTrace: st);
     } catch (e, st) {
       AppLogger.e('setTheme unexpected error', error: e, stackTrace: st);
+    } finally {
+      link.close();
     }
   }
 
@@ -39,16 +44,18 @@ class SettingsNotifier extends _$SettingsNotifier {
     final user = ref.read(authProvider).asData?.value;
     if (user == null) return;
 
+    final link = ref.keepAlive();
     try {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.speechSpeed': speed});
-      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setSpeechSpeed failed', error: e, stackTrace: st);
     } catch (e, st) {
       AppLogger.e('setSpeechSpeed unexpected error', error: e, stackTrace: st);
+    } finally {
+      link.close();
     }
   }
 
@@ -60,17 +67,19 @@ class SettingsNotifier extends _$SettingsNotifier {
     final user = ref.read(authProvider).asData?.value;
     if (user == null) return;
 
+    final link = ref.keepAlive();
     try {
       await ref
           .read(userRepositoryProvider)
           .saveSelectedLanguage(user.id, language.name);
-      if (!ref.mounted) return;
       ref.invalidate(studyLanguageProvider);
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setStudyLanguage failed', error: e, stackTrace: st);
     } catch (e, st) {
       AppLogger.e('setStudyLanguage unexpected error', error: e, stackTrace: st);
+    } finally {
+      link.close();
     }
   }
 
@@ -79,20 +88,20 @@ class SettingsNotifier extends _$SettingsNotifier {
     final user = ref.read(authProvider).asData?.value;
     if (user == null) return;
 
-    // setLocale перестраивает дерево виджетов — settingsProvider может быть
-    // диспозен до завершения await. ref.mounted проверяем перед invalidate.
+    final link = ref.keepAlive();
     ref.read(appLocaleProvider.notifier).setLocale(Locale(langCode));
 
     try {
       await ref
           .read(userRepositoryProvider)
           .updatePublicProfile(user.id, {'preference.uiLanguage': langCode});
-      if (!ref.mounted) return;
       ref.invalidate(profileProvider);
     } on AppError catch (e, st) {
       AppLogger.e('setUiLanguage failed', error: e, stackTrace: st);
     } catch (e, st) {
       AppLogger.e('setUiLanguage unexpected error', error: e, stackTrace: st);
+    } finally {
+      link.close();
     }
   }
 }
