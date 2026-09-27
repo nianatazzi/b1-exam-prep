@@ -123,6 +123,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get langRussian => 'Russian';
 
   @override
+  String get langPolish => 'Polish';
+
+  @override
+  String get langGerman => 'German';
+
+  @override
+  String get learningLanguageSection => 'Study language';
+
+  @override
   String get nameLabel => 'First name';
 
   @override
@@ -435,6 +444,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get b1HomeTitle => 'B1 Exam Prep';
 
   @override
+  String get b1LanguageNotAvailable =>
+      'B1 exam prep isn\'t available for your selected study language yet';
+
+  @override
+  String get b1LessonsComingSoon => 'Lessons are coming soon';
+
+  @override
+  String get b1TopicNoLessonsYet => 'No lessons yet for this topic';
+
+  @override
+  String get b1LessonFlowComingSoon => 'This lesson isn\'t ready yet';
+
+  @override
   String get b1ImageDescription => 'Image Description';
 
   @override
@@ -556,4 +578,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get b1WordTypeNoun => 'Noun';
+
+  @override
+  String get b1LessonComplete => 'Lesson complete!';
+
+  @override
+  String get b1NoMisusedWords => 'No mistakes to review — well done!';
+
+  @override
+  String get b1RemedialReviewTitle => 'Words to review';
+
+  @override
+  String get b1DialogueStart => 'Start dialogue';
+
+  @override
+  String b1DialogueTurnsLeft(int count) {
+    return '$count turns left';
+  }
+
+  @override
+  String get b1DialogueTypeMessage => 'Type your reply…';
+
+  @override
+  String get b1DialogueFinish => 'Finish dialogue';
 }

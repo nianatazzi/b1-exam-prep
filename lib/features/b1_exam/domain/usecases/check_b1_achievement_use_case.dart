@@ -1,47 +1,40 @@
-import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_result.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/achievement_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/achievement_update.dart';
 import 'package:b1_exam_prep/features/profile/domain/step_result_model.dart';
 
-/// Проверяет достижения после завершения уровня подготовки B1-темы.
-/// Те же 5 типов достижений, что и в linguobyte (см. CheckAchievementUseCase),
-/// но триггеры адаптированы под структуру B1: раздел → тема → уровень
-/// подготовки (vocabulary/grammar/phrases), без уроков и суб-шагов глаголов.
+/// Проверяет достижения после завершения блока упражнений урока (Lesson
+/// Matrix §0). Те же 5 типов достижений, что и в linguobyte/старой B1-схеме,
+/// но триггеры на lessonId/block (verb/noun/phrase) вместо
+/// sectionType/topicTId/prepLevel. Урок всегда состоит ровно из трёх блоков
+/// (verb+noun+phrase) — в отличие от старой схемы, где набор уровней
+/// подготовки варьировался между image_description и обычными темами,
+/// параметр requiredPrepLevels больше не нужен.
 class CheckB1AchievementUseCase {
-  /// [allTopicResults] — topicResults ПОСЛЕ сохранения текущего шага.
-  /// [requiredPrepLevels] — какие уровни подготовки должны быть пройдены,
-  /// чтобы тема считалась завершённой. Разные секции экзамена имеют разный
-  /// набор уровней (например image_description не использует "vocabulary" —
-  /// существительные проходятся через "grammar", см. ImagePracticeStep).
+  /// [allTopicResults] — topicResults ПОСЛЕ сохранения текущего блока.
   List<AchievementUpdate> check({
-    required String sectionType,
-    required int topicTId,
-    required String prepLevel,
-    required List<ExerciseResult> exerciseResults,
+    required String lessonId,
+    required ExerciseBlock block,
     required Map<String, StepResultModel> allTopicResults,
     required Map<String, AchievementModel> currentAchievements,
     required int currentStreak,
-    required List<String> requiredPrepLevels,
   }) {
     final updates = <AchievementUpdate>[];
 
-    final isTopicComplete = _isTopicComplete(
-      sectionType: sectionType,
-      topicTId: topicTId,
+    final isLessonComplete = _isLessonComplete(
+      lessonId: lessonId,
       allTopicResults: allTopicResults,
-      requiredPrepLevels: requiredPrepLevels,
     );
 
     final masterConj = _checkMasterConjugator(
-      prepLevel: prepLevel,
-      isTopicComplete: isTopicComplete,
+      block: block,
+      isLessonComplete: isLessonComplete,
       currentAchievements: currentAchievements,
     );
     if (masterConj != null) updates.add(masterConj);
 
     final firstStep = _checkFirstStep(
-      topicTId: topicTId,
-      isTopicComplete: isTopicComplete,
+      isLessonComplete: isLessonComplete,
       currentAchievements: currentAchievements,
     );
     if (firstStep != null) updates.add(firstStep);
@@ -53,8 +46,9 @@ class CheckB1AchievementUseCase {
     if (focused != null) updates.add(focused);
 
     final vocabMaster = _checkVocabularyMaster(
-      prepLevel: prepLevel,
-      exerciseResults: exerciseResults,
+      lessonId: lessonId,
+      isLessonComplete: isLessonComplete,
+      allTopicResults: allTopicResults,
       currentAchievements: currentAchievements,
     );
     if (vocabMaster != null) updates.add(vocabMaster);
@@ -62,27 +56,23 @@ class CheckB1AchievementUseCase {
     return updates;
   }
 
-  bool _isTopicComplete({
-    required String sectionType,
-    required int topicTId,
+  bool _isLessonComplete({
+    required String lessonId,
     required Map<String, StepResultModel> allTopicResults,
-    required List<String> requiredPrepLevels,
   }) {
-    return requiredPrepLevels.every(
-      (level) =>
-          allTopicResults.containsKey('${sectionType}_${topicTId}_$level'),
+    return ExerciseBlock.values.every(
+      (b) => allTopicResults.containsKey('${lessonId}_${b.name}'),
     );
   }
 
-  /// Master Conjugator: тема полностью пройдена (vocab+grammar+phrases),
-  /// грамматика — финальный/только что завершённый уровень. Повторяемо:
-  /// уровень растёт при каждом повторном прохождении, аналог linguobyte.
+  /// Master Conjugator: блок verb (спряжение) только что завершён, урок
+  /// полностью пройден. Повторяемо — уровень растёт при каждом повторе.
   AchievementUpdate? _checkMasterConjugator({
-    required String prepLevel,
-    required bool isTopicComplete,
+    required ExerciseBlock block,
+    required bool isLessonComplete,
     required Map<String, AchievementModel> currentAchievements,
   }) {
-    if (prepLevel != 'grammar' || !isTopicComplete) return null;
+    if (block != ExerciseBlock.verb || !isLessonComplete) return null;
 
     final current = currentAchievements[AchievementType.masterConjugator.key];
     final currentLevel = current?.level ?? 0;
@@ -92,13 +82,15 @@ class CheckB1AchievementUseCase {
     );
   }
 
-  /// First Step: первая тема (t_id == 1) полностью пройдена. Одноразовое.
+  /// First Step: первый урок вообще, полностью пройденный. Одноразовое.
+  /// Не привязано к конкретному lessonId — раньше проверялся t_id==1
+  /// (порядковый номер темы), но у уроков нет порядкового номера
+  /// (Lesson Matrix §A) — просто первое полное прохождение любого урока.
   AchievementUpdate? _checkFirstStep({
-    required int topicTId,
-    required bool isTopicComplete,
+    required bool isLessonComplete,
     required Map<String, AchievementModel> currentAchievements,
   }) {
-    if (topicTId != 1 || !isTopicComplete) return null;
+    if (!isLessonComplete) return null;
 
     final current = currentAchievements[AchievementType.firstStep.key];
     if (current != null && current.level >= 1) return null;
@@ -109,7 +101,8 @@ class CheckB1AchievementUseCase {
     );
   }
 
-  /// Focused Learner: каждые 7 дней стрика. Стрик общий для аккаунта.
+  /// Focused Learner: каждые 7 дней стрика. Стрик общий для аккаунта,
+  /// не завязан на lessonId/block — не меняется этим рефакторингом.
   AchievementUpdate? _checkFocusedLearner({
     required int currentStreak,
     required Map<String, AchievementModel> currentAchievements,
@@ -130,18 +123,23 @@ class CheckB1AchievementUseCase {
 
   // Interested Learner: пост-MVP, как и в linguobyte.
 
-  /// Vocabulary Master: все vocabulary-упражнения темы правильно с первой
-  /// попытки. Повторяемо, аналог linguobyte.
+  /// Vocabulary Master: урок полностью пройден и все три блока
+  /// (verb+noun+phrase) правильны с первой попытки. Раньше — отдельный
+  /// уровень подготовки "vocabulary", которого в новой схеме блоков нет;
+  /// решение продукта — переопределить как "весь урок начисто" (см.
+  /// обсуждение при рефакторинге). Повторяемо.
   AchievementUpdate? _checkVocabularyMaster({
-    required String prepLevel,
-    required List<ExerciseResult> exerciseResults,
+    required String lessonId,
+    required bool isLessonComplete,
+    required Map<String, StepResultModel> allTopicResults,
     required Map<String, AchievementModel> currentAchievements,
   }) {
-    if (prepLevel != 'vocabulary') return null;
-    if (exerciseResults.isEmpty) return null;
+    if (!isLessonComplete) return null;
 
-    final allCorrect = exerciseResults.every((r) => r.isCorrect);
-    if (!allCorrect) return null;
+    final allFirstAttempt = ExerciseBlock.values.every(
+      (b) => allTopicResults['${lessonId}_${b.name}']?.firstAttempt ?? false,
+    );
+    if (!allFirstAttempt) return null;
 
     final current = currentAchievements[AchievementType.vocabularyMaster.key];
     final currentLevel = current?.level ?? 0;

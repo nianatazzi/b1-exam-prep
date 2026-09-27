@@ -8,19 +8,19 @@ import 'package:b1_exam_prep/features/profile/domain/public_user_model.dart';
 
 void main() {
   group('snake_case ключи Firestore', () {
-    test('ExerciseModel читает ex_id / segment_type / linked_item_id / '
+    test('ExerciseModel читает ex_id / block / linked_item_id / '
         'grammar_types / type_data', () {
       final m = ExerciseModel.fromJson({
         'id': 'doc1',
         'ex_id': 5,
         'type': 'fill_blank',
-        'segment_type': 'grammar',
+        'block': 'noun',
         'linked_item_id': 2,
         'grammar_types': ['grammar'],
         'type_data': {'form': 'a [] b'},
       });
       expect(m.exId, 5);
-      expect(m.segmentType, 'grammar');
+      expect(m.block, ExerciseBlock.noun);
       expect(m.linkedItemId, 2);
       expect(m.grammarTypes, ['grammar']);
       expect(m.typeData?['form'], 'a [] b');

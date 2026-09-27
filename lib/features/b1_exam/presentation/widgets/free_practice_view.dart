@@ -7,28 +7,32 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:b1_exam_prep/core/constants/app_sizes.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
 import 'package:b1_exam_prep/core/logger/app_logger.dart';
-import 'package:b1_exam_prep/features/b1_exam/domain/models/exam_topic_model.dart';
 import 'package:b1_exam_prep/l10n/app_localizations.dart';
-
-const _practiceDurationSeconds = 180;
-// Изучаемый язык фиксирован (польский) — см. ARCHITECTURE.md §12.
-const _sttLocaleId = 'pl-PL';
 
 enum _Stage { idle, recording, timeUp }
 
-/// Свободная практика image_description: картинка темы, таймер 3 минуты,
-/// запись голоса через speech_to_text, транскрипт по истечении времени.
-/// Сам transcript отправляется на AI-анализ при сабмите — см.
-/// SubmitFreePracticeUseCase и ImagePracticeScreen._CompletedView.
+/// Шаблон для всех трёх устных шагов урока (image/monologue — dialogue
+/// использует отдельный DialogueScreen с ходовым чатом, не эту форму):
+/// картинка (опционально) + текст задания + таймер + запись голоса через
+/// speech_to_text, транскрипт по истечении времени. Сам transcript
+/// отправляется на AI-анализ при сабмите — см. SubmitOralStepUseCase.
 class FreePracticeView extends StatefulWidget {
-  final ExamTopicModel topic;
+  final String? imageUrl;
+  final String promptText;
+  final List<String> pointsToDescribe;
+  final int durationSeconds;
+  final String sttLocaleId;
   final bool isSubmitting;
   final Future<void> Function(String transcript, int durationSeconds)
       onSubmit;
 
   const FreePracticeView({
     super.key,
-    required this.topic,
+    this.imageUrl,
+    required this.promptText,
+    this.pointsToDescribe = const [],
+    required this.durationSeconds,
+    required this.sttLocaleId,
     required this.isSubmitting,
     required this.onSubmit,
   });
@@ -40,9 +44,16 @@ class FreePracticeView extends StatefulWidget {
 class _FreePracticeViewState extends State<FreePracticeView> {
   final SpeechToText _speech = SpeechToText();
 
-  _Stage _stage = _Stage.idle;
-  int _secondsRemaining = _practiceDurationSeconds;
+  late _Stage _stage;
+  late int _secondsRemaining;
   Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _stage = _Stage.idle;
+    _secondsRemaining = widget.durationSeconds;
+  }
 
   // Текст завершённых сессий распознавания + текущий незавершённый кусок.
   // Сессия speech_to_text может закончиться раньше таймера (лимит движка на
@@ -74,7 +85,7 @@ class _FreePracticeViewState extends State<FreePracticeView> {
 
     setState(() {
       _stage = _Stage.recording;
-      _secondsRemaining = _practiceDurationSeconds;
+      _secondsRemaining = widget.durationSeconds;
       _committedTranscript = '';
       _currentPartial = '';
       _speechUnavailable = false;
@@ -108,7 +119,7 @@ class _FreePracticeViewState extends State<FreePracticeView> {
         }
       },
       listenOptions: SpeechListenOptions(
-        localeId: _sttLocaleId,
+        localeId: widget.sttLocaleId,
         listenMode: ListenMode.dictation,
         partialResults: true,
         cancelOnError: true,
@@ -172,7 +183,6 @@ class _FreePracticeViewState extends State<FreePracticeView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final imageUrl = widget.topic.imageUrl;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -181,11 +191,11 @@ class _FreePracticeViewState extends State<FreePracticeView> {
         children: [
           Text(l10n.b1FreePractice, style: theme.textTheme.headlineSmall),
           const SizedBox(height: AppSpacing.md),
-          if (imageUrl != null)
+          if (widget.imageUrl != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(AppSizes.radiusMd),
               child: CachedNetworkImage(
-                imageUrl: imageUrl,
+                imageUrl: widget.imageUrl!,
                 fit: BoxFit.cover,
                 height: 220,
                 placeholder: (_, _) => Container(
@@ -200,6 +210,19 @@ class _FreePracticeViewState extends State<FreePracticeView> {
               ),
             ),
           const SizedBox(height: AppSpacing.lg),
+          if (widget.promptText.isNotEmpty) ...[
+            Text(widget.promptText, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          if (widget.pointsToDescribe.isNotEmpty) ...[
+            ...widget.pointsToDescribe.map(
+              (point) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Text('•  $point', style: theme.textTheme.bodyMedium),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
           if (_stage == _Stage.idle) ...[
             Text(
               l10n.b1FreePracticeInstructions,
@@ -270,7 +293,7 @@ class _FreePracticeViewState extends State<FreePracticeView> {
                     ? null
                     : () => widget.onSubmit(
                           _fullTranscript,
-                          _practiceDurationSeconds,
+                          widget.durationSeconds,
                         ),
                 child: widget.isSubmitting
                     ? const SizedBox(

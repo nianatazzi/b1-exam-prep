@@ -40,6 +40,9 @@
   "langSpanish": "Испанский",
   "langFrench": "Французский",
   "langRussian": "Русский",
+  "langPolish": "Польский",
+  "langGerman": "Немецкий",
+  "learningLanguageSection": "Изучаемый язык",
   "nameLabel": "Имя",
   "surnameLabel": "Фамилия",
   "profileSaved": "Профиль сохранён",
@@ -161,6 +164,10 @@
   "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
 
   "b1HomeTitle": "Подготовка к B1",
+  "b1LanguageNotAvailable": "Подготовка к B1 пока недоступна для выбранного языка обучения",
+  "b1LessonsComingSoon": "Уроки скоро появятся",
+  "b1TopicNoLessonsYet": "Для этой темы пока нет уроков",
+  "b1LessonFlowComingSoon": "Этот урок пока не готов",
   "b1ImageDescription": "Описание изображения",
   "b1Monologue": "Монолог",
   "b1Dialogue": "Диалог",
@@ -206,5 +213,12 @@
   "b1AnalysisYouSaid": "Вы сказали",
   "b1AnalysisCorrectForm": "Правильная форма",
   "b1WordTypeVerb": "Глагол",
-  "b1WordTypeNoun": "Существительное"
+  "b1WordTypeNoun": "Существительное",
+  "b1LessonComplete": "Урок завершён!",
+  "b1NoMisusedWords": "Ошибок для повторения нет — отлично!",
+  "b1RemedialReviewTitle": "Слова для повторения",
+  "b1DialogueStart": "Начать диалог",
+  "b1DialogueTurnsLeft": "Осталось реплик: {count}",
+  "b1DialogueTypeMessage": "Введите ответ…",
+  "b1DialogueFinish": "Завершить диалог"
 }

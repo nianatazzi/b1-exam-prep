@@ -294,8 +294,10 @@ public_user_info/                       # коллекция
 | `exercises/**` | read + write | read |
 | `private_user_info/{userId}/**` | read + write | read + write (только свой `userId`) |
 | `public_user_info/{userId}` | read + write | read (все) / write (только свой `userId`) |
-| `b1_polish/**` (кроме `service/**`) | read + write | read |
-| `b1_polish/{langId}/service/**` | read + write | нет доступа — читает только Cloud Function через Admin SDK, обходит правила |
+| `b1_exam_content/**` | read + write | read |
+| `b1_service/**` | read + write | нет доступа — читает только Cloud Function через Admin SDK, обходит правила |
+
+> **Lesson Matrix + StudyLanguage:** `b1_polish` переименован в `b1_exam_content/{langId}/...` (`langId`: pl/fr/es/en/de) — многоязычный контент вместо только польского, см. §4. `b1_exam_content/{langId}/lexical_topics/**`/`grammar_topics/**`/`lessons/**` попадают под `b1_exam_content/**` наравне с остальным контентом. **`b1_service` — НОВАЯ отдельная root-коллекция** (была подколлекцией `b1_polish/pl/service/**`, теперь `llmConfig`/`llmQuota` не привязаны ни к какому языковому документу, т.к. общие для всех пяти языков) — правило `b1_polish/**` её больше не покрывает автоматически, нужно явно завести `b1_service/**` как отдельную запись, admin-only, без исключений для клиента.
 
 ### Правило доработки
 
@@ -308,75 +310,122 @@ public_user_info/                       # коллекция
 
 ---
 
-## 4. B1 Polish Exam Prep
+## 4. B1 Exam Prep — Lesson Matrix + StudyLanguage
+
+Урок = пара «лексическая тема × грамматическая тема» (`ARCHITECTURE.md` §6.1),
+внутри ОДНОГО языка обучения (`ARCHITECTURE.md` §12.1). Контент изначально
+был только польским (`b1_polish`) — переименовано в `b1_exam_content` и
+разложено по `{langId}` (pl/fr/es/en/de), тем же способом, что linguobyte
+раскладывает `basic/{langId}`. Старая схема `sections/{sectionId}/topics/{topicId}`
+(3 раздела экзамена × 33 темы каждый) выведена из употребления ещё на шаге
+Lesson Matrix — image_description/monologue/dialogue это три устных шага
+ОДНОГО урока, не параллельные разделы.
 
 ```
-b1_polish/                                # корневая коллекция
-  pl/                                      # документ языка (единственный на сейчас)
-    sections/                              # подколлекция: 3 раздела устного экзамена
-      {sectionId}/                         # "image_description" | "monologue" | "dialogue"
-        s_id: number                       # порядковый номер
-        type: string                       # "image_description" | "monologue" | "dialogue"
+b1_exam_content/                          # корневая коллекция (была b1_polish)
+  {langId}/                                # документ: pl | fr | es | en | de
+    lexical_topics/                        # подколлекция: лексические темы (в контексте языка langId)
+      {lexicalTopicId}/
+        lt_id: number                      # порядковый номер
         title: string
         description: string
-        icon: string                       # идентификатор иконки
 
-        topics/                            # подколлекция: темы внутри раздела
-          {topicId}/
-            t_id: number                   # порядковый номер
+        vocabulary/                        # подколлекция: слова по теме (форма не менялась)
+          {vocabId}/
+            voc_id: number
+            word: string                    # слово на изучаемом языке (langId)
+            translation: map<langCode, string>  # перевод на язык ИНТЕРФЕЙСА (не путать с langId)
+            transcription: string
+            gender: string | null           # "m" | "f" | "n" — применимо не ко всем языкам (например en), null где неприменимо
+            example_sentence: map<langCode, string>
+            audio_url: string | null
+
+    grammar_topics/                        # подколлекция: грамматические темы (в контексте языка langId)
+      {grammarTopicId}/
+        gt_id: number
+        title: string
+        description: string
+
+        rules/                             # подколлекция: правила (форма не менялась)
+          {ruleId}/
+            g_id: number
             title: string
-            description: string
-            image_url: string | null       # изображение для раздела image_description
+            rule_type: string               # "declension" | "conjugation" | "case_usage" | "mood" | "degree"
+            paradigm: map                    # таблица парадигмы (гибкая структура)
+            explanation: map<langCode, string>
+            examples: array<map>             # [{pl: "...", en: "...", ru: "..."}, ...] — примеры на langId + перевод интерфейса
 
-            vocabulary/                    # подколлекция: слова по теме
-              {vocabId}/
-                voc_id: number
-                word: string                # слово на польском
-                translation: map<langCode, string>
-                transcription: string
-                gender: string | null       # "m" | "f" | "n"
-                example_sentence: map<langCode, string>
-                audio_url: string | null
+    lessons/                               # подколлекция: уроки — пара лексической + грамматической темы
+      {lessonId}/
+        lexical_topic_id: string            # ссылка на документ lexical_topics (в этом же langId)
+        grammar_topic_id: string            # ссылка на документ grammar_topics (в этом же langId)
+        duration_seconds: number | null     # общая длительность устных шагов; null = дефолт из AppConstants (180с)
 
-            grammar/                       # подколлекция: грамматические правила
-              {grammarId}/
-                g_id: number
-                title: string
-                rule_type: string           # "declension" | "conjugation" | "case_usage"
-                paradigm: map               # таблица парадигмы (гибкая структура)
-                explanation: map<langCode, string>
-                examples: array<map>        # [{pl: "...", en: "...", ru: "..."}, ...]
+        image_task: map                     # задание шага "описание картинки"
+          image_url: string
+          points_to_describe: array<map<langCode, string>>
 
-            phrases/                       # подколлекция: полезные фразы и паттерны
-              {phraseId}/
-                p_id: number
-                phrase: string              # фраза на польском
-                translation: map<langCode, string>
-                usage_context: map<langCode, string>
-                category: string            # "opening" | "transition" | "opinion" | "conclusion" | "description"
-                audio_url: string | null
+        monologue_task: map                 # задание шага "монолог" (FreePracticeTaskModel, форма с 15d3caa)
+          prompt: map<langCode, string>
+          points: array<map<langCode, string>>
+          duration_seconds: number | null
+          think_seconds: number | null
 
-    service/                               # подколлекция: серверная конфигурация (читается Cloud Functions, Admin SDK)
-      llmConfig/                           # документ
-        fallbackEnabled: boolean           # вкл/выкл fallback-провайдера (Anthropic) в analyzeFreePractice, см. ARCHITECTURE.md §6.3.
+        dialogue_task: map                  # сценарий шага "диалог"
+          situation: map<langCode, string>
+          user_role: map<langCode, string>
+          ai_role: map<langCode, string>
+          goal: map<langCode, string>
+          opening_line: string              # первая реплика ИИ, на языке langId
+          max_turns: number                 # потолок реплик студента, дефолт 10
+
+b1_service/                                # НОВАЯ отдельная root-коллекция, Admin SDK-only
+                                            # (была подколлекцией b1_polish/pl/service/** — вынесена
+                                            # наружу, т.к. общая для всех пяти языков, не привязана
+                                            # к конкретному langId)
+  llmConfig/                               # документ
+    fallbackEnabled: boolean               # вкл/выкл fallback-провайдера (Anthropic) в analyzeSpeech/continueDialogue.
                                             # Переключается вручную через Firebase Console. Отсутствие документа = false (fail closed)
+
+  llmQuota/                                # подколлекция: квота вызовов LLM на пользователя (общая по всем языкам)
+    {userId}/                              # документ, пишется/читается только Cloud Functions (Admin SDK)
+      date: string                         # "YYYY-MM-DD" (UTC) — квота суточная
+      count: number                        # сколько вызовов analyzeSpeech/continueDialogue уже сделано за date
 ```
+
+Launch-контент (§F плана редизайна) — четыре польских урока, а не полная
+матрица 33×N ни для одного языка: Restaurant×Dative, Restaurant×Conditional,
+Hotel×Dative, School×Superlative, все под `b1_exam_content/pl/...`.
+Остальные четыре языка (fr/es/en/de) на момент этого изменения схемы не
+имеют ни одного урока — `B1HomeScreen` для них покажет то же пустое
+состояние "content coming soon", что уже показывалось для лексических тем
+без пары (например Doctor). Контент по всем языкам авторится вручную в
+отдельной админ-панели (`ARCHITECTURE.md` §1), не полным перебором.
 
 ### B1 упражнения
 
-Используется общая коллекция `exercises/` с фильтрацией по `course_id: "b1_pl"`.
+Используется общая коллекция `exercises/` с фильтрацией по `course_id`.
+`lesson_id`, `block` и теперь `course_id` (был жёстко `"b1_pl"`) —
+сознательные breaking changes схемы (безопасно: на момент смены не было
+реальных пользователей).
 
 ```
 exercises/
   {exerciseId}/
-    course_id: "b1_pl"                  # отличает B1-упражнения от basic_
-    lesson_id: number                   # = t_id темы (topic)
-    segment_type: string                # "vocabulary" | "grammar" | "phrases" (= уровень подготовки)
-    linked_item_id: number | null       # ссылка на конкретный элемент контента
+    course_id: string                   # "b1_{langId}" — "b1_pl" | "b1_fr" | "b1_es" | "b1_en" | "b1_de" (раньше жёстко "b1_pl")
+    lesson_id: string                   # id документа lessons/{lessonId} (раньше — числовой t_id темы)
+    block: string                       # "verb" | "noun" | "phrase" (раньше segment_type: vocabulary/grammar/phrases)
+    linked_item_id: number | null       # ссылка на GrammarRuleModel.g_id (verb/noun) или PhrasePatternModel.p_id (phrase)
     type: string                        # стандартные типы: flashcard, fill_blank, mosaic и т.д.
     type_data: map                      # данные упражнения (стандартная структура)
     ...остальные поля как в основных exercises
 ```
+
+Каждый блок урока показывает не более `AppConstants.lessonBlockExerciseCap`
+(10) упражнений — капается на клиенте при загрузке (`LessonNotifier`), не в
+самом запросе: все упражнения урока грузятся одним
+`where(course_id==..., lesson_id==...)` и группируются/капаются в памяти,
+тот же паттерн, что был у старой схемы (`ARCHITECTURE.md` §6.1).
 
 ### B1 прогресс пользователя
 
@@ -384,9 +433,10 @@ exercises/
 private_user_info/
   {userId}/
     b1_progress/                        # подколлекция
-      pl/                               # документ
-        topicResults: map
-          "{sectionType}_{topicTId}_{prepLevel}": map
+      {langId}/                         # документ: pl | fr | es | en | de — прогресс изолирован по языку,
+                                          # тот же паттерн, что languages/{langId} у linguobyte
+        topicResults: map               # результаты трёх капов упражнений урока
+          "{lessonId}_{block}": map     # block: verb | noun | phrase (раньше "{sectionType}_{topicTId}_{prepLevel}")
             correct: number
             total: number
             firstAttempt: boolean
@@ -404,22 +454,32 @@ private_user_info/
           focused_learner: {type, level, updatedAt}
           interested_learner: {type, level, updatedAt}
           vocabulary_master: {type, level, updatedAt}
-        freePractice: map                # свободная практика (image_description) — только последняя попытка
-          "{sectionType}_{topicTId}": map
-            transcript: string           # текст, распознанный speech_to_text за сессию таймера
-            durationSeconds: number      # фактическая длительность записи
+        lessonResults: map               # три устных шага урока — только последняя попытка каждого
+          "{lessonId}_{oralStep}": map   # oralStep: image | monologue | dialogue (заменяет старый freePractice)
+            transcript: string | null    # заполнено для image/monologue; null для dialogue (см. turns)
+            turns: array<map> | []       # заполнено для dialogue: [{role: "user"|"ai", text: string}, ...]; [] для image/monologue
+            durationSeconds: number
             completedAt: timestamp
-            analysis: map | null         # результат LLM-анализа (Фаза 2, analyzeFreePractice Cloud Function).
-                                          # null если анализ не запускался или упал — не критично для завершения топика
-              misusedWords: array
-                - word: string           # словарная форма правильного польского слова
-                  type: string           # "verb" | "noun"
-                  userForm: string       # форма, которую использовал пользователь
-                  correctForm: string    # правильная форма в этом контексте
-                  explanation: string    # объяснение на языке интерфейса пользователя
+            score: number | null         # 0-100, рубрика AppConstants.speechScore* (Lesson Matrix §D, плейсхолдер)
+            analysis: map | null         # результат analyzeSpeech Cloud Function, null если анализ не запускался/упал
+              lemmas: array              # [{surfaceForm, lemma, partOfSpeech}, ...] — лемматизация внутри analyzeSpeech, без отдельного морфологического анализатора
+              targetGrammarErrors: array # [{word, userForm, correctForm, explanation}, ...] — ошибки в grammar_topic_id ЭТОГО урока
+              otherGrammarErrors: array  # та же форма — прочие грамматические ошибки
+              lexicalErrors: array       # та же форма — серверная сверка (не решение LLM) со словарём lexical_topic_id урока
+              talkingPointsCovered: array # [{point, covered: boolean}, ...] — раскрытие пунктов image_task/monologue_task
+              coherenceScore: number     # 0-15, холистическая оценка LLM
 ```
 
-`stats`/`achievements` заполняются `ExamProgressRepository` по тем же правилам, что `UserProgressRepository` для linguobyte: `stats` — инкременты по `ExerciseResult.grammarTypes` (не по `prepLevel`/`segment_type`); `achievements` — `CheckB1AchievementUseCase`, триггеры адаптированы под структуру B1 (раздел→тема→уровень подготовки, нет уроков/суб-шагов глаголов) — см. `ARCHITECTURE.md` §20.
+`stats`/`achievements` заполняются `ExamProgressRepository` по тем же
+правилам, что `UserProgressRepository` для linguobyte: `stats` — инкременты
+по `ExerciseResult.grammarTypes` (не по `block`); `achievements` —
+`CheckB1AchievementUseCase`, триггеры на `lessonId`/`block` вместо
+`sectionType`/`topicTId`/`prepLevel`: Master Conjugator — блок `verb` +
+урок полностью пройден; First Step — первый ЛЮБОЙ урок, пройденный
+полностью (раньше был привязан к `t_id==1`, у уроков нет порядкового
+номера); Vocabulary Master — переопределено под новую схему: весь урок
+(все три блока) пройден и все с первой попытки, не отдельный уровень
+"vocabulary" (его в новой схеме блоков нет).
 
 ---
 
@@ -441,9 +501,14 @@ private_user_info/
 | Streak (`lastActiveDate`, `currentStreak`, `bestStreak`) в корне `private_user_info` | Стрик не привязан к языку — общий для пользователя |
 | `personalized_courses` — заглушка | Зарезервировано для персональных курсов (например, подготовка к просмотру фильмов) |
 | `AIPreference`, `botSettings` — заглушки в `service` | Будущие фичи после MVP |
-| `b1_polish` — отдельная корневая коллекция | B1 exam prep — отдельное приложение с собственной структурой контента (секции → темы → vocab/grammar/phrases) |
-| B1 exercises в общей коллекции `exercises` | Переиспользование существующих типов упражнений; `course_id: "b1_pl"` отделяет от `basic_*` |
-| `segment_type` для B1 = уровень подготовки | "vocabulary" / "grammar" / "phrases" — аналог "theory" / "vocab" / "verb" из linguobyte |
-| B1 прогресс в `b1_progress/pl` | Изолирован от `languages/{langId}` — разные приложения, разный прогресс. `stats`/`achievements` намеренно повторяют форму linguobyte (не изолированы по смыслу) — общий `ProfileScreen` показывает то и другое одинаково |
+| `b1_exam_content` — отдельная корневая коллекция (была `b1_polish`) | B1 exam prep — отдельное приложение с собственной структурой контента (лексические темы × грамматические темы → уроки, Lesson Matrix), теперь по пяти языкам обучения (`{langId}`), не только польскому |
+| B1 exercises в общей коллекции `exercises` | Переиспользование существующих типов упражнений; `course_id: "b1_{langId}"` отделяет от `basic_*` и от других языков b1 |
+| `block` для B1 = капанное упражнение урока | "verb" / "noun" / "phrase" — заменяет старый `segment_type` (vocabulary/grammar/phrases), три капа по 10 упражнений на лексике урока |
+| B1 прогресс в `b1_progress/{langId}` (раньше жёстко `pl`) | Изолирован от `languages/{langId}` linguobyte (разные приложения, разный прогресс), но сам разложен по языку тем же способом — переключение `StudyLanguage` (§12.1 ARCHITECTURE.md) сразу показывает прогресс по нужному языку без миграции данных. `stats`/`achievements` намеренно повторяют форму linguobyte — общий `ProfileScreen` показывает то и другое одинаково |
+| `b1_service` — отдельная root-коллекция (была подколлекцией `b1_polish/pl/service/**`) | `llmConfig`/`llmQuota` общие для всех пяти языков — не имеет смысла держать их под каким-то одним `{langId}` документом; вынесены на верхний уровень, требует отдельного Admin SDK-only правила в Console (см. Security Rules) |
+| `preference.selectedLanguage` переиспользуется для StudyLanguage b1-exam-prep, не заводится отдельное поле | То же поле, что уже пишет linguobyte — осознанное решение для консистентного UX между приложениями на одном аккаунте (см. ARCHITECTURE.md §12.1). Компромисс: b1-exam-prep не может проверить обработку этого поля со стороны linguobyte/cinephile |
+| `lexical_topics`/`grammar_topics` — раздельные коллекции, не полная матрица | Урок — пара тем, авторится вручную в админ-панели; раздельные оси избегают заведения N×M документов, когда реально нужна лишь горстка пар (Lesson Matrix §F) |
+| `lessonResults` вместо `freePractice`, ключ `{lessonId}_{oralStep}` | Единый паттерн для всех трёх устных шагов (image/monologue/dialogue), а не только image_description; `transcript`/`turns` — взаимоисключающие поля одной формы вместо двух параллельных документных форм |
+| `llmQuota` под `service/` (Admin SDK-only), а не в `private_user_info/{userId}` | `private_user_info/{userId}` даёт владельцу read+write — квоту, лежащую там, пользователь мог бы сбросить прямым Firestore-запросом. `service/**` уже закрыт для клиента тем же правилом, что и `llmConfig` |
 | `basic`/`exercises` (`course_id: basic_*`)/`languages/{langId}` не используются кодом b1-exam-prep | `features/home`/`features/lesson` (linguobyte-логика) удалены из этого репозитория целиком. Коллекции описаны здесь только как справка по структуре общего Firebase-проекта — их пишет/читает только linguobyte |
 | `service/llmConfig.fallbackEnabled` вместо переменной окружения Cloud Function | Читается на лету (Admin SDK) без передеплоя функции — переключается вручную через Firebase Console; переменная окружения потребовала бы `firebase deploy --only functions` на каждое включение/выключение |

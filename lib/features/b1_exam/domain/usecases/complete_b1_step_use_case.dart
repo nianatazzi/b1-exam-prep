@@ -1,5 +1,6 @@
 import 'package:b1_exam_prep/core/logger/app_logger.dart';
 import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_progress_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/repositories/i_exam_progress_repository.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_result.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/usecases/check_b1_achievement_use_case.dart';
@@ -16,10 +17,10 @@ CompleteB1StepUseCase completeB1StepUseCase(Ref ref) => CompleteB1StepUseCase(
       streakRepository: ref.read(userRepositoryProvider),
     );
 
-/// Оркестрация завершения уровня подготовки B1-темы: сохранение результата
-/// (+ stats), обновление стрика (общий для аккаунта), проверка достижений.
-/// Аналог CompleteStepUseCase из linguobyte, без продвижения lastLesson —
-/// в B1 нет последовательного прогресса уроков, темы доступны сразу.
+/// Оркестрация завершения блока упражнений урока (verb/noun/phrase, Lesson
+/// Matrix §0): сохранение результата (+ stats), обновление стрика (общий
+/// для аккаунта), проверка достижений. Ключ прогресса —
+/// "{lessonId}_{block}" вместо старого "{sectionType}_{topicTId}_{prepLevel}".
 class CompleteB1StepUseCase {
   final IExamProgressRepository progressRepository;
   final IStreakRepository streakRepository;
@@ -31,17 +32,17 @@ class CompleteB1StepUseCase {
 
   Future<List<AchievementUpdate>> execute({
     required String userId,
-    required String sectionType,
-    required int topicTId,
-    required String prepLevel,
+    required String langId,
+    required String lessonId,
+    required ExerciseBlock block,
     required List<ExerciseResult> exerciseResults,
-    required List<String> requiredPrepLevels,
   }) async {
-    final stepKey = '${sectionType}_${topicTId}_$prepLevel';
+    final stepKey = '${lessonId}_${block.name}';
     final correct = exerciseResults.where((r) => r.isCorrect).length;
 
     await progressRepository.saveStepResult(
       userId: userId,
+      langId: langId,
       stepKey: stepKey,
       correct: correct,
       total: exerciseResults.length,
@@ -59,22 +60,20 @@ class CompleteB1StepUseCase {
     // Достижения — сбой не должен ронять завершение шага.
     var updates = <AchievementUpdate>[];
     try {
-      final progress = await progressRepository.getProgress(userId);
+      final progress = await progressRepository.getProgress(userId, langId);
 
       updates = CheckB1AchievementUseCase().check(
-        sectionType: sectionType,
-        topicTId: topicTId,
-        prepLevel: prepLevel,
-        exerciseResults: exerciseResults,
+        lessonId: lessonId,
+        block: block,
         allTopicResults: progress.topicResults,
         currentAchievements: progress.achievements,
         currentStreak: currentStreak,
-        requiredPrepLevels: requiredPrepLevels,
       );
 
       for (final update in updates) {
         await progressRepository.updateAchievement(
           userId: userId,
+          langId: langId,
           type: update.type,
           newLevel: update.newLevel,
         );

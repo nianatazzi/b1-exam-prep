@@ -125,6 +125,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get langRussian => 'Russe';
 
   @override
+  String get langPolish => 'Polonais';
+
+  @override
+  String get langGerman => 'Allemand';
+
+  @override
+  String get learningLanguageSection => 'Langue étudiée';
+
+  @override
   String get nameLabel => 'Prénom';
 
   @override
@@ -441,6 +450,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get b1HomeTitle => 'Préparation B1';
 
   @override
+  String get b1LanguageNotAvailable =>
+      'La préparation B1 n\'est pas encore disponible pour la langue étudiée sélectionnée';
+
+  @override
+  String get b1LessonsComingSoon => 'Les leçons arrivent bientôt';
+
+  @override
+  String get b1TopicNoLessonsYet => 'Pas encore de leçons pour ce thème';
+
+  @override
+  String get b1LessonFlowComingSoon => 'Cette leçon n\'est pas encore prête';
+
+  @override
   String get b1ImageDescription => 'Description d\'image';
 
   @override
@@ -563,4 +585,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get b1WordTypeNoun => 'Nom';
+
+  @override
+  String get b1LessonComplete => 'Leçon terminée !';
+
+  @override
+  String get b1NoMisusedWords => 'Aucune erreur à revoir — bravo !';
+
+  @override
+  String get b1RemedialReviewTitle => 'Mots à revoir';
+
+  @override
+  String get b1DialogueStart => 'Commencer le dialogue';
+
+  @override
+  String b1DialogueTurnsLeft(int count) {
+    return '$count tours restants';
+  }
+
+  @override
+  String get b1DialogueTypeMessage => 'Tapez votre réponse…';
+
+  @override
+  String get b1DialogueFinish => 'Terminer le dialogue';
 }

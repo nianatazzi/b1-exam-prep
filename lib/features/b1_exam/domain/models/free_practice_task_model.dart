@@ -10,7 +10,7 @@ part 'free_practice_task_model.g.dart';
 /// поэтому там это поле не заполняется (см. ARCHITECTURE.md §6.2).
 ///
 /// `prompt` и `points` — тексты по коду языка интерфейса, та же форма, что у
-/// `explanation` в GrammarRuleModel и `translation` в PhrasePatternModel.
+/// `explanation` в GrammarRuleModel.
 /// Оба поля с дефолтами: наполовину заполненный контент-документ не должен
 /// ронять разбор всего списка тем в `getTopics()`.
 ///

@@ -18,12 +18,15 @@ class ExamExerciseRepository implements IExamExerciseRepository {
   const ExamExerciseRepository(this._firestore);
 
   @override
-  Future<List<ExerciseModel>> getExercisesForTopic(int topicTId) async {
+  Future<List<ExerciseModel>> getExercisesForLesson(
+    String langId,
+    String lessonId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection(FirestorePaths.exercises)
-          .where('course_id', isEqualTo: FirestorePaths.b1CourseId)
-          .where('lesson_id', isEqualTo: topicTId)
+          .where('course_id', isEqualTo: FirestorePaths.b1CourseId(langId))
+          .where('lesson_id', isEqualTo: lessonId)
           .orderBy('ex_id')
           .get();
 
