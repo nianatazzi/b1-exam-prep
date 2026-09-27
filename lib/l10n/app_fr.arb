@@ -40,6 +40,9 @@
   "langSpanish": "Espagnol",
   "langFrench": "Français",
   "langRussian": "Russe",
+  "langPolish": "Polonais",
+  "langGerman": "Allemand",
+  "learningLanguageSection": "Langue étudiée",
   "nameLabel": "Prénom",
   "surnameLabel": "Nom de famille",
   "profileSaved": "Profil enregistré",
@@ -161,6 +164,10 @@
   "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
 
   "b1HomeTitle": "Préparation B1",
+  "b1LanguageNotAvailable": "La préparation B1 n'est pas encore disponible pour la langue étudiée sélectionnée",
+  "b1LessonsComingSoon": "Les leçons arrivent bientôt",
+  "b1TopicNoLessonsYet": "Pas encore de leçons pour ce thème",
+  "b1LessonFlowComingSoon": "Cette leçon n'est pas encore prête",
   "b1ImageDescription": "Description d'image",
   "b1Monologue": "Monologue",
   "b1Dialogue": "Dialogue",
@@ -206,5 +213,12 @@
   "b1AnalysisYouSaid": "Vous avez dit",
   "b1AnalysisCorrectForm": "Forme correcte",
   "b1WordTypeVerb": "Verbe",
-  "b1WordTypeNoun": "Nom"
+  "b1WordTypeNoun": "Nom",
+  "b1LessonComplete": "Leçon terminée !",
+  "b1NoMisusedWords": "Aucune erreur à revoir — bravo !",
+  "b1RemedialReviewTitle": "Mots à revoir",
+  "b1DialogueStart": "Commencer le dialogue",
+  "b1DialogueTurnsLeft": "{count} tours restants",
+  "b1DialogueTypeMessage": "Tapez votre réponse…",
+  "b1DialogueFinish": "Terminer le dialogue"
 }

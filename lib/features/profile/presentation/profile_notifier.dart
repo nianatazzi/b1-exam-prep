@@ -3,12 +3,14 @@ import 'package:b1_exam_prep/core/errors/app_error.dart';
 import 'package:b1_exam_prep/core/locale/locale_provider.dart';
 import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
 import 'package:b1_exam_prep/features/b1_exam/data/repositories/exam_progress_repository.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_progress_model.dart';
 import 'package:b1_exam_prep/features/profile/data/user_repository.dart';
 import 'package:b1_exam_prep/features/profile/domain/achievement_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/exercise_stats_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/private_user_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/public_user_model.dart';
 import 'package:b1_exam_prep/features/profile/domain/streak_model.dart';
+import 'package:b1_exam_prep/shared/models/study_language.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'profile_notifier.g.dart';
@@ -46,17 +48,24 @@ class ProfileNotifier extends _$ProfileNotifier {
 
     final repo = ref.read(userRepositoryProvider);
 
-    // Загружаем все данные параллельно. Прогресс — из b1_progress/{userId},
-    // изолирован от languages/{langId} (см. FIRESTORE.md §4).
-    final publicFuture = repo.getPublicProfile(user.id);
-    final privateFuture = repo.getPrivateProfile(user.id);
-    final progressFuture =
-        ref.read(examProgressRepositoryProvider).getProgress(user.id);
+    // publicProfile грузится первым отдельно — прогресс нужно запросить по
+    // b1_progress/{userId}/{langId} (ARCHITECTURE.md §12.1), а langId лежит
+    // именно в publicProfile.preference.selectedLanguage.
+    final publicProfile = await repo.getPublicProfile(user.id);
+    final langId =
+        StudyLanguage.fromCode(publicProfile.preference['selectedLanguage'] as String?)
+            ?.name;
 
-    final results = await (publicFuture, privateFuture, progressFuture).wait;
-    final publicProfile = results.$1;
-    final privateProfile = results.$2;
-    final progress = results.$3;
+    // Дальше — параллельно. Прогресс изолирован от languages/{langId}
+    // linguobyte (см. FIRESTORE.md §4), но выбранный язык обучения общий.
+    final privateFuture = repo.getPrivateProfile(user.id);
+    final progressFuture = langId == null
+        ? Future.value(TopicProgressModel(id: user.id))
+        : ref.read(examProgressRepositoryProvider).getProgress(user.id, langId);
+
+    final results = await (privateFuture, progressFuture).wait;
+    final privateProfile = results.$1;
+    final progress = results.$2;
 
     // Восстанавливаем язык интерфейса
     final uiLang = publicProfile.preference['uiLanguage'] as String?;

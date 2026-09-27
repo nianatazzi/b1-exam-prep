@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:b1_exam_prep/core/constants/app_sizes.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
 import 'package:b1_exam_prep/core/locale/locale_provider.dart';
+import 'package:b1_exam_prep/core/locale/study_language_provider.dart';
 import 'package:b1_exam_prep/core/theme/app_colors.dart';
 import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
 import 'package:b1_exam_prep/features/profile/presentation/profile_notifier.dart';
 import 'package:b1_exam_prep/features/profile/presentation/settings_notifier.dart';
 import 'package:b1_exam_prep/l10n/app_localizations.dart';
+import 'package:b1_exam_prep/shared/models/study_language.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -36,6 +38,10 @@ class SettingsScreen extends ConsumerWidget {
             _SectionHeader(title: l10n.interfaceLanguageSection),
             const SizedBox(height: AppSpacing.sm),
             const _LanguageTile(),
+            const SizedBox(height: AppSpacing.x2l),
+            _SectionHeader(title: l10n.learningLanguageSection),
+            const SizedBox(height: AppSpacing.sm),
+            const _StudyLanguageTile(),
             const SizedBox(height: AppSpacing.x2l),
             _SectionHeader(title: l10n.appearanceSection),
             const SizedBox(height: AppSpacing.sm),
@@ -130,6 +136,69 @@ class _LanguageTile extends ConsumerWidget {
                   : null,
               onTap: () {
                 ref.read(settingsProvider.notifier).setUiLanguage(lang.$1);
+                Navigator.pop(ctx);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+/// Язык обучения (ARCHITECTURE.md §12.1) — переключает
+/// preference.selectedLanguage, общее поле с linguobyte/cinephile.
+class _StudyLanguageTile extends ConsumerWidget {
+  const _StudyLanguageTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).extension<AppColors>()!;
+    final languageAsync = ref.watch(studyLanguageProvider);
+    final active = languageAsync.asData?.value;
+
+    return _SettingsCard(
+      child: ListTile(
+        leading: Icon(Icons.school_outlined, color: colors.textSecondary),
+        title: Text(l10n.learningLanguageLabel),
+        subtitle: Text(active != null ? _label(l10n, active) : ''),
+        trailing: Icon(Icons.chevron_right, color: colors.textMuted),
+        onTap: () => _showLanguagePicker(context, ref, active),
+      ),
+    );
+  }
+
+  String _label(AppLocalizations l10n, StudyLanguage lang) => switch (lang) {
+        StudyLanguage.pl => l10n.langPolish,
+        StudyLanguage.fr => l10n.langFrench,
+        StudyLanguage.es => l10n.langSpanish,
+        StudyLanguage.en => l10n.langEnglish,
+        StudyLanguage.de => l10n.langGerman,
+      };
+
+  void _showLanguagePicker(
+    BuildContext context,
+    WidgetRef ref,
+    StudyLanguage? active,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: StudyLanguage.values.map((lang) {
+            final isSelected = active == lang;
+            return ListTile(
+              title: Text(_label(l10n, lang)),
+              trailing: isSelected
+                  ? Icon(Icons.check,
+                      color: Theme.of(context).colorScheme.primary)
+                  : null,
+              onTap: () {
+                ref.read(settingsProvider.notifier).setStudyLanguage(lang);
                 Navigator.pop(ctx);
               },
             );

@@ -115,6 +115,15 @@
   "langRussian": "Russian",
   "@langRussian": { "description": "Name of the Russian learning language option" },
 
+  "langPolish": "Polish",
+  "@langPolish": { "description": "Name of the Polish study language option" },
+
+  "langGerman": "German",
+  "@langGerman": { "description": "Name of the German study language option" },
+
+  "learningLanguageSection": "Study language",
+  "@learningLanguageSection": { "description": "Settings section header for the language being studied" },
+
   "nameLabel": "First name",
   "@nameLabel": { "description": "Profile first name field label" },
 
@@ -419,6 +428,18 @@
   "b1HomeTitle": "B1 Exam Prep",
   "@b1HomeTitle": { "description": "B1 exam home screen title" },
 
+  "b1LanguageNotAvailable": "B1 exam prep isn't available for your selected study language yet",
+  "@b1LanguageNotAvailable": { "description": "Shown on the B1 home screen when the account's selected study language isn't one of the languages b1-exam-prep supports" },
+
+  "b1LessonsComingSoon": "Lessons are coming soon",
+  "@b1LessonsComingSoon": { "description": "Shown on the B1 home screen when no lexical topics exist yet" },
+
+  "b1TopicNoLessonsYet": "No lessons yet for this topic",
+  "@b1TopicNoLessonsYet": { "description": "Shown on the lexical-topic lesson list when the topic has no paired lessons yet" },
+
+  "b1LessonFlowComingSoon": "This lesson isn't ready yet",
+  "@b1LessonFlowComingSoon": { "description": "Snackbar shown when tapping a lesson tile before the lesson-flow screen is built" },
+
   "b1ImageDescription": "Image Description",
   "@b1ImageDescription": { "description": "Exam section: describe a photo" },
 
@@ -540,5 +561,29 @@
   "@b1WordTypeVerb": { "description": "Part of speech label: verb" },
 
   "b1WordTypeNoun": "Noun",
-  "@b1WordTypeNoun": { "description": "Part of speech label: noun" }
+  "@b1WordTypeNoun": { "description": "Part of speech label: noun" },
+
+  "b1LessonComplete": "Lesson complete!",
+  "@b1LessonComplete": { "description": "Shown after finishing all 6 steps of a lesson" },
+
+  "b1NoMisusedWords": "No mistakes to review — well done!",
+  "@b1NoMisusedWords": { "description": "Shown on the lesson summary when an oral step had no grammar/lexical errors" },
+
+  "b1RemedialReviewTitle": "Words to review",
+  "@b1RemedialReviewTitle": { "description": "Header for the list of misused words after an oral step" },
+
+  "b1DialogueStart": "Start dialogue",
+  "@b1DialogueStart": { "description": "Button to enter the dialogue step from the lesson flow" },
+
+  "b1DialogueTurnsLeft": "{count} turns left",
+  "@b1DialogueTurnsLeft": {
+    "description": "Remaining turn counter in the dialogue screen",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "b1DialogueTypeMessage": "Type your reply…",
+  "@b1DialogueTypeMessage": { "description": "Text input placeholder in the dialogue screen" },
+
+  "b1DialogueFinish": "Finish dialogue",
+  "@b1DialogueFinish": { "description": "Button to end the dialogue and submit it for analysis" }
 }

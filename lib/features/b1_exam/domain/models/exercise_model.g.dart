@@ -11,7 +11,7 @@ _ExerciseModel _$ExerciseModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       exId: (json['ex_id'] as num).toInt(),
       type: json['type'] as String,
-      segmentType: json['segment_type'] as String,
+      block: $enumDecode(_$ExerciseBlockEnumMap, json['block']),
       linkedItemId: (json['linked_item_id'] as num?)?.toInt(),
       audioUrl: json['audio_url'] as String?,
       imageUrl: json['image_url'] as String?,
@@ -27,10 +27,16 @@ Map<String, dynamic> _$ExerciseModelToJson(_ExerciseModel instance) =>
     <String, dynamic>{
       'ex_id': instance.exId,
       'type': instance.type,
-      'segment_type': instance.segmentType,
+      'block': _$ExerciseBlockEnumMap[instance.block]!,
       'linked_item_id': instance.linkedItemId,
       'audio_url': instance.audioUrl,
       'image_url': instance.imageUrl,
       'type_data': instance.typeData,
       'grammar_types': instance.grammarTypes,
     };
+
+const _$ExerciseBlockEnumMap = {
+  ExerciseBlock.verb: 'verb',
+  ExerciseBlock.noun: 'noun',
+  ExerciseBlock.phrase: 'phrase',
+};

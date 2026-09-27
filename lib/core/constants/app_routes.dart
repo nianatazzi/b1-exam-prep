@@ -5,22 +5,19 @@ abstract class AppRoutes {
   static const String profile = '/profile';
   static const String settings = '/settings';
 
-  // B1 exam prep
+  // B1 exam prep — langId (StudyLanguage.name) в пути: гарантирует, что
+  // lexicalTopicId/lessonId читаются из того же языкового документа, что
+  // и на экране, откуда сделан переход, даже если язык обучения сменили
+  // (Settings) в другой вкладке/окне посреди навигации (ARCHITECTURE.md §12.1).
   static const String b1Home = '/b1';
-  static const String b1Topic = '/b1/topic/:sectionId/:topicId';
-  static const String b1Practice =
-      '/b1/practice/:sectionId/:topicId/:prepLevel';
-  static const String b1ImagePractice =
-      '/b1/image-practice/:sectionId/:topicId';
+  static const String b1LexicalTopic = '/b1/:langId/topic/:lexicalTopicId';
+  static const String b1Lesson = '/b1/:langId/lesson/:lessonId';
+  static const String b1Dialogue = '/b1/:langId/lesson/:lessonId/dialogue';
 
-  static String b1TopicPath(String sectionId, String topicId) =>
-      '/b1/topic/$sectionId/$topicId';
-  static String b1PracticePath(
-    String sectionId,
-    String topicId,
-    String prepLevel,
-  ) =>
-      '/b1/practice/$sectionId/$topicId/$prepLevel';
-  static String b1ImagePracticePath(String sectionId, String topicId) =>
-      '/b1/image-practice/$sectionId/$topicId';
+  static String b1LexicalTopicPath(String langId, String lexicalTopicId) =>
+      '/b1/$langId/topic/$lexicalTopicId';
+  static String b1LessonPath(String langId, String lessonId) =>
+      '/b1/$langId/lesson/$lessonId';
+  static String b1DialoguePath(String langId, String lessonId) =>
+      '/b1/$langId/lesson/$lessonId/dialogue';
 }

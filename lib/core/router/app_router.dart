@@ -8,9 +8,9 @@ import 'package:b1_exam_prep/features/auth/presentation/onboarding_status_provid
 import 'package:b1_exam_prep/core/router/splash_screen.dart';
 import 'package:b1_exam_prep/features/profile/presentation/profile_screen.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/screens/b1_home_screen.dart';
-import 'package:b1_exam_prep/features/b1_exam/presentation/screens/image_practice_screen.dart';
-import 'package:b1_exam_prep/features/b1_exam/presentation/screens/practice_screen.dart';
-import 'package:b1_exam_prep/features/b1_exam/presentation/screens/topic_detail_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/dialogue_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/lesson_screen.dart';
+import 'package:b1_exam_prep/features/b1_exam/presentation/screens/lexical_topic_lessons_screen.dart';
 import 'package:b1_exam_prep/features/profile/presentation/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -93,25 +93,24 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const B1HomeScreen(),
       ),
       GoRoute(
-        path: AppRoutes.b1Topic,
-        builder: (context, state) => TopicDetailScreen(
-          sectionId: state.pathParameters['sectionId']!,
-          topicId: state.pathParameters['topicId']!,
+        path: AppRoutes.b1LexicalTopic,
+        builder: (context, state) => LexicalTopicLessonsScreen(
+          langId: state.pathParameters['langId']!,
+          lexicalTopicId: state.pathParameters['lexicalTopicId']!,
         ),
       ),
       GoRoute(
-        path: AppRoutes.b1Practice,
-        builder: (context, state) => PracticeScreen(
-          sectionId: state.pathParameters['sectionId']!,
-          topicId: state.pathParameters['topicId']!,
-          prepLevel: state.pathParameters['prepLevel']!,
+        path: AppRoutes.b1Lesson,
+        builder: (context, state) => LessonScreen(
+          langId: state.pathParameters['langId']!,
+          lessonId: state.pathParameters['lessonId']!,
         ),
       ),
       GoRoute(
-        path: AppRoutes.b1ImagePractice,
-        builder: (context, state) => ImagePracticeScreen(
-          sectionId: state.pathParameters['sectionId']!,
-          topicId: state.pathParameters['topicId']!,
+        path: AppRoutes.b1Dialogue,
+        builder: (context, state) => DialogueScreen(
+          langId: state.pathParameters['langId']!,
+          lessonId: state.pathParameters['lessonId']!,
         ),
       ),
     ],

@@ -123,6 +123,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get langRussian => 'Русский';
 
   @override
+  String get langPolish => 'Польский';
+
+  @override
+  String get langGerman => 'Немецкий';
+
+  @override
+  String get learningLanguageSection => 'Изучаемый язык';
+
+  @override
   String get nameLabel => 'Имя';
 
   @override
@@ -436,6 +445,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get b1HomeTitle => 'Подготовка к B1';
 
   @override
+  String get b1LanguageNotAvailable =>
+      'Подготовка к B1 пока недоступна для выбранного языка обучения';
+
+  @override
+  String get b1LessonsComingSoon => 'Уроки скоро появятся';
+
+  @override
+  String get b1TopicNoLessonsYet => 'Для этой темы пока нет уроков';
+
+  @override
+  String get b1LessonFlowComingSoon => 'Этот урок пока не готов';
+
+  @override
   String get b1ImageDescription => 'Описание изображения';
 
   @override
@@ -556,4 +578,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get b1WordTypeNoun => 'Существительное';
+
+  @override
+  String get b1LessonComplete => 'Урок завершён!';
+
+  @override
+  String get b1NoMisusedWords => 'Ошибок для повторения нет — отлично!';
+
+  @override
+  String get b1RemedialReviewTitle => 'Слова для повторения';
+
+  @override
+  String get b1DialogueStart => 'Начать диалог';
+
+  @override
+  String b1DialogueTurnsLeft(int count) {
+    return 'Осталось реплик: $count';
+  }
+
+  @override
+  String get b1DialogueTypeMessage => 'Введите ответ…';
+
+  @override
+  String get b1DialogueFinish => 'Завершить диалог';
 }

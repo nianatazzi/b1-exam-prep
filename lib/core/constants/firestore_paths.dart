@@ -12,25 +12,42 @@ abstract class FirestorePaths {
   // Публичный профиль
   static String publicUser(String userId) => '$publicUserInfo/$userId';
 
-  // B1 Polish exam prep
-  static const String b1Polish = 'b1_polish';
-  static const String b1CourseId = 'b1_pl';
+  // B1 exam prep — многоязычный контент (ARCHITECTURE.md §12.1). Раньше
+  // b1_polish/pl/... (только польский) — переименовано и разложено по
+  // langId (pl/fr/es/en/de, StudyLanguage.name).
+  static const String b1ExamContent = 'b1_exam_content';
+  static String b1CourseId(String langId) => 'b1_$langId';
 
-  // 'pl' — документ языка внутри b1_polish (аналог структуры b1Progress ниже)
-  static const String b1Sections = '$b1Polish/pl/sections';
-  static String b1Section(String sectionId) => '$b1Sections/$sectionId';
-  static String b1Topics(String sectionId) =>
-      '$b1Sections/$sectionId/topics';
-  static String b1Topic(String sectionId, String topicId) =>
-      '$b1Sections/$sectionId/topics/$topicId';
-  static String b1Vocabulary(String sectionId, String topicId) =>
-      '${b1Topic(sectionId, topicId)}/vocabulary';
-  static String b1Grammar(String sectionId, String topicId) =>
-      '${b1Topic(sectionId, topicId)}/grammar';
-  static String b1Phrases(String sectionId, String topicId) =>
-      '${b1Topic(sectionId, topicId)}/phrases';
+  // B1 progress — раньше жёстко b1_progress/pl, теперь по langId, тот же
+  // паттерн, что private_user_info/{userId}/languages/{langId} у linguobyte.
+  static String b1Progress(String userId, String langId) =>
+      '$privateUserInfo/$userId/b1_progress/$langId';
 
-  // B1 progress
-  static String b1Progress(String userId) =>
-      '$privateUserInfo/$userId/b1_progress/pl';
+  // Lesson Matrix — лексические темы (Lesson Matrix §A)
+  static String b1LexicalTopics(String langId) =>
+      '$b1ExamContent/$langId/lexical_topics';
+  static String b1LexicalTopic(String langId, String lexicalTopicId) =>
+      '${b1LexicalTopics(langId)}/$lexicalTopicId';
+  static String b1LexicalVocabulary(String langId, String lexicalTopicId) =>
+      '${b1LexicalTopic(langId, lexicalTopicId)}/vocabulary';
+
+  // Lesson Matrix — грамматические темы
+  static String b1GrammarTopics(String langId) =>
+      '$b1ExamContent/$langId/grammar_topics';
+  static String b1GrammarTopic(String langId, String grammarTopicId) =>
+      '${b1GrammarTopics(langId)}/$grammarTopicId';
+  static String b1GrammarTopicRules(String langId, String grammarTopicId) =>
+      '${b1GrammarTopic(langId, grammarTopicId)}/rules';
+
+  // Lesson Matrix — уроки (пара лексической + грамматической темы)
+  static String b1Lessons(String langId) => '$b1ExamContent/$langId/lessons';
+  static String b1Lesson(String langId, String lessonId) =>
+      '${b1Lessons(langId)}/$lessonId';
+
+  // Серверная конфигурация (Admin SDK-only, Cloud Functions) — НОВАЯ
+  // отдельная root-коллекция, не подколлекция b1ExamContent: llmConfig/
+  // llmQuota общие для всех языков, не привязаны к конкретному langId.
+  static const String b1Service = 'b1_service';
+  static const String b1LlmConfig = '$b1Service/llmConfig';
+  static String b1LlmQuota(String userId) => '$b1Service/llmQuota/$userId';
 }

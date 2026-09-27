@@ -330,6 +330,24 @@ abstract class AppLocalizations {
   /// **'Russian'**
   String get langRussian;
 
+  /// Name of the Polish study language option
+  ///
+  /// In en, this message translates to:
+  /// **'Polish'**
+  String get langPolish;
+
+  /// Name of the German study language option
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get langGerman;
+
+  /// Settings section header for the language being studied
+  ///
+  /// In en, this message translates to:
+  /// **'Study language'**
+  String get learningLanguageSection;
+
   /// Profile first name field label
   ///
   /// In en, this message translates to:
@@ -936,6 +954,30 @@ abstract class AppLocalizations {
   /// **'B1 Exam Prep'**
   String get b1HomeTitle;
 
+  /// Shown on the B1 home screen when the account's selected study language isn't one of the languages b1-exam-prep supports
+  ///
+  /// In en, this message translates to:
+  /// **'B1 exam prep isn\'t available for your selected study language yet'**
+  String get b1LanguageNotAvailable;
+
+  /// Shown on the B1 home screen when no lexical topics exist yet
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons are coming soon'**
+  String get b1LessonsComingSoon;
+
+  /// Shown on the lexical-topic lesson list when the topic has no paired lessons yet
+  ///
+  /// In en, this message translates to:
+  /// **'No lessons yet for this topic'**
+  String get b1TopicNoLessonsYet;
+
+  /// Snackbar shown when tapping a lesson tile before the lesson-flow screen is built
+  ///
+  /// In en, this message translates to:
+  /// **'This lesson isn\'t ready yet'**
+  String get b1LessonFlowComingSoon;
+
   /// Exam section: describe a photo
   ///
   /// In en, this message translates to:
@@ -1169,6 +1211,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Noun'**
   String get b1WordTypeNoun;
+
+  /// Shown after finishing all 6 steps of a lesson
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson complete!'**
+  String get b1LessonComplete;
+
+  /// Shown on the lesson summary when an oral step had no grammar/lexical errors
+  ///
+  /// In en, this message translates to:
+  /// **'No mistakes to review — well done!'**
+  String get b1NoMisusedWords;
+
+  /// Header for the list of misused words after an oral step
+  ///
+  /// In en, this message translates to:
+  /// **'Words to review'**
+  String get b1RemedialReviewTitle;
+
+  /// Button to enter the dialogue step from the lesson flow
+  ///
+  /// In en, this message translates to:
+  /// **'Start dialogue'**
+  String get b1DialogueStart;
+
+  /// Remaining turn counter in the dialogue screen
+  ///
+  /// In en, this message translates to:
+  /// **'{count} turns left'**
+  String b1DialogueTurnsLeft(int count);
+
+  /// Text input placeholder in the dialogue screen
+  ///
+  /// In en, this message translates to:
+  /// **'Type your reply…'**
+  String get b1DialogueTypeMessage;
+
+  /// Button to end the dialogue and submit it for analysis
+  ///
+  /// In en, this message translates to:
+  /// **'Finish dialogue'**
+  String get b1DialogueFinish;
 }
 
 class _AppLocalizationsDelegate

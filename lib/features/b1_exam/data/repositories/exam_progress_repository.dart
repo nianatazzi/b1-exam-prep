@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:b1_exam_prep/core/constants/firestore_paths.dart';
 import 'package:b1_exam_prep/core/errors/app_error.dart';
-import 'package:b1_exam_prep/features/b1_exam/domain/models/free_practice_analysis_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/dialogue_message_model.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/lesson_step.dart';
+import 'package:b1_exam_prep/features/b1_exam/domain/models/speech_analysis_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/topic_progress_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/repositories/i_exam_progress_repository.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/exercise_result.dart';
@@ -14,19 +16,21 @@ part 'exam_progress_repository.g.dart';
 ExamProgressRepository examProgressRepository(Ref ref) =>
     ExamProgressRepository(FirebaseFirestore.instance);
 
-/// Прогресс B1 Polish exam prep — документ b1_progress/{userId}, полностью
-/// изолирован от languages/{langId} (FIRESTORE.md §4), но stats/achievements
-/// используют ту же форму, что и linguobyte, для общего ProfileScreen.
+/// Прогресс B1 exam prep — документ b1_progress/{userId}/{langId}, изолирован
+/// от languages/{langId} linguobyte (разные приложения), но сам разложен по
+/// языку обучения тем же способом (FIRESTORE.md §4, ARCHITECTURE.md §12.1);
+/// stats/achievements используют ту же форму, что и linguobyte, для общего
+/// ProfileScreen.
 class ExamProgressRepository implements IExamProgressRepository {
   final FirebaseFirestore _firestore;
 
   const ExamProgressRepository(this._firestore);
 
   @override
-  Future<TopicProgressModel> getProgress(String userId) async {
+  Future<TopicProgressModel> getProgress(String userId, String langId) async {
     try {
       final doc = await _firestore
-          .doc(FirestorePaths.b1Progress(userId))
+          .doc(FirestorePaths.b1Progress(userId, langId))
           .get();
 
       if (!doc.exists || doc.data() == null) {
@@ -80,10 +84,10 @@ class ExamProgressRepository implements IExamProgressRepository {
       result['achievements'] = converted;
     }
 
-    final freePractice = result['freePractice'];
-    if (freePractice is Map) {
+    final lessonResults = result['lessonResults'];
+    if (lessonResults is Map) {
       final converted = <String, dynamic>{};
-      for (final entry in freePractice.entries) {
+      for (final entry in lessonResults.entries) {
         if (entry.value is Map) {
           final attempt = Map<String, dynamic>.from(entry.value as Map);
           final completedAt = attempt['completedAt'];
@@ -93,7 +97,7 @@ class ExamProgressRepository implements IExamProgressRepository {
           converted[entry.key as String] = attempt;
         }
       }
-      result['freePractice'] = converted;
+      result['lessonResults'] = converted;
     }
 
     return result;
@@ -102,6 +106,7 @@ class ExamProgressRepository implements IExamProgressRepository {
   @override
   Future<void> saveStepResult({
     required String userId,
+    required String langId,
     required String stepKey,
     required int correct,
     required int total,
@@ -113,7 +118,7 @@ class ExamProgressRepository implements IExamProgressRepository {
           .map((r) => r.exerciseId)
           .toList();
 
-      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId));
+      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId, langId));
       final updateData = {
         'topicResults.$stepKey': {
           'correct': correct,
@@ -135,12 +140,13 @@ class ExamProgressRepository implements IExamProgressRepository {
   @override
   Future<void> updateAchievement({
     required String userId,
+    required String langId,
     required AchievementType type,
     required int newLevel,
   }) async {
     try {
       final key = type.key;
-      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId));
+      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId, langId));
       await _updateOrInit(docRef, {
         'achievements.$key': {
           // type внутри документа — иначе AchievementModel.fromJson падает на
@@ -158,27 +164,30 @@ class ExamProgressRepository implements IExamProgressRepository {
   }
 
   @override
-  Future<void> saveFreePracticeResult({
+  Future<void> saveLessonStepResult({
     required String userId,
-    required String sectionType,
-    required int topicTId,
-    required String transcript,
+    required String langId,
+    required String lessonId,
+    required OralStep oralStep,
+    String? transcript,
+    List<DialogueMessageModel> turns = const [],
     required int durationSeconds,
-    FreePracticeAnalysisModel? analysis,
+    int? score,
+    SpeechAnalysisModel? analysis,
   }) async {
     try {
-      final key = '${sectionType}_$topicTId';
-      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId));
-      // update()/set() локально применяют мутацию к офлайн-кэшу сразу же —
-      // Future ждёт только подтверждения от сервера. При деградации сети
-      // (не полном обрыве, а "подвисшем" канале) Future может не завершиться
-      // сколько угодно долго, хотя запись уже стоит в очереди на синк.
-      // Таймаут не отменяет запись — просто не держит вызывающий код в ожидании.
+      final key = '${lessonId}_${oralStep.name}';
+      final docRef = _firestore.doc(FirestorePaths.b1Progress(userId, langId));
+      // Тот же паттерн best-effort-с-таймаутом, что у saveFreePracticeResult:
+      // мутация уже стоит в офлайн-очереди SDK, таймаут не отменяет запись —
+      // просто не держит вызывающий код в ожидании подтверждения от сервера.
       await _updateOrInit(docRef, {
-        'freePractice.$key': {
+        'lessonResults.$key': {
           'transcript': transcript,
+          'turns': turns.map((t) => t.toJson()).toList(),
           'durationSeconds': durationSeconds,
           'completedAt': FieldValue.serverTimestamp(),
+          'score': score,
           'analysis': analysis?.toJson(),
         },
       }).timeout(
@@ -218,7 +227,7 @@ class ExamProgressRepository implements IExamProgressRepository {
           'speaking': {'correct': 0, 'total': 0},
         },
         'achievements': <String, dynamic>{},
-        'freePractice': <String, dynamic>{},
+        'lessonResults': <String, dynamic>{},
       };
 
   /// Строит map инкрементов stats по grammarTypes каждого упражнения.

@@ -40,6 +40,9 @@
   "langSpanish": "Español",
   "langFrench": "Francés",
   "langRussian": "Ruso",
+  "langPolish": "Polaco",
+  "langGerman": "Alemán",
+  "learningLanguageSection": "Idioma de estudio",
   "nameLabel": "Nombre",
   "surnameLabel": "Apellido",
   "profileSaved": "Perfil guardado",
@@ -161,6 +164,10 @@
   "@editProfileTitle": { "description": "Title of the edit-profile bottom sheet" },
 
   "b1HomeTitle": "Preparación B1",
+  "b1LanguageNotAvailable": "La preparación B1 aún no está disponible para el idioma de estudio seleccionado",
+  "b1LessonsComingSoon": "Las lecciones estarán disponibles pronto",
+  "b1TopicNoLessonsYet": "Todavía no hay lecciones para este tema",
+  "b1LessonFlowComingSoon": "Esta lección todavía no está lista",
   "b1ImageDescription": "Descripción de imagen",
   "b1Monologue": "Monólogo",
   "b1Dialogue": "Diálogo",
@@ -206,5 +213,12 @@
   "b1AnalysisYouSaid": "Dijiste",
   "b1AnalysisCorrectForm": "Forma correcta",
   "b1WordTypeVerb": "Verbo",
-  "b1WordTypeNoun": "Sustantivo"
+  "b1WordTypeNoun": "Sustantivo",
+  "b1LessonComplete": "¡Lección completada!",
+  "b1NoMisusedWords": "No hay errores que revisar — ¡bien hecho!",
+  "b1RemedialReviewTitle": "Palabras para repasar",
+  "b1DialogueStart": "Iniciar diálogo",
+  "b1DialogueTurnsLeft": "{count} turnos restantes",
+  "b1DialogueTypeMessage": "Escribe tu respuesta…",
+  "b1DialogueFinish": "Terminar diálogo"
 }

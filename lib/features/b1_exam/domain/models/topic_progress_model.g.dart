@@ -25,14 +25,14 @@ _TopicProgressModel _$TopicProgressModelFromJson(
             MapEntry(k, AchievementModel.fromJson(e as Map<String, dynamic>)),
       ) ??
       const <String, AchievementModel>{},
-  freePractice:
-      (json['freePractice'] as Map<String, dynamic>?)?.map(
+  lessonResults:
+      (json['lessonResults'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
           k,
-          FreePracticeResultModel.fromJson(e as Map<String, dynamic>),
+          LessonStepResultModel.fromJson(e as Map<String, dynamic>),
         ),
       ) ??
-      const <String, FreePracticeResultModel>{},
+      const <String, LessonStepResultModel>{},
 );
 
 Map<String, dynamic> _$TopicProgressModelToJson(_TopicProgressModel instance) =>
@@ -40,5 +40,5 @@ Map<String, dynamic> _$TopicProgressModelToJson(_TopicProgressModel instance) =>
       'topicResults': instance.topicResults,
       'stats': instance.stats,
       'achievements': instance.achievements,
-      'freePractice': instance.freePractice,
+      'lessonResults': instance.lessonResults,
     };

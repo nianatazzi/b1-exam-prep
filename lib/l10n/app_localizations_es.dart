@@ -125,6 +125,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get langRussian => 'Ruso';
 
   @override
+  String get langPolish => 'Polaco';
+
+  @override
+  String get langGerman => 'Alemán';
+
+  @override
+  String get learningLanguageSection => 'Idioma de estudio';
+
+  @override
   String get nameLabel => 'Nombre';
 
   @override
@@ -441,6 +450,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get b1HomeTitle => 'Preparación B1';
 
   @override
+  String get b1LanguageNotAvailable =>
+      'La preparación B1 aún no está disponible para el idioma de estudio seleccionado';
+
+  @override
+  String get b1LessonsComingSoon => 'Las lecciones estarán disponibles pronto';
+
+  @override
+  String get b1TopicNoLessonsYet => 'Todavía no hay lecciones para este tema';
+
+  @override
+  String get b1LessonFlowComingSoon => 'Esta lección todavía no está lista';
+
+  @override
   String get b1ImageDescription => 'Descripción de imagen';
 
   @override
@@ -562,4 +584,27 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get b1WordTypeNoun => 'Sustantivo';
+
+  @override
+  String get b1LessonComplete => '¡Lección completada!';
+
+  @override
+  String get b1NoMisusedWords => 'No hay errores que revisar — ¡bien hecho!';
+
+  @override
+  String get b1RemedialReviewTitle => 'Palabras para repasar';
+
+  @override
+  String get b1DialogueStart => 'Iniciar diálogo';
+
+  @override
+  String b1DialogueTurnsLeft(int count) {
+    return '$count turnos restantes';
+  }
+
+  @override
+  String get b1DialogueTypeMessage => 'Escribe tu respuesta…';
+
+  @override
+  String get b1DialogueFinish => 'Terminar diálogo';
 }
