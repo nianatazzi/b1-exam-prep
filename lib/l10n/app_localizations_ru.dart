@@ -597,8 +597,5 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get b1DialogueTypeMessage => 'Введите ответ…';
-
-  @override
   String get b1DialogueFinish => 'Завершить диалог';
 }

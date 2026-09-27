@@ -1,3 +1,4 @@
+import 'package:b1_exam_prep/core/errors/app_error.dart';
 import 'package:b1_exam_prep/features/auth/presentation/auth_notifier.dart';
 import 'package:b1_exam_prep/features/b1_exam/data/repositories/dialogue_repository.dart';
 import 'package:b1_exam_prep/features/b1_exam/data/repositories/lesson_content_repository.dart';
@@ -17,6 +18,10 @@ class DialogueState {
   final int turnsLeft;
   final bool shouldClose;
   final bool isSubmitting;
+  // Ошибка последнего хода (continueDialogue) — только для отображения,
+  // не персистится. copyWith() не сохраняет её между вызовами (см. ниже) —
+  // ошибка актуальна только до следующего изменения состояния.
+  final AppError? error;
 
   const DialogueState({
     required this.scenario,
@@ -25,14 +30,19 @@ class DialogueState {
     required this.turnsLeft,
     this.shouldClose = false,
     this.isSubmitting = false,
+    this.error,
   });
 
+  // error НЕ мёржится через "?? this.error" — любой вызов copyWith без
+  // явного error: сбрасывает его. Ошибка хода одноразовая: как только
+  // начался новый ход или завершение диалога, старая ошибка не актуальна.
   DialogueState copyWith({
     List<DialogueMessageModel>? turns,
     bool? isAwaitingReply,
     int? turnsLeft,
     bool? shouldClose,
     bool? isSubmitting,
+    AppError? error,
   }) =>
       DialogueState(
         scenario: scenario,
@@ -41,6 +51,7 @@ class DialogueState {
         turnsLeft: turnsLeft ?? this.turnsLeft,
         shouldClose: shouldClose ?? this.shouldClose,
         isSubmitting: isSubmitting ?? this.isSubmitting,
+        error: error,
       );
 }
 
@@ -84,22 +95,32 @@ class DialogueNotifier extends _$DialogueNotifier {
     state = AsyncData(current.copyWith(turns: withUserTurn, isAwaitingReply: true));
 
     final repo = ref.read(dialogueRepositoryProvider);
-    final result = await repo.continueDialogue(
-      langId: langId,
-      lessonId: lessonId,
-      turns: withUserTurn,
-      uiLanguage: uiLanguage,
-    );
+    try {
+      final result = await repo.continueDialogue(
+        langId: langId,
+        lessonId: lessonId,
+        turns: withUserTurn,
+        uiLanguage: uiLanguage,
+      );
 
-    state = AsyncData(current.copyWith(
-      turns: [
-        ...withUserTurn,
-        DialogueMessageModel(role: DialogueRole.ai, text: result.reply),
-      ],
-      isAwaitingReply: false,
-      turnsLeft: result.turnsLeft,
-      shouldClose: result.shouldClose,
-    ));
+      state = AsyncData(current.copyWith(
+        turns: [
+          ...withUserTurn,
+          DialogueMessageModel(role: DialogueRole.ai, text: result.reply),
+        ],
+        isAwaitingReply: false,
+        turnsLeft: result.turnsLeft,
+        shouldClose: result.shouldClose,
+      ));
+    } catch (e) {
+      // Ход не дошёл до сервера — откатываем реплику студента из истории
+      // (current, не withUserTurn), иначе она "зависает" в чате без ответа
+      // и без возможности повторить попытку.
+      state = AsyncData(current.copyWith(
+        isAwaitingReply: false,
+        error: e is AppError ? e : UnknownError(e.toString()),
+      ));
+    }
   }
 
   /// Финальная отправка — SubmitDialogueUseCase (анализ + сохранение),

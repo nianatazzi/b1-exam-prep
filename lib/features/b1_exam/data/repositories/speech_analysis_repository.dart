@@ -26,7 +26,10 @@ class SpeechAnalysisRepository implements ISpeechAnalysisRepository {
     required String uiLanguage,
   }) async {
     try {
-      final callable = _functions.httpsCallable('analyzeSpeech');
+      final callable = _functions.httpsCallable(
+        'analyzeSpeech',
+        options: HttpsCallableOptions(timeout: const Duration(seconds: 65)),
+      );
       final result = await callable.call<Map<Object?, Object?>>({
         'langId': langId,
         'lessonId': lessonId,

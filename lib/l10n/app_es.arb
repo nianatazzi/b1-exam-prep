@@ -219,6 +219,5 @@
   "b1RemedialReviewTitle": "Palabras para repasar",
   "b1DialogueStart": "Iniciar diálogo",
   "b1DialogueTurnsLeft": "{count} turnos restantes",
-  "b1DialogueTypeMessage": "Escribe tu respuesta…",
   "b1DialogueFinish": "Terminar diálogo"
 }

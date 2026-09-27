@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FreePracticeTaskModel {
 
- Map<String, dynamic> get prompt; List<Map<String, dynamic>> get points;@JsonKey(name: 'duration_seconds') int? get durationSeconds;@JsonKey(name: 'think_seconds') int? get thinkSeconds;
+ Map<String, dynamic> get prompt;@JsonKey(name: 'duration_seconds') int? get durationSeconds;@JsonKey(name: 'think_seconds') int? get thinkSeconds;
 /// Create a copy of FreePracticeTaskModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $FreePracticeTaskModelCopyWith<FreePracticeTaskModel> get copyWith => _$FreePrac
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FreePracticeTaskModel&&const DeepCollectionEquality().equals(other.prompt, prompt)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thinkSeconds, thinkSeconds) || other.thinkSeconds == thinkSeconds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FreePracticeTaskModel&&const DeepCollectionEquality().equals(other.prompt, prompt)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thinkSeconds, thinkSeconds) || other.thinkSeconds == thinkSeconds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(prompt),const DeepCollectionEquality().hash(points),durationSeconds,thinkSeconds);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(prompt),durationSeconds,thinkSeconds);
 
 @override
 String toString() {
-  return 'FreePracticeTaskModel(prompt: $prompt, points: $points, durationSeconds: $durationSeconds, thinkSeconds: $thinkSeconds)';
+  return 'FreePracticeTaskModel(prompt: $prompt, durationSeconds: $durationSeconds, thinkSeconds: $thinkSeconds)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $FreePracticeTaskModelCopyWith<$Res>  {
   factory $FreePracticeTaskModelCopyWith(FreePracticeTaskModel value, $Res Function(FreePracticeTaskModel) _then) = _$FreePracticeTaskModelCopyWithImpl;
 @useResult
 $Res call({
- Map<String, dynamic> prompt, List<Map<String, dynamic>> points,@JsonKey(name: 'duration_seconds') int? durationSeconds,@JsonKey(name: 'think_seconds') int? thinkSeconds
+ Map<String, dynamic> prompt,@JsonKey(name: 'duration_seconds') int? durationSeconds,@JsonKey(name: 'think_seconds') int? thinkSeconds
 });
 
 
@@ -65,11 +65,10 @@ class _$FreePracticeTaskModelCopyWithImpl<$Res>
 
 /// Create a copy of FreePracticeTaskModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? prompt = null,Object? points = null,Object? durationSeconds = freezed,Object? thinkSeconds = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? prompt = null,Object? durationSeconds = freezed,Object? thinkSeconds = freezed,}) {
   return _then(_self.copyWith(
 prompt: null == prompt ? _self.prompt : prompt // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
-as List<Map<String, dynamic>>,durationSeconds: freezed == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,durationSeconds: freezed == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
 as int?,thinkSeconds: freezed == thinkSeconds ? _self.thinkSeconds : thinkSeconds // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -156,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, dynamic> prompt,  List<Map<String, dynamic>> points, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, dynamic> prompt, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FreePracticeTaskModel() when $default != null:
-return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSeconds);case _:
+return $default(_that.prompt,_that.durationSeconds,_that.thinkSeconds);case _:
   return orElse();
 
 }
@@ -177,10 +176,10 @@ return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSecon
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, dynamic> prompt,  List<Map<String, dynamic>> points, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, dynamic> prompt, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _FreePracticeTaskModel():
-return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSeconds);case _:
+return $default(_that.prompt,_that.durationSeconds,_that.thinkSeconds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +196,10 @@ return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSecon
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, dynamic> prompt,  List<Map<String, dynamic>> points, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, dynamic> prompt, @JsonKey(name: 'duration_seconds')  int? durationSeconds, @JsonKey(name: 'think_seconds')  int? thinkSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _FreePracticeTaskModel() when $default != null:
-return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSeconds);case _:
+return $default(_that.prompt,_that.durationSeconds,_that.thinkSeconds);case _:
   return null;
 
 }
@@ -212,7 +211,7 @@ return $default(_that.prompt,_that.points,_that.durationSeconds,_that.thinkSecon
 @JsonSerializable()
 
 class _FreePracticeTaskModel implements FreePracticeTaskModel {
-  const _FreePracticeTaskModel({final  Map<String, dynamic> prompt = const <String, dynamic>{}, final  List<Map<String, dynamic>> points = const <Map<String, dynamic>>[], @JsonKey(name: 'duration_seconds') this.durationSeconds, @JsonKey(name: 'think_seconds') this.thinkSeconds}): _prompt = prompt,_points = points;
+  const _FreePracticeTaskModel({final  Map<String, dynamic> prompt = const <String, dynamic>{}, @JsonKey(name: 'duration_seconds') this.durationSeconds, @JsonKey(name: 'think_seconds') this.thinkSeconds}): _prompt = prompt;
   factory _FreePracticeTaskModel.fromJson(Map<String, dynamic> json) => _$FreePracticeTaskModelFromJson(json);
 
  final  Map<String, dynamic> _prompt;
@@ -220,13 +219,6 @@ class _FreePracticeTaskModel implements FreePracticeTaskModel {
   if (_prompt is EqualUnmodifiableMapView) return _prompt;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_prompt);
-}
-
- final  List<Map<String, dynamic>> _points;
-@override@JsonKey() List<Map<String, dynamic>> get points {
-  if (_points is EqualUnmodifiableListView) return _points;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_points);
 }
 
 @override@JsonKey(name: 'duration_seconds') final  int? durationSeconds;
@@ -245,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FreePracticeTaskModel&&const DeepCollectionEquality().equals(other._prompt, _prompt)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thinkSeconds, thinkSeconds) || other.thinkSeconds == thinkSeconds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FreePracticeTaskModel&&const DeepCollectionEquality().equals(other._prompt, _prompt)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thinkSeconds, thinkSeconds) || other.thinkSeconds == thinkSeconds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_prompt),const DeepCollectionEquality().hash(_points),durationSeconds,thinkSeconds);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_prompt),durationSeconds,thinkSeconds);
 
 @override
 String toString() {
-  return 'FreePracticeTaskModel(prompt: $prompt, points: $points, durationSeconds: $durationSeconds, thinkSeconds: $thinkSeconds)';
+  return 'FreePracticeTaskModel(prompt: $prompt, durationSeconds: $durationSeconds, thinkSeconds: $thinkSeconds)';
 }
 
 
@@ -265,7 +257,7 @@ abstract mixin class _$FreePracticeTaskModelCopyWith<$Res> implements $FreePract
   factory _$FreePracticeTaskModelCopyWith(_FreePracticeTaskModel value, $Res Function(_FreePracticeTaskModel) _then) = __$FreePracticeTaskModelCopyWithImpl;
 @override @useResult
 $Res call({
- Map<String, dynamic> prompt, List<Map<String, dynamic>> points,@JsonKey(name: 'duration_seconds') int? durationSeconds,@JsonKey(name: 'think_seconds') int? thinkSeconds
+ Map<String, dynamic> prompt,@JsonKey(name: 'duration_seconds') int? durationSeconds,@JsonKey(name: 'think_seconds') int? thinkSeconds
 });
 
 
@@ -282,11 +274,10 @@ class __$FreePracticeTaskModelCopyWithImpl<$Res>
 
 /// Create a copy of FreePracticeTaskModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? prompt = null,Object? points = null,Object? durationSeconds = freezed,Object? thinkSeconds = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? prompt = null,Object? durationSeconds = freezed,Object? thinkSeconds = freezed,}) {
   return _then(_FreePracticeTaskModel(
 prompt: null == prompt ? _self._prompt : prompt // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
-as List<Map<String, dynamic>>,durationSeconds: freezed == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,durationSeconds: freezed == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
 as int?,thinkSeconds: freezed == thinkSeconds ? _self.thinkSeconds : thinkSeconds // ignore: cast_nullable_to_non_nullable
 as int?,
   ));

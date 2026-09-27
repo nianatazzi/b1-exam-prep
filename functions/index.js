@@ -12,6 +12,14 @@ const anthropicApiKey = defineSecret('ANTHROPIC_API_KEY');
 
 const OPENAI_MODEL = 'gpt-4o-mini';
 const ANTHROPIC_MODEL = 'claude-haiku-4-5';
+// Раньше не было ни одного таймаута на цепочке LLM-вызова — зависший
+// провайдер мог держать onCall до дефолта платформы (60с), а с учётом
+// встроенных ретраев SDK — заметно дольше, зависание выглядело клиенту как
+// "приложение зависло" без единой ошибки. LLM_TIMEOUT_MS ограничивает
+// каждую попытку (OpenAI ИЛИ fallback Anthropic), FUNCTION_TIMEOUT_SECONDS —
+// весь onCall с запасом на Firestore-чтения и обе попытки подряд.
+const LLM_TIMEOUT_MS = 20_000;
+const FUNCTION_TIMEOUT_SECONDS = 60;
 // Fallback идёт не напрямую в Anthropic, а через стороннего провайдера с
 // Anthropic-совместимым API (тот же протокол /v1/messages, свой ключ) —
 // временно, на этапе тестирования (см. ARCHITECTURE.md §6.3).
@@ -40,7 +48,13 @@ const LLM_CONFIG_PATH = 'b1_service/llmConfig';
 // не может прочитать/подменить свою квоту напрямую (в отличие от
 // private_user_info/{userId}, который пользователь сам может читать и
 // писать). Значение — плейсхолдер, подобрать по реальному использованию.
-const LLM_QUOTA_COLLECTION = 'b1_service/llmQuota';
+//
+// Отдельная root-коллекция, а НЕ подколлекция b1_service/llmQuota/{userId} —
+// та версия была невалидным путём документа (3 сегмента, Firestore требует
+// чётное число), db.doc() падал синхронно на каждом вызове enforceQuota.
+// Анализ речи из-за этого молча не работал вообще ни для одного устного шага
+// (image/monologue глотали ошибку как best-effort, dialogue зависал).
+const LLM_QUOTA_COLLECTION = 'llmQuota';
 const DAILY_LLM_QUOTA = 100;
 
 function validateLangId(langId) {
@@ -63,7 +77,7 @@ function validateLangId(langId) {
 //     lexicalErrors. Дешевле и проверяемее, чем просить модель саму знать
 //     список слов урока.
 exports.analyzeSpeech = onCall(
-  { secrets: [openaiApiKey, anthropicApiKey] },
+  { secrets: [openaiApiKey, anthropicApiKey], timeoutSeconds: FUNCTION_TIMEOUT_SECONDS },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Sign-in required.');
@@ -140,7 +154,7 @@ const MAX_DIALOGUE_CHARS = 8000; // суммарно по всем turns
 const MAX_MESSAGE_CHARS = 2000; // на одно сообщение
 
 exports.continueDialogue = onCall(
-  { secrets: [openaiApiKey, anthropicApiKey] },
+  { secrets: [openaiApiKey, anthropicApiKey], timeoutSeconds: FUNCTION_TIMEOUT_SECONDS },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Sign-in required.');
@@ -301,9 +315,10 @@ function extractTaskPoints(lesson, oralStep, uiLanguage) {
   if (oralStep === 'monologue') {
     return localizedFieldList(lesson.monologue_task?.points, uiLanguage);
   }
-  // dialogue: раскрытие пунктов не применимо так же, как к image/monologue —
-  // там оценивается достижение goal сценария, не список пунктов.
-  return [];
+  // dialogue: та же механика, что у image/monologue — points не показываются
+  // студенту (dialogue_task.points не мапится в клиентскую модель), но
+  // анализируются здесь, на транскрипте реплик студента после диалога.
+  return localizedFieldList(lesson.dialogue_task?.points, uiLanguage);
 }
 
 function localizedField(map, uiLanguage) {
@@ -452,7 +467,11 @@ async function callLlm(messages, { maxTokens = 1024, jsonMode = false, temperatu
 }
 
 async function callOpenAI(messages, maxTokens, jsonMode, temperature) {
-  const client = new OpenAI({ apiKey: openaiApiKey.value() });
+  const client = new OpenAI({
+    apiKey: openaiApiKey.value(),
+    timeout: LLM_TIMEOUT_MS,
+    maxRetries: 0, // ретраи самого SDK молча удваивали/утраивали время до ответа
+  });
   const completion = await client.chat.completions.create({
     model: OPENAI_MODEL,
     temperature,
@@ -469,6 +488,8 @@ async function callAnthropic(messages, maxTokens, temperature) {
   const client = new Anthropic({
     authToken: anthropicApiKey.value(),
     baseURL: ANTHROPIC_BASE_URL,
+    timeout: LLM_TIMEOUT_MS,
+    maxRetries: 0,
   });
 
   const systemMessage = messages.find((m) => m.role === 'system');

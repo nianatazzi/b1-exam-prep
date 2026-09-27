@@ -581,9 +581,6 @@
     "placeholders": { "count": { "type": "int" } }
   },
 
-  "b1DialogueTypeMessage": "Type your reply…",
-  "@b1DialogueTypeMessage": { "description": "Text input placeholder in the dialogue screen" },
-
   "b1DialogueFinish": "Finish dialogue",
   "@b1DialogueFinish": { "description": "Button to end the dialogue and submit it for analysis" }
 }

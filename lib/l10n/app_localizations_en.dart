@@ -597,8 +597,5 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get b1DialogueTypeMessage => 'Type your reply…';
-
-  @override
   String get b1DialogueFinish => 'Finish dialogue';
 }

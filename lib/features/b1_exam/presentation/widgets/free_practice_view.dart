@@ -19,7 +19,6 @@ enum _Stage { idle, recording, timeUp }
 class FreePracticeView extends StatefulWidget {
   final String? imageUrl;
   final String promptText;
-  final List<String> pointsToDescribe;
   final int durationSeconds;
   final String sttLocaleId;
   final bool isSubmitting;
@@ -30,7 +29,6 @@ class FreePracticeView extends StatefulWidget {
     super.key,
     this.imageUrl,
     required this.promptText,
-    this.pointsToDescribe = const [],
     required this.durationSeconds,
     required this.sttLocaleId,
     required this.isSubmitting,
@@ -212,15 +210,6 @@ class _FreePracticeViewState extends State<FreePracticeView> {
           const SizedBox(height: AppSpacing.lg),
           if (widget.promptText.isNotEmpty) ...[
             Text(widget.promptText, style: theme.textTheme.bodyLarge),
-            const SizedBox(height: AppSpacing.md),
-          ],
-          if (widget.pointsToDescribe.isNotEmpty) ...[
-            ...widget.pointsToDescribe.map(
-              (point) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                child: Text('•  $point', style: theme.textTheme.bodyMedium),
-              ),
-            ),
             const SizedBox(height: AppSpacing.md),
           ],
           if (_stage == _Stage.idle) ...[

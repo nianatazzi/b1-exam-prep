@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:b1_exam_prep/core/constants/app_spacing.dart';
+import 'package:b1_exam_prep/core/errors/app_error.dart';
 import 'package:b1_exam_prep/features/b1_exam/domain/models/dialogue_message_model.dart';
 import 'package:b1_exam_prep/features/b1_exam/presentation/providers/dialogue_notifier.dart';
 import 'package:b1_exam_prep/l10n/app_localizations.dart';
@@ -12,11 +13,12 @@ import 'package:b1_exam_prep/shared/models/study_language.dart';
 import 'package:b1_exam_prep/shared/widgets/error_view.dart';
 
 /// Диалог урока (дизайн диалога, Lesson Matrix) — ходовой чат с
-/// ИИ-собеседником. STT запускается и останавливается на каждый ход (не
-/// непрерывно, как в FreePracticeView) — микрофон включается только пока
-/// студент формулирует ответ. По завершении (shouldClose/max_turns) —
-/// финальная отправка через DialogueNotifier.finish, возвращает результат
-/// пop'ом наверх в LessonScreen.
+/// ИИ-собеседником, голосовой ввод (без набора текста). STT запускается и
+/// останавливается на каждый ход (не непрерывно, как в FreePracticeView) —
+/// микрофон включается только пока студент формулирует ответ, ход
+/// отправляется автоматически по остановке записи. По завершении
+/// (shouldClose/max_turns) — финальная отправка через DialogueNotifier.finish,
+/// возвращает результат пop'ом наверх в LessonScreen.
 class DialogueScreen extends ConsumerStatefulWidget {
   final String langId;
   final String lessonId;
@@ -32,9 +34,9 @@ class DialogueScreen extends ConsumerStatefulWidget {
 }
 
 class _DialogueScreenState extends ConsumerState<DialogueScreen> {
-  final _controller = TextEditingController();
   final _speech = SpeechToText();
   bool _isListening = false;
+  String _recognizedText = '';
   int _secondsElapsed = 0;
   Timer? _timer;
 
@@ -49,30 +51,34 @@ class _DialogueScreenState extends ConsumerState<DialogueScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
     _speech.stop();
     super.dispose();
   }
 
-  Future<void> _toggleMic() async {
+  Future<void> _toggleMic(String locale) async {
     if (_isListening) {
       await _speech.stop();
       if (mounted) setState(() => _isListening = false);
+      _sendRecognized(locale);
       return;
     }
 
     final available = await _speech.initialize();
     if (!available || !mounted) return;
 
-    setState(() => _isListening = true);
+    setState(() {
+      _isListening = true;
+      _recognizedText = '';
+    });
     // langId всегда валиден — та же гарантия, что в LessonScreen.
     final sttLocaleId = StudyLanguage.fromCode(widget.langId)!.sttLocaleId;
     await _speech.listen(
       onResult: (result) {
         if (!mounted) return;
-        _controller.text = result.recognizedWords;
+        setState(() => _recognizedText = result.recognizedWords);
         if (result.finalResult) {
           setState(() => _isListening = false);
+          _sendRecognized(locale);
         }
       },
       listenOptions: SpeechListenOptions(
@@ -83,14 +89,19 @@ class _DialogueScreenState extends ConsumerState<DialogueScreen> {
     );
   }
 
-  void _send(String locale) {
-    final text = _controller.text.trim();
+  void _sendRecognized(String locale) {
+    final text = _recognizedText.trim();
     if (text.isEmpty) return;
-    _controller.clear();
+    _recognizedText = '';
     ref
         .read(dialogueProvider(widget.langId, widget.lessonId).notifier)
         .sendUserTurn(text, locale);
   }
+
+  String _errorText(AppError error, AppLocalizations l10n) => switch (error) {
+        NetworkError() => l10n.errorNetwork,
+        _ => l10n.errorGeneric,
+      };
 
   Future<void> _finish() async {
     final locale = Localizations.localeOf(context).languageCode;
@@ -143,6 +154,19 @@ class _DialogueScreenState extends ConsumerState<DialogueScreen> {
                 padding: EdgeInsets.all(AppSpacing.md),
                 child: LinearProgressIndicator(),
               ),
+            if (data.error != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                ),
+                child: Text(
+                  _errorText(data.error!, l10n),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: data.shouldClose
@@ -160,25 +184,33 @@ class _DialogueScreenState extends ConsumerState<DialogueScreen> {
                             : Text(l10n.b1DialogueFinish),
                       ),
                     )
-                  : Row(
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
-                          onPressed: data.isAwaitingReply ? null : _toggleMic,
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _controller,
-                            enabled: !data.isAwaitingReply,
-                            decoration: InputDecoration(
-                              hintText: l10n.b1DialogueTypeMessage,
-                            ),
+                        if (_isListening && _recognizedText.isNotEmpty) ...[
+                          Text(
+                            _recognizedText,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.send),
-                          onPressed:
-                              data.isAwaitingReply ? null : () => _send(locale),
+                          const SizedBox(height: AppSpacing.xs),
+                        ],
+                        if (_isListening) ...[
+                          Text(
+                            l10n.listeningLabel,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                        ],
+                        FilledButton.icon(
+                          onPressed: data.isAwaitingReply
+                              ? null
+                              : () => _toggleMic(locale),
+                          icon: Icon(_isListening
+                              ? Icons.stop_circle_outlined
+                              : Icons.mic),
+                          label: Text(_isListening
+                              ? l10n.b1StopRecording
+                              : l10n.b1StartRecording),
                         ),
                       ],
                     ),

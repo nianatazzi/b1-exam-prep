@@ -74,8 +74,6 @@ class LessonScreen extends ConsumerWidget {
                 title: l10n.b1ImageDescription,
                 imageUrl: task.imageUrl,
                 promptText: '',
-                pointsToDescribe:
-                    localizedTextList(task.pointsToDescribe, locale),
                 durationSeconds: data.durationSeconds,
                 sttLocaleId: sttLocaleId,
                 isSubmitting: data.isSubmittingOralStep,
@@ -87,7 +85,6 @@ class LessonScreen extends ConsumerWidget {
                 title: l10n.b1Monologue,
                 imageUrl: null,
                 promptText: localizedText(task.prompt, locale),
-                pointsToDescribe: localizedTextList(task.points, locale),
                 durationSeconds: data.durationSeconds,
                 sttLocaleId: sttLocaleId,
                 isSubmitting: data.isSubmittingOralStep,
@@ -147,7 +144,6 @@ class _OralStepView extends ConsumerWidget {
   final String title;
   final String? imageUrl;
   final String promptText;
-  final List<String> pointsToDescribe;
   final int durationSeconds;
   final String sttLocaleId;
   final bool isSubmitting;
@@ -159,7 +155,6 @@ class _OralStepView extends ConsumerWidget {
     required this.title,
     required this.imageUrl,
     required this.promptText,
-    required this.pointsToDescribe,
     required this.durationSeconds,
     required this.sttLocaleId,
     required this.isSubmitting,
@@ -170,9 +165,11 @@ class _OralStepView extends ConsumerWidget {
     final locale = Localizations.localeOf(context).languageCode;
 
     return FreePracticeView(
+      // Ключ по шагу — иначе image/monologue делят один State (не создаётся
+      // заново), и после image-description в monologue остаётся transcript/_stage
+      key: ValueKey(oralStep),
       imageUrl: imageUrl,
       promptText: promptText.isNotEmpty ? promptText : title,
-      pointsToDescribe: pointsToDescribe,
       durationSeconds: durationSeconds,
       sttLocaleId: sttLocaleId,
       isSubmitting: isSubmitting,

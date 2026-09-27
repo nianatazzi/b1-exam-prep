@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ImageTaskModel {
 
-@JsonKey(name: 'image_url') String get imageUrl;@JsonKey(name: 'points_to_describe') List<Map<String, dynamic>> get pointsToDescribe;
+@JsonKey(name: 'image_url') String get imageUrl;
 /// Create a copy of ImageTaskModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ImageTaskModelCopyWith<ImageTaskModel> get copyWith => _$ImageTaskModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageTaskModel&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other.pointsToDescribe, pointsToDescribe));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageTaskModel&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,imageUrl,const DeepCollectionEquality().hash(pointsToDescribe));
+int get hashCode => Object.hash(runtimeType,imageUrl);
 
 @override
 String toString() {
-  return 'ImageTaskModel(imageUrl: $imageUrl, pointsToDescribe: $pointsToDescribe)';
+  return 'ImageTaskModel(imageUrl: $imageUrl)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ImageTaskModelCopyWith<$Res>  {
   factory $ImageTaskModelCopyWith(ImageTaskModel value, $Res Function(ImageTaskModel) _then) = _$ImageTaskModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'points_to_describe') List<Map<String, dynamic>> pointsToDescribe
+@JsonKey(name: 'image_url') String imageUrl
 });
 
 
@@ -65,11 +65,10 @@ class _$ImageTaskModelCopyWithImpl<$Res>
 
 /// Create a copy of ImageTaskModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? imageUrl = null,Object? pointsToDescribe = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? imageUrl = null,}) {
   return _then(_self.copyWith(
 imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String,pointsToDescribe: null == pointsToDescribe ? _self.pointsToDescribe : pointsToDescribe // ignore: cast_nullable_to_non_nullable
-as List<Map<String, dynamic>>,
+as String,
   ));
 }
 
@@ -154,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'points_to_describe')  List<Map<String, dynamic>> pointsToDescribe)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_url')  String imageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ImageTaskModel() when $default != null:
-return $default(_that.imageUrl,_that.pointsToDescribe);case _:
+return $default(_that.imageUrl);case _:
   return orElse();
 
 }
@@ -175,10 +174,10 @@ return $default(_that.imageUrl,_that.pointsToDescribe);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'points_to_describe')  List<Map<String, dynamic>> pointsToDescribe)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_url')  String imageUrl)  $default,) {final _that = this;
 switch (_that) {
 case _ImageTaskModel():
-return $default(_that.imageUrl,_that.pointsToDescribe);case _:
+return $default(_that.imageUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +194,10 @@ return $default(_that.imageUrl,_that.pointsToDescribe);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'points_to_describe')  List<Map<String, dynamic>> pointsToDescribe)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'image_url')  String imageUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _ImageTaskModel() when $default != null:
-return $default(_that.imageUrl,_that.pointsToDescribe);case _:
+return $default(_that.imageUrl);case _:
   return null;
 
 }
@@ -210,17 +209,10 @@ return $default(_that.imageUrl,_that.pointsToDescribe);case _:
 @JsonSerializable()
 
 class _ImageTaskModel implements ImageTaskModel {
-  const _ImageTaskModel({@JsonKey(name: 'image_url') this.imageUrl = '', @JsonKey(name: 'points_to_describe') final  List<Map<String, dynamic>> pointsToDescribe = const <Map<String, dynamic>>[]}): _pointsToDescribe = pointsToDescribe;
+  const _ImageTaskModel({@JsonKey(name: 'image_url') this.imageUrl = ''});
   factory _ImageTaskModel.fromJson(Map<String, dynamic> json) => _$ImageTaskModelFromJson(json);
 
 @override@JsonKey(name: 'image_url') final  String imageUrl;
- final  List<Map<String, dynamic>> _pointsToDescribe;
-@override@JsonKey(name: 'points_to_describe') List<Map<String, dynamic>> get pointsToDescribe {
-  if (_pointsToDescribe is EqualUnmodifiableListView) return _pointsToDescribe;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_pointsToDescribe);
-}
-
 
 /// Create a copy of ImageTaskModel
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +227,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageTaskModel&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&const DeepCollectionEquality().equals(other._pointsToDescribe, _pointsToDescribe));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageTaskModel&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,imageUrl,const DeepCollectionEquality().hash(_pointsToDescribe));
+int get hashCode => Object.hash(runtimeType,imageUrl);
 
 @override
 String toString() {
-  return 'ImageTaskModel(imageUrl: $imageUrl, pointsToDescribe: $pointsToDescribe)';
+  return 'ImageTaskModel(imageUrl: $imageUrl)';
 }
 
 
@@ -255,7 +247,7 @@ abstract mixin class _$ImageTaskModelCopyWith<$Res> implements $ImageTaskModelCo
   factory _$ImageTaskModelCopyWith(_ImageTaskModel value, $Res Function(_ImageTaskModel) _then) = __$ImageTaskModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'points_to_describe') List<Map<String, dynamic>> pointsToDescribe
+@JsonKey(name: 'image_url') String imageUrl
 });
 
 
@@ -272,11 +264,10 @@ class __$ImageTaskModelCopyWithImpl<$Res>
 
 /// Create a copy of ImageTaskModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? imageUrl = null,Object? pointsToDescribe = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? imageUrl = null,}) {
   return _then(_ImageTaskModel(
 imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String,pointsToDescribe: null == pointsToDescribe ? _self._pointsToDescribe : pointsToDescribe // ignore: cast_nullable_to_non_nullable
-as List<Map<String, dynamic>>,
+as String,
   ));
 }
 

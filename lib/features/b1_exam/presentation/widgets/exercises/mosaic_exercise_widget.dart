@@ -34,11 +34,15 @@ class _MosaicExerciseWidgetState extends State<MosaicExerciseWidget> {
   void initState() {
     super.initState();
     final td = widget.exercise.typeData ?? {};
-    final answer = (td['answer_chunks'] as List?)?.cast<String>() ?? [];
+    final answer = _answerChunks(td);
     final distractors = (td['distractor_chunks'] as List?)?.cast<String>() ?? [];
     _allBankChunks = [...answer, ...distractors]..shuffle();
     _isUsed = List.filled(_allBankChunks.length, false);
   }
+
+  // answer хранится строкой "слова через пробел" (см. FIRESTORE.md), а не готовым массивом
+  static List<String> _answerChunks(Map<String, dynamic> td) =>
+      (td['answer'] as String? ?? '').split(' ').where((w) => w.isNotEmpty).toList();
 
   void _pickChunk(int bankIndex) {
     setState(() {
@@ -56,7 +60,7 @@ class _MosaicExerciseWidgetState extends State<MosaicExerciseWidget> {
 
   void _check() {
     final td = widget.exercise.typeData ?? {};
-    final answerChunks = (td['answer_chunks'] as List?)?.cast<String>() ?? [];
+    final answerChunks = _answerChunks(td);
     final userChunks = _answer.map((e) => e.label).toList();
     final isCorrect = listEquals(userChunks, answerChunks);
     setState(() {
@@ -88,8 +92,7 @@ class _MosaicExerciseWidgetState extends State<MosaicExerciseWidget> {
     final promptsMap = (td['prompts'] as Map?)?.cast<String, dynamic>() ?? {};
     final prompt = (promptsMap[langCode] ?? promptsMap['en'] ?? '').toString();
 
-    final answerChunks = (td['answer_chunks'] as List?)?.cast<String>() ?? [];
-    final correctSentence = answerChunks.join(' ');
+    final correctSentence = (td['answer'] as String? ?? '');
 
     final Color feedbackColor;
     final Color feedbackBg;
